@@ -1,0 +1,7 @@
+create_table("plants") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("name", "string", {})
+	t.Column("germinated", "bool", {})
+	t.Column("days_harvast", "integer", {})
+	t.Timestamps()
+}
