@@ -37,3 +37,9 @@ We recommend you heading over to [http://gobuffalo.io](http://gobuffalo.io) and 
 Good luck!
 
 [Powered by Buffalo](http://gobuffalo.io)
+
+
+# Notes
+
+Start docker postgres `docker run --name garden_development -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres`
+create database `buffalo pop create -a`
