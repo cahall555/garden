@@ -1,0 +1,46 @@
+[[scenario]]
+name = "model test"
+
+  [[scenario.table]]
+    name = "gardens"
+
+    [[scenario.table.row]]
+      id = "<%= uuidNamed("salsa") %>"
+      name = "Salsa Garden"
+      zone = 13
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+    id = "<%= uuid() %>"
+    name = "Herb Garden"
+    zone = 7
+    created_at = "<%= now() %>"
+    updated_at = "<%= now() %>"
+
+    [[scenario.table]]
+    name = "plants"
+
+    [[scenario.table.row]]
+      id = "<%= uuid() %>"
+      name = "Tomato"
+      garden_id = "<%= uuidNamed("salsa") %>"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "<%= uuid() %>"
+      name = "Jalapeno"
+      garden_id = "<%= uuidNamed("salsa") %>"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table]]
+    name = "tags"
+
+    [[scenario.table.row]]
+      id = "<%= uuid() %>"
+      name = "Annual"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+

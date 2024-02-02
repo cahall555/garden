@@ -24,6 +24,17 @@ func (g Garden) GardenZone() string {
 	return g.Name + " is in zone " + g.Zone
 }
 
+func (g Garden) GetPlants(tx *pop.Connection) error {
+	var plants []Plant
+	err := tx.Where("garden_id = ?", g.ID).All(&plants)
+	if err != nil {
+		return err
+	}
+
+	g.Plants = plants
+	return nil
+}
+
 // String is not required by pop and may be deleted
 func (g Garden) String() string {
 	jg, _ := json.Marshal(g)

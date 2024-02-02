@@ -10,55 +10,50 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-// Plant is used by pop to map your plants database table to your go code.
-type Plant struct {
+// Tag is used by pop to map your tags database table to your go code.
+type Tag struct {
 	ID            uuid.UUID `json:"id" db:"id"`
 	Name          string    `json:"name" db:"name"`
-	Germinated    bool      `json:"germinated" db:"germinated"`
-	DaysToHarvest int       `json:"days_to_harvest" db:"days_to_harvest"`
-	GardenID      uuid.UUID `json:"-" db:"garden_id"`
-	Garden        *Garden   `json:"Garden,omitempty" belongs_to:"garden"`
-	PlantTags     Tags      `many_to_many:"plants_tags"`
+	RelatedPlants Plants    `many_to_many:"plants_tags"` 
 	CreatedAt     time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at" db:"updated_at"`
 }
 
-func (p Plant) PlantName() string {
-	return p.Name
+func (t Tag) TagName() string {
+	return t.Name
 }
 
 // String is not required by pop and may be deleted
-func (p Plant) String() string {
-	jp, _ := json.Marshal(p)
-	return string(jp)
+func (t Tag) String() string {
+	jt, _ := json.Marshal(t)
+	return string(jt)
 }
 
-// Plants is not required by pop and may be deleted
-type Plants []Plant
+// Tags is not required by pop and may be deleted
+type Tags []Tag
 
 // String is not required by pop and may be deleted
-func (p Plants) String() string {
-	jp, _ := json.Marshal(p)
-	return string(jp)
+func (t Tags) String() string {
+	jt, _ := json.Marshal(t)
+	return string(jt)
 }
 
 // Validate gets run every time you call a "pop.Validate*" (pop.ValidateAndSave, pop.ValidateAndCreate, pop.ValidateAndUpdate) method.
 // This method is not required and may be deleted.
-func (p *Plant) Validate(tx *pop.Connection) (*validate.Errors, error) {
+func (t *Tag) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
-		&validators.StringIsPresent{Field: p.Name, Name: "Name"},
-		&validators.IntIsPresent{Field: p.DaysToHarvest, Name: "DaysToHarvest"},
+		&validators.StringIsPresent{Field: t.Name, Name: "Name"},
 	), nil
 }
 
 // ValidateCreate gets run every time you call "pop.ValidateAndCreate" method.
 // This method is not required and may be deleted.
-func (p *Plant) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {
+func (t *Tag) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.NewErrors(), nil
 }
 
 // ValidateUpdate gets run every time you call "pop.ValidateAndUpdate" method.
 // This method is not required and may be deleted.
-func (p *Plant) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {
+func (t *Tag) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.NewErrors(), nil
 }
