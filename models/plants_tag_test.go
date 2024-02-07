@@ -71,5 +71,31 @@ func (ms *ModelSuite) Test_PlantsTag() {
 
 	ms.NotEqual(uuid.Nil, pt.ID, "PlantsTag id is created when saving to database")
 	ms.False(verrs.HasAny(), "No errors when creating PlantsTag")
+	
+	pt2 := &PlantsTag{
+		PlantID: p.ID,
+		TagID: t2.ID,
+	}
 
+	verrs, err = db.ValidateAndCreate(pt2)
+	if err != nil {
+		panic(err)
+	}
+
+	ms.NotEqual(uuid.Nil, pt2.ID, "PlantsTag id is created when saving to database")
+	ms.False(verrs.HasAny(), "No errors when creating PlantsTag")
+
+	ptTag, err := pt.ListPlantTags(ms.DB)
+ 	if err != nil {
+        	ms.Fail("Error fetching plant tags", err.Error())
+    	}
+	
+    	ms.Equal(ptTag, []string{"Tomato", "perennial"}, "Expected tag names to match")
+
+	ptTag2, err := pt2.ListPlantTags(ms.DB)
+	if err != nil {
+		ms.Fail("Error fetching plant tags", err.Error())
+	}
+
+	ms.Equal(ptTag2, []string{"Tomato", "fruit"}, "Expected tag names to match")
 }

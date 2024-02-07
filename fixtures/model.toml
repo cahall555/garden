@@ -12,7 +12,7 @@ name = "model test"
       updated_at = "<%= now() %>"
 
     [[scenario.table.row]]
-    id = "<%= uuid() %>"
+    id = "<%= uuidNamed("herb") %>"
     name = "Herb Garden"
     zone = 7
     created_at = "<%= now() %>"
@@ -22,16 +22,30 @@ name = "model test"
     name = "plants"
 
     [[scenario.table.row]]
-      id = "<%= uuid() %>"
+      id = "<%= uuidNamed("tomato") %>"
       name = "Tomato"
       garden_id = "<%= uuidNamed("salsa") %>"
       created_at = "<%= now() %>"
       updated_at = "<%= now() %>"
 
     [[scenario.table.row]]
-      id = "<%= uuid() %>"
+      id = "<%= uuidNamed("jalapeno") %>"
       name = "Jalapeno"
       garden_id = "<%= uuidNamed("salsa") %>"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "<%= uuidNamed("basil") %>"
+      name = "Basil"
+      garden_id = "<%= uuidNamed("herb") %>"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "<%= uuidNamed("cilantro") %>"
+      name = "Cilantro"
+      garden_id = "<%= uuidNamed("herb") %>"
       created_at = "<%= now() %>"
       updated_at = "<%= now() %>"
 
@@ -39,8 +53,78 @@ name = "model test"
     name = "tags"
 
     [[scenario.table.row]]
-      id = "<%= uuid() %>"
+      id = "<%= uuidNamed("annual") %>"
       name = "Annual"
       created_at = "<%= now() %>"
       updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "<%= uuidNamed("perennial") %>"
+      name = "Perennial"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "<%= uuidNamed("vegetable") %>"
+      name = "Vegetable"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "<%= uuidNamed("herb") %>"
+      name = "Herb"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "<%= uuidNamed("fruit") %>"
+      name = "Fruit"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "<%= uuidNamed("spicy") %>"
+      name = "Spicy"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+
+    [[scenario.table]]
+    name = "plant_tags"
+
+    [[scenario.table.row]]
+      id = "<%= uuid() %>"
+      plant_id = "<%= uuidNamed("jalapeno") %>"
+      tag_id = "<%= uuidNamed("spicy") %>"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "<%= uuid() %>"
+      plant_id = "<%= uuidNamed("tomato") %>"
+      tag_id = "<%= uuidNamed("vegetable") %>"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "<%= uuid() %>"
+      plant_id = "<%=uuidNamed("basil") %>"
+      tag_id = "<%= uuidNamed("herb") %>"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "<%= uuid() %>"
+      plant_id = "<%= uuidNamed("jalapeno") %>"
+      tag_id = "<%= uuidNamed("fruit") %>"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+    id = "<%= uuid() %>"
+    plant_id = "<%= uuidNamed("tomato") %>"
+    tag_id = "<%= uuidNamed("perennial") %>"
+    created_at = "<%= now() %>"
+    updated_at = "<%= now() %>"
+
 

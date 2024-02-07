@@ -3,7 +3,7 @@ package models
 import (
 	"encoding/json"
 	"time"
-
+	"fmt"
 	"github.com/gobuffalo/pop/v6"
 	"github.com/gobuffalo/validate/v3"
 	"github.com/gofrs/uuid"
@@ -18,6 +18,28 @@ type PlantsTag struct {
 	Tag       *Tag      `belongs_to:"tags"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+}
+
+func (pt *PlantsTag) ListPlantTags(tx *pop.Connection) ([]string, error) {
+	var names []string
+
+	var plant Plant
+	err := tx.Where("id = ?", pt.PlantID).First(&plant)
+	if err != nil {
+		return nil, fmt.Errorf("error fetching plant by id: %w", err)
+	}
+	 names = append(names, plant.Name)
+
+	var tag Tag
+	err = tx.Where("id = ?", pt.TagID).First(&tag)
+	if err != nil {
+		return nil, fmt.Errorf("error fetching tag by id: %w", err)
+	}
+	
+        names = append(names, tag.Name)
+	
+
+    return names, nil
 }
 
 // String is not required by pop and may be deleted
