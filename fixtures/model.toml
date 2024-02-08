@@ -7,14 +7,14 @@ name = "model test"
     [[scenario.table.row]]
       id = "<%= uuidNamed("salsa") %>"
       name = "Salsa Garden"
-      zone = 13
+      zone = "13"
       created_at = "<%= now() %>"
       updated_at = "<%= now() %>"
 
     [[scenario.table.row]]
     id = "<%= uuidNamed("herb") %>"
     name = "Herb Garden"
-    zone = 7
+    zone = "7"
     created_at = "<%= now() %>"
     updated_at = "<%= now() %>"
 
@@ -24,6 +24,8 @@ name = "model test"
     [[scenario.table.row]]
       id = "<%= uuidNamed("tomato") %>"
       name = "Tomato"
+      germinated = true
+      days_to_harvest = 90
       garden_id = "<%= uuidNamed("salsa") %>"
       created_at = "<%= now() %>"
       updated_at = "<%= now() %>"
@@ -31,6 +33,8 @@ name = "model test"
     [[scenario.table.row]]
       id = "<%= uuidNamed("jalapeno") %>"
       name = "Jalapeno"
+      germinated = false
+      days_to_harvest = 60
       garden_id = "<%= uuidNamed("salsa") %>"
       created_at = "<%= now() %>"
       updated_at = "<%= now() %>"
@@ -38,6 +42,8 @@ name = "model test"
     [[scenario.table.row]]
       id = "<%= uuidNamed("basil") %>"
       name = "Basil"
+      germinated = true
+      days_to_harvest = 30
       garden_id = "<%= uuidNamed("herb") %>"
       created_at = "<%= now() %>"
       updated_at = "<%= now() %>"
@@ -45,6 +51,8 @@ name = "model test"
     [[scenario.table.row]]
       id = "<%= uuidNamed("cilantro") %>"
       name = "Cilantro"
+      germinated = false
+      days_to_harvest = 30
       garden_id = "<%= uuidNamed("herb") %>"
       created_at = "<%= now() %>"
       updated_at = "<%= now() %>"
@@ -90,7 +98,7 @@ name = "model test"
 
 
     [[scenario.table]]
-    name = "plant_tags"
+    name = "plants_tags"
 
     [[scenario.table.row]]
       id = "<%= uuid() %>"
@@ -123,7 +131,7 @@ name = "model test"
     [[scenario.table.row]]
     id = "<%= uuid() %>"
     plant_id = "<%= uuidNamed("tomato") %>"
-    tag_id = "<%= uuidNamed("perennial") %>"
+    tag_id = "<%= uuidNamed("annual") %>"
     created_at = "<%= now() %>"
     updated_at = "<%= now() %>"
 

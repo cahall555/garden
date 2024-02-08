@@ -67,6 +67,9 @@ func App() *buffalo.App {
 
 		app.GET("/", HomeHandler)
 
+		app.GET("/gardens/{id}", GardensShow)
+		app.GET("/plants/{id}", PlantsShow)
+		app.GET("/tags/{id}", TagsShow)
 		app.ServeFiles("/", http.FS(public.FS())) // serve files from the public directory
 	})
 

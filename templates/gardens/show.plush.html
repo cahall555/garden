@@ -1,0 +1,23 @@
+<h1 class="text-info-emphasis"><%= garden.Name %></h1>
+
+<h3 class="badge text-bg-primary">Zone <%=garden.Zone %></h3>
+<table class="table table-striped table-hover">
+	<thead>
+		<tr>
+			<th scope="col">Plant Name</th>
+			<th scope="col">Germinated</th>
+			<th scope="col">Days to Harvast</th>
+		</tr>
+	</thead>
+	<tbody class="table-group-divider">
+		<%= for (t) in garden.Plants { %>
+		<tr>
+			<td><%= t.PlantName() %></td>
+			<td><%= t.Germinated %></td>
+			<td><%= t.DaysToHarvest %></td>
+		</tr>
+		<% } %>
+	</tbody>
+</table>
+
+

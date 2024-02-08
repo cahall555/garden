@@ -3,7 +3,6 @@ package actions
 import (
 	"garden/public"
 	"garden/templates"
-
 	"github.com/gobuffalo/buffalo/render"
 )
 

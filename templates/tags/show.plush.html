@@ -1,0 +1,7 @@
+<h1><%= tag.Name %></h1>
+
+<ul>
+	<%= for (p) in tag.RelatedPlants { %>
+	<li><%= p.Name %></li>
+	<% } %>
+</ul>
