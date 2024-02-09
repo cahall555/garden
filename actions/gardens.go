@@ -23,5 +23,18 @@ func GardensShow(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.HTML("gardens/show.html"))
 }
 
+// GardensIndex default implementation.
+func GardensIndex(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	garden := models.Gardens{}
+	
+	err := tx.All(&garden)
+	if err != nil {
+		c.Flash().Add("warning", "Gardens not found")
+		c.Redirect(301, "/")
+	}
 
+	c.Set("garden", garden)
+	return c.Render(http.StatusOK, r.HTML("gardens/index.html"))
+}
 

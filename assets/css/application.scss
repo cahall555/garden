@@ -2,3 +2,51 @@
 @import "~@fortawesome/fontawesome-free/css/all.min.css";
 
 @import "buffalo";
+
+$background-color: #DAD7CD;
+$primary-color: #588157;
+$dark-green: #344E41;
+
+body {
+	font-family: 'Taviraj', serif;
+	background-color: $background-color;
+ 	color: $primary-color;
+}
+
+.text-bg-primary {
+	color: $primary-color;
+}
+
+.card-header {
+	color: $background-color;
+	background-color: $primary-color;
+	font-weight: bolder;
+	font-size: 2.5em;
+}
+
+.nav-tabs {
+	background-color: $primary-color;
+	font-size: 1.5em;
+}
+
+.nav-link {
+	color: $background-color;
+
+}
+
+:hover {
+	color: $primary-color;
+}
+
+.table {
+	font-size: 1.5em;
+}
+
+.badge {
+	font-size: 1.5em;
+}
+
+.text-bg-green {
+	background-color: $dark-green;
+	color: $background-color;
+}

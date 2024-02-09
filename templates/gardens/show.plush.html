@@ -11,7 +11,7 @@
 	</thead>
 	<tbody class="table-group-divider">
 		<%= for (t) in garden.Plants { %>
-		<tr>
+		<tr onClick="window.location='/plants/<%= t.ID %>';">
 			<td><%= t.PlantName() %></td>
 			<td><%= t.Germinated %></td>
 			<td><%= t.DaysToHarvest %></td>
@@ -20,4 +20,5 @@
 	</tbody>
 </table>
 
+<button type="button" class="btn btn-primary mb-3">Add Plant</button>
 
