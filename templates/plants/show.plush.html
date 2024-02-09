@@ -1,7 +1,46 @@
 <h1><%= plant.Name %></h1>
 
-<ul>
-	<%= for (t) in plant.PlantTags { %>
-		<li><%= t.Name %></li>
-	<% } %>
-</ul>
+<table class="table table-striped table-hover">
+	<thead>
+		<tr>
+			<th scope="row">Germinated</th>
+			<th scope="row">Days to Harvest</th>
+		</tr>
+	</thead>
+	<tbody class="table-group-divider">
+		<tr>
+			<td><%= plant.Germinated %></td>
+			<td><%= plant.DaysToHarvest %></td>
+		</tr>
+		
+	</tbody>
+</table>
+
+<div class="card mb-3">
+  <div class="card-header text-center">
+    Journal Post February 9th, 2024
+  </div>
+  <div class="card-body">
+	  <img src="https://via.placeholder.com/50" class="card-img-top" alt="...">
+    <h5 class="card-title">Growth Record</h5>
+    <p class="card-text">Today I observed this plant has begun to produce buds.</p>
+  </div>
+  <div class="card-footer text-body-secondary">
+    2 days ago
+  </div>
+</div>
+
+<button type="button" class="btn btn-primary mb-3">New Journal Entry</button>
+
+<%= if (len(plant.PlantTags) > 0) { %> 
+<div class="card">
+  <div class="card-header">
+    Tags
+  </div>
+  <div class="card-body">
+    <%= for (t) in plant.PlantTags { %>
+    <p class="badge rounded-pill text-bg-green"><%= t.Name %></p>
+    <% } %>
+  </div>
+</div>
+

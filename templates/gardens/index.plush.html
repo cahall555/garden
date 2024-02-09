@@ -1,0 +1,21 @@
+<h1>Gardens</h1>
+
+<table class="table table-striped table-hover">
+	<thead>
+		<tr>
+			<th scope="col">Garden Name</th>
+			<th scope="col">Zone</th>
+		</tr>
+	</thead>
+	<tbody class="table-group-divider">
+		<%= for (g) in garden { %>
+		<tr onClick="window.location='/gardens/<%= g.ID %>';">
+			<td><%= g.Name %></td>
+			<td><%= g.Zone %></td>
+		</tr>
+		<% } %>
+	</tbody>
+</table>
+
+<button type="button" class="btn btn-primary mb-3">New Garden</button>
+

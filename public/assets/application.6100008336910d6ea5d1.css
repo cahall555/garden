@@ -12123,3 +12123,45 @@ table.table tbody tr td {
     width: 100%;
   }
 }
+body {
+  font-family: "Taviraj", serif;
+  background-color: #DAD7CD;
+  color: #588157;
+}
+
+.text-bg-primary {
+  color: #588157;
+}
+
+.card-header {
+  color: #DAD7CD;
+  background-color: #588157;
+  font-weight: bolder;
+  font-size: 2.5em;
+}
+
+.nav-tabs {
+  background-color: #588157;
+  font-size: 1.5em;
+}
+
+.nav-link {
+  color: #DAD7CD;
+}
+
+:hover {
+  color: #588157;
+}
+
+.table {
+  font-size: 1.5em;
+}
+
+.badge {
+  font-size: 1.5em;
+}
+
+.text-bg-green {
+  background-color: #344E41;
+  color: #DAD7CD;
+}
