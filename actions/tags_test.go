@@ -19,7 +19,5 @@ func (as *ActionSuite) Test_Tags_Show() {
 	body := res.Body.String()
 	as.Contains(body, "Annual", "Tag name not found on page")
 	as.Contains(body, "Tomato", "Plant name not found on page")
-	
 
 }
-

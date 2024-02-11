@@ -3,8 +3,9 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-	"github.com/gobuffalo/pop/v6"
+
 	"github.com/gobuffalo/buffalo"
+	"github.com/gobuffalo/pop/v6"
 )
 
 // GardensShow default implementation.
@@ -27,7 +28,7 @@ func GardensShow(c buffalo.Context) error {
 func GardensIndex(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	garden := models.Gardens{}
-	
+
 	err := tx.All(&garden)
 	if err != nil {
 		c.Flash().Add("warning", "Gardens not found")
@@ -37,4 +38,3 @@ func GardensIndex(c buffalo.Context) error {
 	c.Set("garden", garden)
 	return c.Render(http.StatusOK, r.HTML("gardens/index.html"))
 }
-

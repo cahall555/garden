@@ -135,4 +135,27 @@ name = "model test"
     created_at = "<%= now() %>"
     updated_at = "<%= now() %>"
 
+    [[scenario.table]]
+    name = "journals"
 
+    [[scenario.table.row]]
+      id = "<%= uuid() %>"
+      title = "Observations"
+      entry = "The jalapenos are not germinating"
+      display_on_garden = false
+      image = "jalapeno.jpg"
+      category = "Germination"
+      Plant_id = "<%= uuidNamed("jalapeno") %>"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "<%= uuid() %>"
+      title = "Basil notes"
+      entry = "The basil looks eaten"
+      display_on_garden = false
+      image = "basil.jpg"
+      category = "Pests"
+      Plant_id = "<%= uuidNamed("basil") %>"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"

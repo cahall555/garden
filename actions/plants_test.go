@@ -7,7 +7,7 @@ import (
 
 func (as *ActionSuite) Test_Plants_Show() {
 	as.LoadFixture("model test")
-	
+
 	plant := models.Plant{}
 	err := as.DB.First(&plant)
 	if err != nil {
@@ -19,6 +19,5 @@ func (as *ActionSuite) Test_Plants_Show() {
 	as.Contains(body, "Tomato", "Plant name not found on page")
 	as.Contains(body, "Annual", "Tag name not found on page")
 	as.Contains(body, "Vegetable", "Tag name not found on page")
-	
-}
 
+}

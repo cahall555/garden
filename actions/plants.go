@@ -1,10 +1,11 @@
 package actions
 
 import (
-	"net/http"
 	"garden/models"
-	"github.com/gobuffalo/pop/v6"
+	"net/http"
+
 	"github.com/gobuffalo/buffalo"
+	"github.com/gobuffalo/pop/v6"
 )
 
 // PlantsShow default implementation.
@@ -22,4 +23,3 @@ func PlantsShow(c buffalo.Context) error {
 	c.Set("plant", plant)
 	return c.Render(http.StatusOK, r.HTML("plants/show.html"))
 }
-

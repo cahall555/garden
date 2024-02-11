@@ -1,8 +1,35 @@
 <nav>
-  <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
-    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" onClick="window.location='/gardens/';"type="button" role="tab" aria-controls="nav-home" aria-selected="true">My Gardens</button>
-    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Journal</button>
-    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
+  <div class="nav nav-tabs mb-3">
+    <button class="nav-link active" id="gardens-tab" onclick="updateActiveTab(this); window.location='/gardens/';" type="button" aria-selected="true">My Gardens</button>
+    <button class="nav-link" id="journal-tab" onClick="updateActiveTab(this); window.location='/journals/';" type="button" aria-selected="false">Journal</button>
+    <button class="nav-link" id="contact-tab" onClick="updateActiveTab(this);" type="button" aria-selected="false">Contact</button>
     </div>
 </nav>
 
+<script>
+function updateActiveTab(clickedTab) {
+    sessionStorage.setItem('activeTab', clickedTab.id);
+    document.querySelectorAll('.nav-link').forEach(tab => {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
+    });
+
+    clickedTab.classList.add('active');
+    clickedTab.setAttribute('aria-selected', 'true');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const activeTabId = sessionStorage.getItem('activeTab');
+    if (activeTabId) {
+        document.querySelectorAll('.nav-link').forEach(tab => {
+            tab.classList.remove('active');
+            tab.setAttribute('aria-selected', 'false');
+        });
+        const activeTab = document.getElementById(activeTabId);
+        if (activeTab) {
+            activeTab.classList.add('active');
+            activeTab.setAttribute('aria-selected', 'true');
+        }
+    }
+});
+</script>

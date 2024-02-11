@@ -19,6 +19,7 @@ type Plant struct {
 	GardenID      uuid.UUID `json:"-" db:"garden_id"`
 	Garden        *Garden   `json:"Garden,omitempty" belongs_to:"garden"`
 	PlantTags     Tags      `many_to_many:"plants_tags"`
+	Journals      []Journal `json:"journals,omitempty" has_many:"journals"`
 	CreatedAt     time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at" db:"updated_at"`
 }
