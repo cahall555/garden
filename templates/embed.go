@@ -3,7 +3,7 @@ package templates
 import (
 	"embed"
 	"io/fs"
-	
+
 	"github.com/gobuffalo/buffalo"
 )
 

@@ -51,11 +51,11 @@ func (ms *ModelSuite) Test_GardenPlant() {
 func (ms *ModelSuite) Test_Fixture() {
 	ms.LoadFixture("model test")
 
-        var g Garden
-    	err := ms.DB.Where("name = ?", "Salsa Garden").First(&g)
-    	if err != nil {
-        	ms.Fail("Failed to query garden", err.Error())
-    	}
+	var g Garden
+	err := ms.DB.Where("name = ?", "Salsa Garden").First(&g)
+	if err != nil {
+		ms.Fail("Failed to query garden", err.Error())
+	}
 
 	ms.Equal(g.Name, "Salsa Garden")
 }

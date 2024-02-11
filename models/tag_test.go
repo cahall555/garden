@@ -33,7 +33,7 @@ func (ms *ModelSuite) Test_TagGetPlants() {
 	if err != nil {
 		panic(err)
 	}
-	
+
 	ms.NotEqual(uuid.Nil, t1.ID, "Tag id is created when saving to database")
 	ms.False(verrs.HasAny(), "No errors when creating tag")
 	ms.Equal(t1.TagName(), "perennial")
@@ -47,7 +47,7 @@ func (ms *ModelSuite) Test_TagGetPlants() {
 	ms.False(verrs.HasAny(), "No errors when creating tag")
 	ms.Equal(t2.TagName(), "annual")
 
-	g:= &Garden{
+	g := &Garden{
 		Name: "backyard",
 		Zone: "13",
 	}
@@ -57,4 +57,3 @@ func (ms *ModelSuite) Test_TagGetPlants() {
 		panic(err)
 	}
 }
-

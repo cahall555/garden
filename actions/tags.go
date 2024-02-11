@@ -1,10 +1,11 @@
 package actions
 
 import (
-	"net/http"
 	"garden/models"
-	"github.com/gobuffalo/pop/v6"
+	"net/http"
+
 	"github.com/gobuffalo/buffalo"
+	"github.com/gobuffalo/pop/v6"
 )
 
 // TagsShow default implementation.
@@ -22,4 +23,3 @@ func TagsShow(c buffalo.Context) error {
 	c.Set("tag", tag)
 	return c.Render(http.StatusOK, r.HTML("tags/show.html"))
 }
-

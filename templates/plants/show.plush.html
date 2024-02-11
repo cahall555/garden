@@ -16,19 +16,23 @@
 	</tbody>
 </table>
 
+<%= for (j) in plant.Journals { %>
 <div class="card mb-3">
   <div class="card-header text-center">
-    Journal Post February 9th, 2024
+    <%= j.CreatedAt.Format("January 2, 2006") %>
   </div>
   <div class="card-body">
+	      <%= if (j.Image != "") { %>
 	  <img src="https://via.placeholder.com/50" class="card-img-top" alt="...">
-    <h5 class="card-title">Growth Record</h5>
-    <p class="card-text">Today I observed this plant has begun to produce buds.</p>
+	  <% } %>
+	  <h5 class="card-title"><%= j.Title %></h5>
+	  <p class="card-text"><%= j.Entry %></p>
   </div>
   <div class="card-footer text-body-secondary">
-    2 days ago
+    <%= j.Category.CatStr() %>
   </div>
 </div>
+<% } %>
 
 <button type="button" class="btn btn-primary mb-3">New Journal Entry</button>
 

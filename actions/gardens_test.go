@@ -1,13 +1,13 @@
 package actions
 
 import (
-	"garden/models"
 	"fmt"
+	"garden/models"
 )
 
 func (as *ActionSuite) Test_Gardens_Show() {
 	as.LoadFixture("model test")
-	
+
 	garden := models.Garden{}
 	err := as.DB.First(&garden)
 	if err != nil {
@@ -21,4 +21,3 @@ func (as *ActionSuite) Test_Gardens_Show() {
 	as.Contains(body, "Tomato", "Plant name not found on page")
 	as.Contains(body, "Jalapeno", "Plant name not found on page")
 }
-
