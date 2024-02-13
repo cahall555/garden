@@ -1,0 +1,15 @@
+create_table("water_schedules") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("monday", "bool", {})
+	t.Column("tuesday", "bool", {})
+	t.Column("wednesday", "bool", {})
+	t.Column("thursday", "bool", {})
+	t.Column("friday", "bool", {})
+	t.Column("saturday", "bool", {})
+	t.Column("sunday", "bool", {})
+	t.Column("method", "string", {})
+	t.Column("notes", "string", {})
+	t.Column("plant_id", "uuid", {})
+	t.ForeignKey("plant_id", {"plants": ["id"]})
+	t.Timestamps()
+}

@@ -43,3 +43,9 @@ Good luck!
 
 Start docker postgres `docker run --name garden_development -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres`
 create database `buffalo pop create -a`
+
+
+# Todo
+
+- add plant journals with true bool to garden page
+- Create image save logic

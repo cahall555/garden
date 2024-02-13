@@ -20,6 +20,7 @@ type Plant struct {
 	Garden        *Garden   `json:"Garden,omitempty" belongs_to:"garden"`
 	PlantTags     Tags      `many_to_many:"plants_tags"`
 	Journals      []Journal `json:"journals,omitempty" has_many:"journals"`
+	WaterSchedules WaterSchedule `json:"water_schedules,omitempty" has_one:"water_schedules"`
 	CreatedAt     time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at" db:"updated_at"`
 }

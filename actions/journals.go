@@ -3,8 +3,9 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-	"github.com/gobuffalo/pop/v6"
+
 	"github.com/gobuffalo/buffalo"
+	"github.com/gobuffalo/pop/v6"
 )
 
 // JournalsShow default implementation.

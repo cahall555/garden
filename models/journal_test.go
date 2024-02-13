@@ -23,9 +23,7 @@ func (ms *ModelSuite) Test_Journal() {
 		GardenID:      g.ID,
 	}
 
-
 	g.Plants = append(g.Plants, *p)
-
 
 	verrs, err = db.ValidateAndCreate(p)
 	if err != nil {
@@ -33,11 +31,11 @@ func (ms *ModelSuite) Test_Journal() {
 	}
 
 	j := &Journal{
-		Title:   "First Planting",
-		Entry:   "Planted 4 seeds in the ground",
+		Title:           "First Planting",
+		Entry:           "Planted 4 seeds in the ground",
 		DisplayOnGarden: false,
-		Category: "Planting",
-		PlantID: p.ID,
+		Category:        "Planting",
+		PlantID:         p.ID,
 	}
 
 	p.Journals = append(p.Journals, *j)

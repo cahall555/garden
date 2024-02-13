@@ -10,17 +10,17 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-type Category string 
+type Category string
 
-	const (
-	    	Pests   Category = "Pests"
-    		Planting   Category = "Planting"
-		Watering   Category = "Watering"
-		Pruning   Category = "Pruning"
-		Harvesting   Category = "Harvesting"
-		Weather   Category = "Weather"
-		Germination   Category = "Germination"
-	)
+const (
+	Pests       Category = "Pests"
+	Planting    Category = "Planting"
+	Watering    Category = "Watering"
+	Pruning     Category = "Pruning"
+	Harvesting  Category = "Harvesting"
+	Weather     Category = "Weather"
+	Germination Category = "Germination"
+)
 
 // Journal is used by pop to map your journals database table to your go code.
 type Journal struct {
@@ -43,18 +43,19 @@ func (j Journal) String() string {
 }
 
 func (c Category) CatStr() string {
-    return string(c)
+	return string(c)
 }
-//watch this ticket https://github.com/gobuffalo/fizz/issues/65, fizz does not support enums yet
-func IsValidCategory(category string) bool {
-    validCategories := []Category{Pests, Planting, Watering, Pruning, Harvesting, Weather, Germination}
 
-    for _, v := range validCategories {
-        if string(v) == category {
-            return true
-        }
-    }
-    return false
+// watch this ticket https://github.com/gobuffalo/fizz/issues/65, fizz does not support enums yet
+func IsValidCategory(category string) bool {
+	validCategories := []Category{Pests, Planting, Watering, Pruning, Harvesting, Weather, Germination}
+
+	for _, v := range validCategories {
+		if string(v) == category {
+			return true
+		}
+	}
+	return false
 }
 
 // Journals is not required by pop and may be deleted
@@ -79,11 +80,11 @@ func (j *Journal) Validate(tx *pop.Connection) (*validate.Errors, error) {
 // ValidateCreate gets run every time you call "pop.ValidateAndCreate" method.
 // This method is not required and may be deleted.
 func (j *Journal) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {
-	 if !IsValidCategory(string(j.Category)) {
-     	   	vErrs := validate.NewErrors()
+	if !IsValidCategory(string(j.Category)) {
+		vErrs := validate.NewErrors()
 		vErrs.Add("category", "invalid category")
 		return vErrs, nil
-    }
+	}
 	return validate.NewErrors(), nil
 }
 
@@ -91,9 +92,9 @@ func (j *Journal) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {
 // This method is not required and may be deleted.
 func (j *Journal) ValidateUpdate(tx *pop.Connection) (*validate.Errors, error) {
 	if !IsValidCategory(string(j.Category)) {
-     	   	vErrs := validate.NewErrors()
+		vErrs := validate.NewErrors()
 		vErrs.Add("category", "invalid category")
 		return vErrs, nil
-    }
+	}
 	return validate.NewErrors(), nil
 }

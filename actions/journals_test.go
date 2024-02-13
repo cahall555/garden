@@ -1,13 +1,13 @@
 package actions
 
 import (
-	"garden/models"
 	"fmt"
+	"garden/models"
 )
 
 func (as *ActionSuite) Test_Journals_Show() {
 	as.LoadFixture("model test")
-	
+
 	journal := models.Journal{}
 
 	err := as.DB.First(&journal)
@@ -20,4 +20,3 @@ func (as *ActionSuite) Test_Journals_Show() {
 	as.Contains(body, "Observations", "The word observations not found on page")
 
 }
-
