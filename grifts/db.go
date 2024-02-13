@@ -90,7 +90,7 @@ var _ = grift.Namespace("db", func() {
 		}
 
 		//Seed Journals
-		j1 := models.Journal{Title: "Observation", Entry: "Basil is growing well", DisplayOnGarden: false, Category: "Germination", PlantID: basil.ID}
+		j1 := models.Journal{Title: "Observation", Entry: "Basil is growing well", DisplayOnGarden: false, Category: "Planting", PlantID: basil.ID}
 		err = models.DB.Create(&j1)
 		if err != nil {
 			panic(err)
@@ -102,6 +102,18 @@ var _ = grift.Namespace("db", func() {
 			panic(err)
 		}
 
+		j3 := models.Journal{Title: "New leaves", Entry: "New leaves are growing!", DisplayOnGarden: false, Image: "../assets/images/tomato.jpg", Category: "Germination", PlantID: tomato.ID}
+		err = models.DB.Create(&j3)
+		if err != nil {
+			panic(err)
+		}
+
+		//Seed WaterSchedules
+		ws1 := models.WaterSchedule{Monday: true, Tuesday: false, Wednesday: true, Thursday: false, Friday: true, Saturday: false, Sunday: true, Method: "Drip", Notes:"Watering every other day", PlantID: basil.ID}
+		err = models.DB.Create(&ws1)
+		if err != nil {
+			panic(err)
+		}
 
 		return nil
 	})

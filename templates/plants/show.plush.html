@@ -15,7 +15,37 @@
 		
 	</tbody>
 </table>
+<!-- TODO: find a better way to manage showing and hidding the watering schedule. -->
+<%= if (plant.WaterSchedules.Notes != "") { %>
+<h2 class="text-center">Water Schedule</h2>
 
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Monday</th>
+      <th scope="col">Tuesday</th>
+      <th scope="col">Wednesday</th>
+      <th scope="col">Thursday</th>
+      <th scope="col">Friday</th>
+      <th scope="col">Saturday</th>
+      <th scope="col">Sunday</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    <tr>
+      <td><%= plant.WaterSchedules.Monday %></td>
+      <td><%= plant.WaterSchedules.Tuesday %></td>
+      <td><%= plant.WaterSchedules.Wednesday %></td>
+      <td><%= plant.WaterSchedules.Thursday %></td>
+      <td><%= plant.WaterSchedules.Friday %></td>
+      <td><%= plant.WaterSchedules.Saturday %></td>
+      <td><%= plant.WaterSchedules.Sunday %></td>
+    </tr>
+      </tbody>
+</table>
+
+<h3><%= plant.WaterSchedules.Notes %></h3>
+<% } %>
 <%= for (j) in plant.Journals { %>
 <div class="card mb-3">
   <div class="card-header text-center">
@@ -23,7 +53,7 @@
   </div>
   <div class="card-body">
 	      <%= if (j.Image != "") { %>
-	  <img src="https://via.placeholder.com/50" class="card-img-top" alt="...">
+	      <img src= <%= j.Image %> class="card-img-top" alt="...">
 	  <% } %>
 	  <h5 class="card-title"><%= j.Title %></h5>
 	  <p class="card-text"><%= j.Entry %></p>

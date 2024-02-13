@@ -159,3 +159,37 @@ name = "model test"
       Plant_id = "<%= uuidNamed("basil") %>"
       created_at = "<%= now() %>"
       updated_at = "<%= now() %>"
+
+    [[scenario.table]]
+    name = "water_schedules"
+
+    [[scenario.table.row]]
+    id = "<%= uuid() %>"
+    monday = true
+    tuesday = false
+    wednesday = true
+    thursday = false
+    friday = true
+    saturday = false
+    sunday = true
+    method = "Drip"
+    notes = "Water every other day"
+    Plant_id = "<%= uuidNamed("basil") %>"
+    created_at = "<%= now() %>"
+    updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+    id = "<%= uuid() %>"
+    monday = true
+    tuesday = false
+    wednesday = true
+    thursday = false
+    friday = true
+    saturday = false
+    sunday = true
+    method = "Drip"
+    notes = "Water every other day"
+    Plant_id = "<%= uuidNamed("jalapeno") %>"
+    created_at = "<%= now() %>"
+    updated_at = "<%= now() %>"
+
