@@ -3,7 +3,7 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-
+	"fmt"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"
 )
@@ -37,4 +37,37 @@ func GardensIndex(c buffalo.Context) error {
 
 	c.Set("garden", garden)
 	return c.Render(http.StatusOK, r.HTML("gardens/index.html"))
+}
+
+// GardensCreate default implementation.
+func GardensCreate(c buffalo.Context) error {
+	garden := models.Garden{}
+	c.Set("garden", garden)
+	return c.Render(http.StatusOK, r.HTML("gardens/create.html"))
+}
+
+// GardensNew default implementation.
+func GardensNew(c buffalo.Context) error {
+	tx :=c.Value("tx").(*pop.Connection)
+	garden := &models.Garden{}
+	err := c.Bind(garden)
+	if err != nil {
+		c.Flash().Add("warning", "Garden form binding error")
+		return c.Redirect(301, "/")
+	}
+	
+	verrs, err := tx.ValidateAndCreate(garden)
+	if err != nil {
+		return c.Redirect(301, "/")
+	}
+
+	if verrs.HasAny() {
+		c.Flash().Add("warning", "Garden validation error")
+		c.Set("garden", garden)
+		c.Set("errors", verrs)
+		return c.Render(422, r.HTML("gardens/create.html"))
+	}
+
+	c.Flash().Add("success", "Garden created")
+	return c.Redirect(301, fmt.Sprintf("/gardens/%s", garden.ID))
 }

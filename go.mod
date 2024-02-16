@@ -12,6 +12,7 @@ require (
 	github.com/gobuffalo/suite/v4 v4.0.4
 	github.com/gobuffalo/validate/v3 v3.3.3
 	github.com/gofrs/uuid v4.3.1+incompatible
+	github.com/pkg/errors v0.9.1
 	github.com/unrolled/secure v1.14.0
 )
 

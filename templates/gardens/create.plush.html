@@ -1,0 +1,8 @@
+<h1>New Garden</h1>
+
+<%= form_for(garden, {action: gardensPath()}) { %>
+	<%= f.InputTag("Name") %>
+	<%= f.InputTag("Zone") %>
+	<%= f.SubmitTag("Create") %>
+<% } %>
+

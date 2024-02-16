@@ -66,10 +66,14 @@ func App() *buffalo.App {
 		app.Use(translations())
 
 		app.GET("/", GardensIndex) //replacing HomeHandler
-
+	
+		app.GET("/gardens/create", GardensCreate)
 		app.GET("/gardens/{id}", GardensShow)
 		app.GET("/gardens", GardensIndex)
+		app.POST("/gardens", GardensNew)
+		app.GET("/plants/create", PlantsCreate)
 		app.GET("/plants/{id}", PlantsShow)
+		app.POST("/plants", PlantsNew)
 		app.GET("/tags/{id}", TagsShow)
 		app.GET("/journals/{id}", JournalsShow)
 		app.GET("/journals", JournalsIndex)
