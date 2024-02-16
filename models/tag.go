@@ -23,6 +23,14 @@ func (t Tag) TagName() string {
 	return t.Name
 }
 
+func (t Tag) SelectLabel() string {
+	return t.Name
+}
+
+func (t Tag) SelectValue() interface{} {
+	return t.ID
+}
+
 // String is not required by pop and may be deleted
 func (t Tag) String() string {
 	jt, _ := json.Marshal(t)

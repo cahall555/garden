@@ -35,6 +35,14 @@ func (g Garden) GetPlants(tx *pop.Connection) error {
 	return nil
 }
 
+func (g Garden) SelectLabel() string {
+	return g.Name
+}
+
+func (g Garden) SelectValue() interface{} {
+	return g.ID
+}
+
 // String is not required by pop and may be deleted
 func (g Garden) String() string {
 	jg, _ := json.Marshal(g)

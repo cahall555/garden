@@ -1,0 +1,11 @@
+<h1>New Plant</h1>
+
+<%= form_for(plant) { %>
+	<%= f.InputTag("Name") %>
+	<%= f.CheckboxTag("Germination",{label: "Plant has germinated"}) %>
+	<%= f.InputTag("DaysToHarvest") %>
+	<%= f.SelectTag("Gardens",{options:gardens}) %>
+	<%= f.InputTag("Tags") %>
+	<%= f.SubmitTag("Create") %>
+<% } %>
+
