@@ -32,6 +32,9 @@ func PlantsShow(c buffalo.Context) error {
 func PlantsCreate(c buffalo.Context) error {
 	plant := models.Plant{}
 	c.Set("plant", plant)
+	
+	gardenId := c.Param("gardenId")
+    	c.Set("gardenId", gardenId)
 
 	tx := c.Value("tx").(*pop.Connection)
 	gardens := &models.Gardens{}
@@ -69,7 +72,6 @@ func PlantsNew(c buffalo.Context) error {
 	t := &models.Tag{}
 	err = tx.Where("name = ?", nt).Last(t)
 	if err != nil {
-		c.Flash().Add("warning", "Tags not found")
 		if errors.Cause(err) == sql.ErrNoRows {
 			t.Name = nt
 			err2 := tx.Create(t)

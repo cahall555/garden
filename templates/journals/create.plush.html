@@ -1,0 +1,26 @@
+<h1>New Journal Entry</h1>
+
+<%= form_for(journal) { %>
+	<%= f.InputTag("Title") %>
+	<%= f.SelectTag("Plants",{options: plants, value: plantId}) %>
+	<%= f.CheckboxTag("DisplayOnGarden", {label: "Display on garden."}) %>
+	<%= f.SelectTag("Category", {options: {"Pests": 1, "Planting": 2, "Watering": 3, "Pruning": 4, "Harvesting": 5, "Weather": 6, "Germination": 7}, value: 5}) %> 
+	<%= f.FileTag("Image") %>
+	<%= f.TextArea("Entry", {id: "editor", rows: 20, class: "body-input"}) %>
+	<%= f.SubmitTag("Create") %>
+<% } %>
+
+
+<script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script>
+
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#editor' ))
+    .then( editor => {
+      console.log( "editor is ready" );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+

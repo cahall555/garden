@@ -29,6 +29,24 @@ func (p Plant) PlantName() string {
 	return p.Name
 }
 
+func (p Plant) GetJournals(tx *pop.Connection) error {
+	var journals []Journal
+	err := tx.Where("plant_id = ?", p.ID).All(&journals)
+	if err != nil {
+		return err
+	}
+
+	p.Journals = journals
+	return nil
+}
+
+func (p Plant) SelectLabel() string {
+	return p.Name
+}
+
+func (p Plant) SelectValue() interface{} {
+	return p.ID
+}
 // String is not required by pop and may be deleted
 func (p Plant) String() string {
 	jp, _ := json.Marshal(p)

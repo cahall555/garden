@@ -4,7 +4,7 @@
 	<%= f.InputTag("Name") %>
 	<%= f.CheckboxTag("Germination",{label: "Plant has germinated"}) %>
 	<%= f.InputTag("DaysToHarvest") %>
-	<%= f.SelectTag("Gardens",{options:gardens}) %>
+	<%= f.SelectTag("Gardens",{options: gardens, value: gardenId }) %>
 	<%= f.InputTag("Tags") %>
 	<%= f.SubmitTag("Create") %>
 <% } %>
