@@ -1,0 +1,8 @@
+<h1>Update Garden</h1>
+
+<%= form_for(garden, {action: gardensPath({gardenId: garden.ID}), method: "PUT"}) { %>
+	<%= f.InputTag("Name") %>
+	<%= f.InputTag("Zone") %>
+	<%= f.SubmitTag("Update") %>
+<% } %>
+
