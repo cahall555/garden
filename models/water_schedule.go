@@ -3,7 +3,6 @@ package models
 import (
 	"encoding/json"
 	"time"
-
 	"github.com/gobuffalo/pop/v6"
 	"github.com/gobuffalo/validate/v3"
 	"github.com/gobuffalo/validate/v3/validators"
@@ -36,7 +35,6 @@ type WaterSchedule struct {
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 }
-
 // String is not required by pop and may be deleted
 func (w WaterSchedule) String() string {
 	jw, _ := json.Marshal(w)

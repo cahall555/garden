@@ -79,7 +79,9 @@ func App() *buffalo.App {
 		app.GET("/journals/{id}", JournalsShow)
 		app.GET("/journals", JournalsIndex)
 		app.POST("/journals", JournalsNew)
+		app.GET("/water_schedules/create", WaterSchedulesCreate)
 		app.GET("/water_schedules/{id}", WaterSchedulesShow)
+		app.POST("/water_schedules", WaterSchedulesNew)
 		app.ServeFiles("/", http.FS(public.FS())) // serve files from the public directory
 	})
 

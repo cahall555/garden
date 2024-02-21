@@ -16,7 +16,6 @@
 	</tbody>
 </table>
 <!-- TODO: find a better way to manage showing and hidding the watering schedule. -->
-<%= if (plant.WaterSchedules.Notes != "") { %>
 <h2 class="text-center">Water Schedule</h2>
 
 <table class="table">
@@ -43,9 +42,10 @@
     </tr>
       </tbody>
 </table>
+<p><%= plant.WaterSchedules.Method %> </p>
+<p><%= plant.WaterSchedules.Notes %></p>
+<button onClick="window.location='/water_schedules/create?plantId=<%= plant.ID %>';" type="button" class="btn btn-primary mb-3">New Water Schedule</button>
 
-<h3><%= plant.WaterSchedules.Notes %></h3>
-<% } %>
 <%= for (j) in plant.Journals { %>
 <div class="card mb-3">
   <div class="card-header text-center">

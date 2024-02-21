@@ -2,7 +2,7 @@
 
 <%= form_for(journal) { %>
 	<%= f.InputTag("Title") %>
-	<%= f.SelectTag("Plants",{options: plants, value: plantId}) %>
+	<%= f.SelectTag("Plant",{options: plants, value: plantId }) %>
 	<%= f.CheckboxTag("DisplayOnGarden", {label: "Display on garden."}) %>
 	<%= f.SelectTag("Category", {options: {"Pests": 1, "Planting": 2, "Watering": 3, "Pruning": 4, "Harvesting": 5, "Weather": 6, "Germination": 7}, value: 5}) %> 
 	<%= f.FileTag("Image") %>
