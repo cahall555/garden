@@ -44,10 +44,11 @@ func PlantsCreate(c buffalo.Context) error {
 	}
 	c.Set("gardens", gardens)
 
+	c.Logger().WithField("gardens", gardens).Info("Gardens found")
 	return c.Render(http.StatusOK, r.HTML("plants/create.html"))
 }
 
-// PlantssNew default implementation.
+// PlantsNew default implementation.
 func PlantsNew(c buffalo.Context) error {
 	tx :=c.Value("tx").(*pop.Connection)
 	plant := &models.Plant{}

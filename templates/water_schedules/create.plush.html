@@ -1,0 +1,29 @@
+<h1>New Water Schedule</h1>
+
+<%= form_for(ws, {action: waterSchedulesPath(), method: "POST"}) { %>
+	<%= f.CheckboxTag("Monday",{label: "Monday"}) %>
+	<%= f.CheckboxTag("Tuesday",{label: "Tuesday"}) %>
+	<%= f.CheckboxTag("Wednesday",{label: "Wednesday"}) %>
+	<%= f.CheckboxTag("Thursday",{label: "Thursday"}) %>
+	<%= f.CheckboxTag("Friday",{label: "Friday"}) %>
+	<%= f.CheckboxTag("Saturday",{label: "Saturday"}) %>
+	<%= f.CheckboxTag("Sunday",{label: "Sunday"}) %>
+	<%= f.SelectTag("Method", {options: {"Drip": 1, "Hand watering": 2, "Sprinkler": 3, "Soaker hose": 4}, value: 2}) %> 
+	<%= f.SelectTag("Plant",{options: plants, value: plantId }) %>
+	<%= f.TextArea("Notes", {id: "editor", rows: 20, class: "body-input"}) %>
+	<%= f.SubmitTag("Create") %>
+<% } %>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script>
+
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#editor' ))
+    .then( editor => {
+      console.log( "editor is ready" );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+
