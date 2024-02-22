@@ -7,7 +7,7 @@
   </div>
   <div class="card-body">
 	      <%= if (j.Image != "") { %>
-	      <img src= <%= j.Image %> class="card-img-top" alt="...">
+	      <img src= ../uploads/<%= j.Image %> class="card-img-top" alt="...">
 	  <% } %>
 	  <h5 class="card-title"><%= j.Title %></h5>
 	  <p class="card-text"><%= j.Entry %></p>

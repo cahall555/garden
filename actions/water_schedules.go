@@ -4,6 +4,7 @@ import (
 	"garden/models"
 	"net/http"
 	"fmt"
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/gobuffalo/pop/v6"
 	"github.com/gobuffalo/buffalo"
 )
@@ -73,7 +74,9 @@ func WaterSchedulesNew(c buffalo.Context) error {
 
 	plant.WaterSchedules = *ws
 
-
+	rawNotes := c.Request().FormValue("Notes")
+	cleanNotes := bluemonday.StrictPolicy().Sanitize(rawNotes)
+	ws.Notes = cleanNotes
 
 	verrs, err := tx.Eager().ValidateAndCreate(ws)
 	if err != nil {

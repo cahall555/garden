@@ -102,7 +102,7 @@ var _ = grift.Namespace("db", func() {
 			panic(err)
 		}
 
-		j3 := models.Journal{Title: "New leaves", Entry: "New leaves are growing!", DisplayOnGarden: false, Image: "../assets/images/tomato.jpg", Category: "Germination", PlantID: tomato.ID}
+		j3 := models.Journal{Title: "New leaves", Entry: "New leaves are growing!", DisplayOnGarden: false, Image: "tomato.jpg", Category: "Germination", PlantID: tomato.ID}
 		err = models.DB.Create(&j3)
 		if err != nil {
 			panic(err)

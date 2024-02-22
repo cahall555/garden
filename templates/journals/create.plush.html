@@ -1,10 +1,10 @@
 <h1>New Journal Entry</h1>
 
-<%= form_for(journal) { %>
+<%= form_for(journal, {action: journalsPath(), method: "POST"}) { %>
 	<%= f.InputTag("Title") %>
 	<%= f.SelectTag("Plant",{options: plants, value: plantId }) %>
 	<%= f.CheckboxTag("DisplayOnGarden", {label: "Display on garden."}) %>
-	<%= f.SelectTag("Category", {options: {"Pests": 1, "Planting": 2, "Watering": 3, "Pruning": 4, "Harvesting": 5, "Weather": 6, "Germination": 7}, value: 5}) %> 
+	<%= f.SelectTag("Category", {options: ["Pests", "Planting", "Watering", "Pruning", "Harvesting", "Weather", "Germination"]}) %> 
 	<%= f.FileTag("Image") %>
 	<%= f.TextArea("Entry", {id: "editor", rows: 20, class: "body-input"}) %>
 	<%= f.SubmitTag("Create") %>

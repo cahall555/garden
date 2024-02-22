@@ -45,7 +45,6 @@
 <p><%= plant.WaterSchedules.Method %> </p>
 <p><%= plant.WaterSchedules.Notes %></p>
 <button onClick="window.location='/water_schedules/create?plantId=<%= plant.ID %>';" type="button" class="btn btn-primary mb-3">New Water Schedule</button>
-
 <%= for (j) in plant.Journals { %>
 <div class="card mb-3">
   <div class="card-header text-center">
@@ -53,7 +52,7 @@
   </div>
   <div class="card-body">
 	      <%= if (j.Image != "") { %>
-	      <img src= <%= j.Image %> class="card-img-top" alt="...">
+	      <img src= ../uploads/<%= j.Image %> class="card-img-top" alt="...">
 	  <% } %>
 	  <h5 class="card-title"><%= j.Title %></h5>
 	  <p class="card-text"><%= j.Entry %></p>
