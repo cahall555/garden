@@ -1,8 +1,8 @@
 <h1>New Plant</h1>
 
-<%= form_for(plant) { %>
+<%= form_for(plant, {action: plantsPath(), method: "POST"}) { %>
 	<%= f.InputTag("Name") %>
-	<%= f.CheckboxTag("Germination",{label: "Plant has germinated"}) %>
+	<%= f.CheckboxTag("Germinated",{label: "Plant has germinated", unchecked: "false"}) %>
 	<%= f.InputTag("DaysToHarvest") %>
 	<%= f.SelectTag("Gardens",{options: gardens, value: gardenId }) %>
 	<%= f.InputTag("Tags") %>

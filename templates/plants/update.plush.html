@@ -1,0 +1,11 @@
+<h1>Update Plant</h1>
+
+<%= form_for(plant, {action: plantsPath({plantId: plant.ID}), method: "PUT"}) { %>
+	<%= f.InputTag("Name") %>
+	<%= f.CheckboxTag("Germinated",{unchecked: "false"}) %>
+	<%= f.InputTag("DaysToHarvest") %>
+	<%= f.SelectTag("Gardens",{options: gardens, value: gardenId }) %>
+	<%= f.InputTag("Tags", {value: tagsStr}) %>
+	<%= f.SubmitTag("Update") %>
+<% } %>
+
