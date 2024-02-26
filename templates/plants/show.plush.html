@@ -15,6 +15,21 @@
 		
 	</tbody>
 </table>
+
+<%= if (len(plant.PlantTags) > 0) { %> 
+<div class="card mb-3">
+  <div class="card-header">
+    Tags
+  </div>
+  <div class="card-body">
+    <%= for (t) in plant.PlantTags { %>
+    <p class="badge rounded-pill text-bg-green"><%= t.Name %></p> 
+<% } %>
+  </div>
+</div>
+<% } %>
+<button onClick="window.location='/plants/update/<%= plant.ID %>';" type="button" class="btn btn-primary mb-3">Update Plant</button>
+
 <!-- TODO: find a better way to manage showing and hidding the watering schedule. -->
 <h2 class="text-center">Water Schedule</h2>
 
@@ -61,19 +76,8 @@
     <%= j.Category.CatStr() %>
   </div>
 </div>
+<button onClick="window.location='/journals/update?journalId=<%= j.ID %>';" type="button" class="btn btn-primary mb-3">Update Journal</button>
 <% } %>
 
 <button onClick="window.location='/journals/create?plantId=<%= plant.ID %>';" type="button" class="btn btn-primary mb-3">New Journal Entry</button>
-
-<%= if (len(plant.PlantTags) > 0) { %> 
-<div class="card">
-  <div class="card-header">
-    Tags
-  </div>
-  <div class="card-body">
-    <%= for (t) in plant.PlantTags { %>
-    <p class="badge rounded-pill text-bg-green"><%= t.Name %></p>
-    <% } %>
-  </div>
-</div>
 
