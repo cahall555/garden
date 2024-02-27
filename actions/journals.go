@@ -103,31 +103,35 @@ func JournalsNew(c buffalo.Context) error {
 	journal.Entry = cleanEntry
 
 	file, header, err := c.Request().FormFile("Image")
-	if err != nil {
+	if err == http.ErrMissingFile {
+		c.Logger().Error("No file uploaded, skipping image logic.")
+
+	} else if err != nil {
 		c.Logger().Error("Error getting uploaded file")
 		return c.Render(400, r.JSON(map[string]string{"error": "Error processing uploaded file"}))
+	} else {
+		defer file.Close()
+
+		newFileName := uuid.Must(uuid.NewV4()).String() + filepath.Ext(header.Filename)
+
+		savePath := filepath.Join("public/uploads", newFileName)
+
+		outFile, err := os.Create(savePath)
+		if err != nil {
+			c.Logger().Error("Outfile error, save path variable error: ", err, " outfile: ", outFile)
+			c.Logger().Error("Error creating file on server")
+			return c.Render(500, r.JSON(map[string]string{"error": "Error saving file on server"}))
+		}
+		defer outFile.Close()
+
+		if _, err = io.Copy(outFile, file); err != nil {
+			c.Logger().Error("Error copying file")
+			c.Logger().Error("Error saving file on server")
+			return c.Render(500, r.JSON(map[string]string{"error": "Error saving file on server"}))
+		}
+
+		journal.Image = newFileName
 	}
-	defer file.Close()
-
-	newFileName := uuid.Must(uuid.NewV4()).String() + filepath.Ext(header.Filename)
-
-	savePath := filepath.Join("public/uploads", newFileName)
-
-	outFile, err := os.Create(savePath)
-	if err != nil {
-		c.Logger().Error("Outfile error, save path variable error: ", err, " outfile: ", outFile)
-		c.Logger().Error("Error creating file on server")
-		return c.Render(500, r.JSON(map[string]string{"error": "Error saving file on server"}))
-	}
-	defer outFile.Close()
-
-	if _, err = io.Copy(outFile, file); err != nil {
-		c.Logger().Error("Error copying file")
-		c.Logger().Error("Error saving file on server")
-		return c.Render(500, r.JSON(map[string]string{"error": "Error saving file on server"}))
-	}
-
-	journal.Image = newFileName
 
 	verrs, err := tx.Eager().ValidateAndCreate(journal)
 	if err != nil {

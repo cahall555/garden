@@ -1,1 +1,12 @@
 <h1><%= journal.Title %></h1>
+
+ <div class="card-body">
+	      <%= if (journal.Image != "") { %>
+	      <img src= ../uploads/<%= j.Image %> class="card-img-top" alt="...">
+	  <% } %>
+	  <p class="card-text"><%= journal.Entry %></p>
+  </div>
+  <div class="card-footer text-body-secondary">
+    <%= journal.Category.CatStr() %>
+  </div>
+<button onClick="window.location='/plants/<%= journal.PlantID %>';" type="button" class="btn btn-primary mb-3">Return to Plant</button>

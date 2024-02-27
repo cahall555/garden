@@ -1,1 +1,31 @@
-<h1><%= ws.Notes %></h1>
+<h1>Watering Schedule for <%= ws.Plant.Name %></h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Monday</th>
+      <th scope="col">Tuesday</th>
+      <th scope="col">Wednesday</th>
+      <th scope="col">Thursday</th>
+      <th scope="col">Friday</th>
+      <th scope="col">Saturday</th>
+      <th scope="col">Sunday</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    <tr>
+      <td><%= ws.Monday %></td>
+      <td><%= ws.Tuesday %></td>
+      <td><%= ws.Wednesday %></td>
+      <td><%= ws.Thursday %></td>
+      <td><%= ws.Friday %></td>
+      <td><%= ws.Saturday %></td>
+      <td><%= ws.Sunday %></td>
+    </tr>
+      </tbody>
+</table>
+
+
+<p><strong>Watering Method: </strong><%= ws.Method.MethodStr() %></p>
+<p><strong>Notes: </strong><%= ws.Notes %></p>
+
+<button onClick="window.location='/plants/<%= ws.PlantID %>';" type="button" class="btn btn-primary mb-3"><%= ws.Plant.Name %></button>
