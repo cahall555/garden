@@ -1,0 +1,26 @@
+<h1>Update Journal Entry</h1>
+
+<%= form_for(journal, {action: journalsPath({journalId: journal.ID}), method: "PUT"}) { %>
+	<%= f.InputTag("Title") %>
+	<%= f.SelectTag("Plant",{options: plants, value: plantId }) %>
+	<%= f.CheckboxTag("DisplayOnGarden", {label: "Display on garden."}) %>
+	<%= f.SelectTag("Category", {options: ["Pests", "Planting", "Watering", "Pruning", "Harvesting", "Weather", "Germination"]}) %> 
+	<%= f.FileTag("Image") %>
+	<%= f.TextArea("Entry", {id: "editor", rows: 20, class: "body-input"}) %>
+	<%= f.SubmitTag("Update") %>
+<% } %>
+
+
+<script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script>
+
+<script>
+  ClassicEditor
+    .create( document.querySelector( '#editor' ))
+    .then( editor => {
+      console.log( "editor is ready" );
+    } )
+    .catch( error => {
+      console.error( error );
+    } );
+</script>
+

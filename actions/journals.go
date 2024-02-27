@@ -150,3 +150,114 @@ func JournalsNew(c buffalo.Context) error {
 	c.Flash().Add("success", "Journal created")
 	return c.Redirect(301, fmt.Sprintf("/journals/%s", journal.ID))
 }
+
+func JournalsUpdate(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	journal := models.Journal{}
+	journalID := c.Param("id")
+	c.Logger().Info("Journal id: ", journalID)
+
+	err := tx.Eager().Find(&journal, journalID)
+	if err != nil {
+		c.Logger().Error("Journal not found, id: ", journalID)
+		c.Flash().Add("warning", "Journal not found")
+		c.Redirect(301, "/")
+	}
+
+	c.Set("journal", journal)
+
+	plants := &models.Plants{}
+	err = tx.All(plants)
+	if err != nil {
+		c.Logger().Error("Plants not found")
+		return c.Redirect(302, "/")
+	}
+	
+	plantId := journal.PlantID
+	c.Set("plantId", plantId)
+	c.Set("plants", plants)
+
+	return c.Render(http.StatusOK, r.HTML("journals/update.html"))
+
+}
+
+func JournalsEdit(c buffalo.Context) error {
+	tx :=c.Value("tx").(*pop.Connection)
+	journal := &models.Journal{}
+	if err := tx.Find(journal, c.Param("journalId")); err != nil {
+		return err
+	}
+
+	err := c.Bind(journal)
+	if err != nil {
+		c.Flash().Add("warning", "Journal form binding error")
+		return c.Redirect(301, "/")
+	}
+
+	err = c.Request().ParseForm()
+	if err != nil {
+		c.Flash().Add("error", "Journal form parsing error")
+		return c.Redirect(301, "/")
+	}
+
+	pws := c.Request().FormValue("Plant")
+	plant := &models.Plant{}
+	err = tx.Find(plant, pws)
+	if err != nil {
+		c.Logger().Error("Plant not found")
+		c.Flash().Add("warning", "Plant not found")
+		return c.Redirect(301, "/")
+	}
+
+
+	rawEntry := c.Request().FormValue("Entry")
+	cleanEntry := bluemonday.StrictPolicy().Sanitize(rawEntry)
+	journal.Entry = cleanEntry
+
+	file, header, err := c.Request().FormFile("Image")
+	if err == http.ErrMissingFile {
+		c.Logger().Error("No file uploaded, skipping image logic.")
+
+	} else if err != nil {
+		c.Logger().Error("Error getting uploaded file")
+		return c.Render(400, r.JSON(map[string]string{"error": "Error processing uploaded file"}))
+	} else {
+		defer file.Close()
+
+		newFileName := uuid.Must(uuid.NewV4()).String() + filepath.Ext(header.Filename)
+
+		savePath := filepath.Join("public/uploads", newFileName)
+
+		outFile, err := os.Create(savePath)
+		if err != nil {
+			c.Logger().Error("Outfile error, save path variable error: ", err, " outfile: ", outFile)
+			c.Logger().Error("Error creating file on server")
+			return c.Render(500, r.JSON(map[string]string{"error": "Error saving file on server"}))
+		}
+		defer outFile.Close()
+
+		if _, err = io.Copy(outFile, file); err != nil {
+			c.Logger().Error("Error copying file")
+			c.Logger().Error("Error saving file on server")
+			return c.Render(500, r.JSON(map[string]string{"error": "Error saving file on server"}))
+		}
+
+		journal.Image = newFileName
+	}
+
+	verrs, err := tx.Eager().ValidateAndUpdate(journal)
+	if err != nil {
+		return c.Redirect(301, "/")
+	}
+
+	if verrs.HasAny() {
+		c.Flash().Add("warning", "Journal validation error")
+		c.Set("journal", journal)
+		c.Set("errors", verrs)
+		return c.Render(422, r.HTML("journals/update.html"))
+	}
+
+	c.Flash().Add("success", "Journal updated")
+	return c.Redirect(301, fmt.Sprintf("/journals/%s", journal.ID))
+
+}
