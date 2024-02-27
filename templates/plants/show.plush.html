@@ -83,7 +83,7 @@
     <%= j.Category.CatStr() %>
   </div>
 </div>
-<button onClick="window.location='/journals/update?journalId=<%= j.ID %>';" type="button" class="btn btn-primary mb-3">Update Journal</button>
+<button onClick="window.location='/journals/update/<%= j.ID %>';" type="button" class="btn btn-primary mb-3">Update Journal</button>
 <% } %>
 
 <button onClick="window.location='/journals/create?plantId=<%= plant.ID %>';" type="button" class="btn btn-primary mb-3">New Journal Entry</button>
