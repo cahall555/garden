@@ -1,5 +1,5 @@
 <h1><%= plant.Name %></h1>
-
+<!-- Plant information -->
 <table class="table table-striped table-hover">
 	<thead>
 		<tr>
@@ -16,6 +16,7 @@
 	</tbody>
 </table>
 
+<!-- Plant Tags -->
 <%= if (len(plant.PlantTags) > 0) { %> 
 <div class="card mb-3">
   <div class="card-header">
@@ -30,7 +31,7 @@
 <% } %>
 <button onClick="window.location='/plants/update/<%= plant.ID %>';" type="button" class="btn btn-primary mb-3">Update Plant</button>
 
-<!-- TODO: find a better way to manage showing and hidding the watering schedule. -->
+<!-- Water Schedule -->
 <h2 class="text-center">Water Schedule</h2>
 
 <table class="table">
@@ -57,9 +58,15 @@
     </tr>
       </tbody>
 </table>
-<p><%= plant.WaterSchedules.Method %> </p>
-<p><%= plant.WaterSchedules.Notes %></p>
+<%= if (plant.WaterSchedules.ID) { %>
+<p><strong>Watering Method: </strong><%= plant.WaterSchedules.Method.MethodStr() %> </p>
+<p><strong>Notes: </strong><%= plant.WaterSchedules.Notes %></p>
+<button onClick="window.location='/water_schedules/update/<%= plant.WaterSchedules.ID %>';" type="button" class="btn btn-primary mb-3">Update Water Schedule</button>
+<% } else { %>
 <button onClick="window.location='/water_schedules/create?plantId=<%= plant.ID %>';" type="button" class="btn btn-primary mb-3">New Water Schedule</button>
+<% } %>
+
+<!-- Journals -->
 <%= for (j) in plant.Journals { %>
 <div class="card mb-3">
   <div class="card-header text-center">
