@@ -32,6 +32,10 @@
 <button onClick="window.location='/plants/update/<%= plant.ID %>';" type="button" class="btn btn-primary mb-3">Update Plant</button>
 
 <!-- Water Schedule -->
+<%= if (plant.WaterSchedules.ID.IsNil()) { %>
+<button onClick="window.location='/water_schedules/create?plantId=<%= plant.ID %>';" type="button" class="btn btn-primary mb-3">New Water Schedule</button>
+<% } else { %>
+
 <h2 class="text-center">Water Schedule</h2>
 
 <table class="table">
@@ -58,12 +62,11 @@
     </tr>
       </tbody>
 </table>
-<%= if (plant.WaterSchedules.ID) { %>
+<p><%= plant.WaterSchedules.ID %></p>
 <p><strong>Watering Method: </strong><%= plant.WaterSchedules.Method.MethodStr() %> </p>
 <p><strong>Notes: </strong><%= plant.WaterSchedules.Notes %></p>
 <button onClick="window.location='/water_schedules/update/<%= plant.WaterSchedules.ID %>';" type="button" class="btn btn-primary mb-3">Update Water Schedule</button>
-<% } else { %>
-<button onClick="window.location='/water_schedules/create?plantId=<%= plant.ID %>';" type="button" class="btn btn-primary mb-3">New Water Schedule</button>
+<button onClick="window.location='/water_schedules/<%= plant.WaterSchedules.ID %>';" type="button" class="btn btn-danger mb-3">Delete Water Schedule</button>
 <% } %>
 
 <!-- Journals -->

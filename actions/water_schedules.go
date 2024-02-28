@@ -173,3 +173,24 @@ func WaterSchedulesEdit(c buffalo.Context) error {
 	return c.Redirect(301, fmt.Sprintf("/water_schedules/%s", ws.ID))
 }	
 
+func WaterSchedulesDelete(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection) 
+	wsId := c.Param("id") 
+
+	ws := models.WaterSchedule{}
+	if err := tx.Find(&ws, wsId); err != nil {
+		c.Logger().Errorf("Error finding Water Schedule with id %s, error: %v", wsId, err)
+		c.Flash().Add("error", "Water Schedule not found")
+		return c.Redirect(http.StatusFound, "/water_schedules/")
+	}
+	
+
+	if err := tx.Destroy(&ws); err != nil {
+		c.Logger().Errorf("Error deleting Water Schedule with id %s, error: %v", wsId, err)
+		c.Flash().Add("error", "Error deleting Water Schedule")
+		return c.Redirect(http.StatusFound, "/")
+	}
+
+	c.Flash().Add("success", "Water Schedule successfully deleted")
+	return c.Redirect(http.StatusFound, "/")
+}
