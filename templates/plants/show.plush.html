@@ -87,6 +87,7 @@
   </div>
 </div>
 <button onClick="window.location='/journals/update/<%= j.ID %>';" type="button" class="btn btn-primary mb-3">Update Journal</button>
+<button onClick="window.location='/journals/<%= j.ID %>';" type="button" class="btn btn-danger mb-3">Delete Journal</button>
 <% } %>
 
 <button onClick="window.location='/journals/create?plantId=<%= plant.ID %>';" type="button" class="btn btn-primary mb-3">New Journal Entry</button>

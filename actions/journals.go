@@ -261,3 +261,31 @@ func JournalsEdit(c buffalo.Context) error {
 	return c.Redirect(301, fmt.Sprintf("/journals/%s", journal.ID))
 
 }
+
+func JournalsDelete (c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection) 
+	journalId := c.Param("id") 
+
+	journal := models.Journal{}
+	if err := tx.Find(&journal, journalId); err != nil {
+		c.Logger().Errorf("Error finding Journal with id %s, error: %v", journalId, err)
+		c.Flash().Add("error", "Journal not found")
+		return c.Redirect(http.StatusFound, "/journals/")
+	}
+	
+    	imagePath := filepath.Join("public/uploads", journal.Image)
+
+    	if err := os.Remove(imagePath); err != nil {
+        	c.Logger().Errorf("Error deleting image file %s, error: %v", imagePath, err)
+    	}
+
+	if err := tx.Destroy(&journal); err != nil {
+		c.Logger().Errorf("Error deleting Journal with id %s, error: %v", journalId, err)
+		c.Flash().Add("error", "Error deleting Journal")
+		return c.Redirect(http.StatusFound, "/")
+	}
+
+	c.Flash().Add("success", "Journal successfully deleted")
+	return c.Redirect(http.StatusFound, "/")
+
+}
