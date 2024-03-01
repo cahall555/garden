@@ -187,6 +187,9 @@ func JournalsEdit(c buffalo.Context) error {
 	if err := tx.Find(journal, c.Param("journalId")); err != nil {
 		return err
 	}
+	
+	originalImageName := journal.Image
+	c.Logger().Info("Original image name: ", originalImageName)
 
 	err := c.Bind(journal)
 	if err != nil {
@@ -214,9 +217,14 @@ func JournalsEdit(c buffalo.Context) error {
 	cleanEntry := bluemonday.StrictPolicy().Sanitize(rawEntry)
 	journal.Entry = cleanEntry
 
+
 	file, header, err := c.Request().FormFile("Image")
+	c.Logger().Info("This is file: ", file)
+	c.Logger().Info("This is header: ", header)
+	c.Logger().Info("This is err: ", err)
 	if err == http.ErrMissingFile {
-		c.Logger().Error("No file uploaded, skipping image logic.")
+		c.Logger().Info("No new file uploaded, preserving existing image if exists.")
+		journal.Image = originalImageName
 
 	} else if err != nil {
 		c.Logger().Error("Error getting uploaded file")
@@ -225,24 +233,32 @@ func JournalsEdit(c buffalo.Context) error {
 		defer file.Close()
 
 		newFileName := uuid.Must(uuid.NewV4()).String() + filepath.Ext(header.Filename)
-
 		savePath := filepath.Join("public/uploads", newFileName)
-
+			
 		outFile, err := os.Create(savePath)
 		if err != nil {
 			c.Logger().Error("Outfile error, save path variable error: ", err, " outfile: ", outFile)
 			c.Logger().Error("Error creating file on server")
 			return c.Render(500, r.JSON(map[string]string{"error": "Error saving file on server"}))
 		}
+		
 		defer outFile.Close()
-
+		
 		if _, err = io.Copy(outFile, file); err != nil {
 			c.Logger().Error("Error copying file")
 			c.Logger().Error("Error saving file on server")
 			return c.Render(500, r.JSON(map[string]string{"error": "Error saving file on server"}))
 		}
 
-		journal.Image = newFileName
+		if journal.Image != "" && journal.Image != newFileName {
+    			oldImagePath := filepath.Join("public/uploads", journal.Image)
+    			if err := os.Remove(oldImagePath); err != nil {
+             			c.Logger().Error("Failed to delete old image: ", err)
+            		}
+        	}
+
+		journal.Image = newFileName 
+		c.Logger().Info("switching to new image: ", newFileName)
 	}
 
 	verrs, err := tx.Eager().ValidateAndUpdate(journal)

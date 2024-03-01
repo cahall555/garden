@@ -1,10 +1,14 @@
 <h1>Update Journal Entry</h1>
-
+<h3><%= journal.Image %></h3>
 <%= form_for(journal, {action: journalsPath({journalId: journal.ID}), method: "PUT"}) { %>
 	<%= f.InputTag("Title") %>
 	<%= f.SelectTag("Plant",{options: plants, value: plantId }) %>
 	<%= f.CheckboxTag("DisplayOnGarden", {label: "Display on garden."}) %>
 	<%= f.SelectTag("Category", {options: ["Pests", "Planting", "Watering", "Pruning", "Harvesting", "Weather", "Germination"]}) %> 
+	<p><%= journal.Image %></p>
+	<% if (journal.Image != nil) { %>
+          <p>Current Image: <%= journal.Image %></p>
+	  <% } %>
 	<%= f.FileTag("Image") %>
 	<%= f.TextArea("Entry", {id: "editor", rows: 20, class: "body-input"}) %>
 	<%= f.SubmitTag("Update") %>
