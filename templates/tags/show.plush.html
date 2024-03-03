@@ -1,7 +1,20 @@
 <h1><%= tag.Name %></h1>
+<button onClick="window.location='/tags/update/<%= tag.ID %>';" type="button" class="btn btn-primary mb-3">Edit Tag</button>
+<button type="button" class="btn btn-danger mb-3">Delete Tag</button>
+<button onClick="window.location='/tags';" type="button" class="btn btn-primary mb-3">View All Tags</button>
+<%= form_for(tag, {action: tagPath({id: tag.ID}), method: "DELETE"}) { %>
+	<%= f.SubmitTag("Delete") %>
+<% } %>
 
 <ul>
 	<%= for (p) in tag.RelatedPlants { %>
-	<li><%= p.Name %></li>
+	<div class="list-group mb-3">
+		<a href="/plants/<%= p.ID %>" class="list-group-item">
+    			<div class="d-flex w-100 justify-content-between">
+				<h5 class="mb-1"><%= p.Name %></h5>
+				<button onClick="window.location='/plants/<%= p.ID %>';" type="button" class="btn btn-primary mb-3">Remove Tag From Plant</button>
+			</div>
+  		</a>
+	</div>
 	<% } %>
 </ul>

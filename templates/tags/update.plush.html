@@ -1,0 +1,7 @@
+<h1>Update Tag</h1>
+
+<%= form_for(tag, {action: tagsPath({tagId: tag.ID}), method: "PUT"}) { %>
+	<%= f.InputTag("Name") %>
+	<%= f.SubmitTag("Update") %>
+<% } %>
+

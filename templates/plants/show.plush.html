@@ -19,12 +19,12 @@
 <!-- Plant Tags -->
 <%= if (len(plant.PlantTags) > 0) { %> 
 <div class="card mb-3">
-  <div class="card-header">
-    Tags
+  <div onClick="window.location='/tags';" type="button" class="card-header">
+	Tags
   </div>
   <div class="card-body">
     <%= for (t) in plant.PlantTags { %>
-    <p class="badge rounded-pill text-bg-green"><%= t.Name %></p> 
+    <p onClick="window.location='/tags/<%= t.ID %>';" style="cursor: pointer" class="badge rounded-pill text-bg-green"><%= t.Name %></p>
 <% } %>
   </div>
 </div>
@@ -62,7 +62,6 @@
     </tr>
       </tbody>
 </table>
-<p><%= plant.WaterSchedules.ID %></p>
 <p><strong>Watering Method: </strong><%= plant.WaterSchedules.Method.MethodStr() %> </p>
 <p><strong>Notes: </strong><%= plant.WaterSchedules.Notes %></p>
 <button onClick="window.location='/water_schedules/update/<%= plant.WaterSchedules.ID %>';" type="button" class="btn btn-primary mb-3">Update Water Schedule</button>
@@ -72,7 +71,7 @@
 <!-- Journals -->
 <%= for (j) in plant.Journals { %>
 <div class="card mb-3">
-  <div class="card-header text-center">
+  <div style="pointer-events:none" class="card-header text-center">
     <%= j.CreatedAt.Format("January 2, 2006") %>
   </div>
   <div class="card-body">
