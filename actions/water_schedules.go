@@ -4,6 +4,7 @@ import (
 	"garden/models"
 	"net/http"
 	"fmt"
+	"github.com/gofrs/uuid"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/gobuffalo/pop/v6"
 	"github.com/gobuffalo/buffalo"
@@ -193,4 +194,14 @@ func WaterSchedulesDelete(c buffalo.Context) error {
 
 	c.Flash().Add("success", "Water Schedule successfully deleted")
 	return c.Redirect(http.StatusFound, "/")
+}
+
+// Delete water schedule as part of parent delete
+func DeleteWSById(tx *pop.Connection, WSID uuid.UUID) error {
+    ws := &models.WaterSchedule{}
+    if err := tx.Find(ws, WSID); err != nil {
+        return err
+    }
+
+    return tx.Destroy(ws)
 }

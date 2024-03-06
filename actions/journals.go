@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"io"
+	"log"
 	"path/filepath"
 	"github.com/gofrs/uuid"
 	"github.com/microcosm-cc/bluemonday"
@@ -305,3 +306,20 @@ func JournalsDelete (c buffalo.Context) error {
 	return c.Redirect(http.StatusFound, "/")
 
 }
+
+// Delete journals as part of parent delete
+func DeleteJournalById(tx *pop.Connection, journalID uuid.UUID) error {
+    journal := &models.Journal{}
+    if err := tx.Find(journal, journalID); err != nil {
+        return err
+    }
+
+    if journal.Image != "" {
+        imagePath := filepath.Join("public/uploads", journal.Image)
+        if err := os.Remove(imagePath); err != nil {
+            log.Printf("Warning: Error deleting image file %s, error: %v", imagePath, err)
+        }
+	}    
+    return tx.Destroy(journal)
+}
+

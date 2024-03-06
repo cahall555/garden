@@ -30,6 +30,9 @@
 </div>
 <% } %>
 <button onClick="window.location='/plants/update/<%= plant.ID %>';" type="button" class="btn btn-primary mb-3">Update Plant</button>
+<%= form_for(plant, {action: plantPath({id: plant.ID}), method: "DELETE"}) { %>
+	<%= f.SubmitTag("Delete Plant") %>
+<% } %>
 
 <!-- Water Schedule -->
 <%= if (plant.WaterSchedules.ID.IsNil()) { %>

@@ -1,6 +1,5 @@
 <h1>Tags</h1>
 <button onClick="window.location='/tags/create';" type="button" class="btn btn-primary mb-3">Create New Tag</button>
-<button onClick="window.location='/tags/create';" type="button" class="btn btn-primary mb-3">Create New Tag</button>
 
 <%= for (t) in tag { %>
 <span onClick="window.location='/tags/<%= t.ID %>';" class="badge rounded-pill text-bg-primary" type="button"><%= t.Name %></span>

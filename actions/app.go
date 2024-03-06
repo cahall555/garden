@@ -78,6 +78,7 @@ func App() *buffalo.App {
 		app.GET("/plants/{id}", PlantsShow)
 		app.POST("/plants", PlantsNew)
 		app.PUT("/plants/", PlantsEdit)
+		app.DELETE("/plants/{id}", PlantsDelete)
 		app.GET("/tags/create", TagsCreate)
 		app.GET("/tags/update/{id}", TagsUpdate)
 		app.GET("/tags/{id}", TagsShow)
@@ -98,6 +99,7 @@ func App() *buffalo.App {
 		app.POST("/water_schedules", WaterSchedulesNew)
 		app.PUT("/water_schedules/", WaterSchedulesEdit)
 		app.DELETE("/water_schedules/{id}", WaterSchedulesDelete)
+		app.DELETE("/plantstag/{tagid}/{plantid}", PlantTagDelete)
 		app.ServeFiles("/", http.FS(public.FS())) // serve files from the public directory
 	})
 

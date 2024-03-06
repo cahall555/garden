@@ -234,6 +234,7 @@ func PlantsEdit(c buffalo.Context) error {
 			c.Logger().Info("Relationship already exists")
 		}
 		}
+	
 	}
 
 	verrs, err := tx.Eager().ValidateAndUpdate(plant)
@@ -252,4 +253,69 @@ func PlantsEdit(c buffalo.Context) error {
 
 	c.Flash().Add("success", "Plant updated")
 	return c.Redirect(301, fmt.Sprintf("/plants/%s", plant.ID))
+}
+
+func PlantsDelete(c buffalo.Context) error {
+	tx :=c.Value("tx").(*pop.Connection)
+	plantID := c.Param("id")
+	
+	plant := &models.Plant{}
+	if err := tx.Find(plant, plantID); err != nil {
+		c.Flash().Add("warning", "Plant not found")
+		return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+	}
+
+	journals := []models.Journal{}
+	if err := tx.Where("plant_id = ?", plantID).All(&journals); err != nil {
+		c.Flash().Add("warning", "Error retreiving journals for plant")
+		return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+	}
+
+	for _, j := range journals {
+		id := j.ID
+		 if err := DeleteJournalById(tx, id); err != nil {
+	        	c.Flash().Add("error", "Error deleting journals for plant")
+        		return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+		}
+	}
+	
+	ws := models.WaterSchedule{}
+	if ws.Notes != "" {
+		if err := tx.Where("plant_id = ?", plantID).First(&ws); err != nil {
+			c.Flash().Add("warning", "Error retreiving water schedule for plant")
+			return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+		}
+
+		wsId := ws.ID
+
+		if err := DeleteWSById(tx, wsId); err != nil {
+			c.Flash().Add("error", "Error deleting water schedule for plant")
+			return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+		}
+	}
+
+	pt := []models.PlantsTag{}
+	if err := tx.Where("plant_id = ?", plantID).All(&pt); err != nil {
+		c.Flash().Add("warning", "Error retreiving tags for plant")
+		c.Logger().Info("Could not retrieve tages for plant")
+		return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+	}
+
+	for _, t := range pt {
+		id := t.ID
+		if err := DeletePlantTagsById(tx, id); err != nil {
+			c.Flash().Add("error", "Error deleting tags from pant")
+			c.Logger().Info("Error deleting tags from plant")
+			return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+		}
+	}
+
+	if err := tx.Destroy(plant); err != nil {
+		c.Logger().Errorf("Error deleting plant with id %s, error: %v", plantID, err)
+		c.Flash().Add("error", "Error deleting plant")
+		return c.Redirect(http.StatusFound, "/")
+	}
+
+	c.Flash().Add("success", "Plant has been deleted.")
+	return c.Redirect(301, "/")
 }
