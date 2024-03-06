@@ -280,11 +280,9 @@ func PlantsDelete(c buffalo.Context) error {
 	}
 	
 	ws := models.WaterSchedule{}
-	if ws.Notes != "" {
-		if err := tx.Where("plant_id = ?", plantID).First(&ws); err != nil {
-			c.Flash().Add("warning", "Error retreiving water schedule for plant")
-			return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
-		}
+	if err := tx.Where("plant_id = ?", plantID).First(&ws); err != nil {
+		c.Logger().Info("Error retreiving water schedule for plant, continuing on.")
+	} else {
 
 		wsId := ws.ID
 
