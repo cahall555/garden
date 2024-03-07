@@ -1,5 +1,4 @@
 <h1>Update Journal Entry</h1>
-
 <%= form_for(journal, {action: journalsPath({journalId: journal.ID}), method: "PUT"}) { %>
 	<%= f.InputTag("Title") %>
 	<%= f.SelectTag("Plant",{options: plants, value: plantId }) %>

@@ -9,4 +9,9 @@
   <div class="card-footer text-body-secondary">
     <%= journal.Category.CatStr() %>
   </div>
-<button onClick="window.location='/plants/<%= journal.PlantID %>';" type="button" class="btn btn-primary mb-3">Return to Plant</button>
+
+<%= form_for(journal, {action: journalPath({id: journal.ID}), method: "DELETE"}) { %>
+	<%= f.SubmitTag("Delete") %>
+<% } %>
+
+  <button onClick="window.location='/plants/<%= journal.PlantID %>';" type="button" class="btn btn-primary mb-3">Return to Plant</button>

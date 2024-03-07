@@ -119,3 +119,38 @@ func GardensEdit(c buffalo.Context) error {
 	c.Flash().Add("success", "Garden updated")
 	return c.Redirect(301, fmt.Sprintf("/gardens/%s", garden.ID))
 }
+
+func GardensDelete(c buffalo.Context) error {
+	tx :=c.Value("tx").(*pop.Connection)
+	gardenID := c.Param("id")
+	
+	garden := &models.Garden{}
+	if err := tx.Find(garden, gardenID); err != nil {
+		c.Flash().Add("warning", "Garden not found")
+		return c.Redirect(302, fmt.Sprintf("/gardens/%s", garden.ID))
+	}
+
+	plants := []models.Plant{}
+	if err := tx.Where("garden_id = ?", gardenID).All(&plants); err != nil {
+		c.Flash().Add("warning", "Error retreiving plants for garden.")
+		return c.Redirect(302, fmt.Sprintf("/gardens/%s", garden.ID))
+	}
+
+	for _, p := range plants {
+		id := p.ID
+		 if err := DeletePlantById(tx, id); err != nil {
+	        	c.Flash().Add("error", "Error deleting plants for garden.")
+        		return c.Redirect(302, fmt.Sprintf("/gardens/%s", garden.ID))
+		}
+	}
+
+	if err := tx.Destroy(garden); err != nil {
+		c.Logger().Errorf("Error deleting garden with id %s, error: %v", gardenID, err)
+		c.Flash().Add("error", "Error deleting garden.")
+		return c.Redirect(http.StatusFound, "/")
+	}
+
+	c.Flash().Add("success", "Garden successfully deleted")
+	return c.Redirect(http.StatusFound, "/")
+
+}

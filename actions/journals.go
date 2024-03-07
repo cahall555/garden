@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"io"
+	"log"
 	"path/filepath"
 	"github.com/gofrs/uuid"
 	"github.com/microcosm-cc/bluemonday"
@@ -187,6 +188,9 @@ func JournalsEdit(c buffalo.Context) error {
 	if err := tx.Find(journal, c.Param("journalId")); err != nil {
 		return err
 	}
+	
+	originalImageName := journal.Image
+	c.Logger().Info("Original image name: ", originalImageName)
 
 	err := c.Bind(journal)
 	if err != nil {
@@ -214,9 +218,14 @@ func JournalsEdit(c buffalo.Context) error {
 	cleanEntry := bluemonday.StrictPolicy().Sanitize(rawEntry)
 	journal.Entry = cleanEntry
 
+
 	file, header, err := c.Request().FormFile("Image")
+	c.Logger().Info("This is file: ", file)
+	c.Logger().Info("This is header: ", header)
+	c.Logger().Info("This is err: ", err)
 	if err == http.ErrMissingFile {
-		c.Logger().Error("No file uploaded, skipping image logic.")
+		c.Logger().Info("No new file uploaded, preserving existing image if exists.")
+		journal.Image = originalImageName
 
 	} else if err != nil {
 		c.Logger().Error("Error getting uploaded file")
@@ -225,24 +234,32 @@ func JournalsEdit(c buffalo.Context) error {
 		defer file.Close()
 
 		newFileName := uuid.Must(uuid.NewV4()).String() + filepath.Ext(header.Filename)
-
 		savePath := filepath.Join("public/uploads", newFileName)
-
+			
 		outFile, err := os.Create(savePath)
 		if err != nil {
 			c.Logger().Error("Outfile error, save path variable error: ", err, " outfile: ", outFile)
 			c.Logger().Error("Error creating file on server")
 			return c.Render(500, r.JSON(map[string]string{"error": "Error saving file on server"}))
 		}
+		
 		defer outFile.Close()
-
+		
 		if _, err = io.Copy(outFile, file); err != nil {
 			c.Logger().Error("Error copying file")
 			c.Logger().Error("Error saving file on server")
 			return c.Render(500, r.JSON(map[string]string{"error": "Error saving file on server"}))
 		}
 
-		journal.Image = newFileName
+		if journal.Image != "" && journal.Image != newFileName {
+    			oldImagePath := filepath.Join("public/uploads", journal.Image)
+    			if err := os.Remove(oldImagePath); err != nil {
+             			c.Logger().Error("Failed to delete old image: ", err)
+            		}
+        	}
+
+		journal.Image = newFileName 
+		c.Logger().Info("switching to new image: ", newFileName)
 	}
 
 	verrs, err := tx.Eager().ValidateAndUpdate(journal)
@@ -261,3 +278,48 @@ func JournalsEdit(c buffalo.Context) error {
 	return c.Redirect(301, fmt.Sprintf("/journals/%s", journal.ID))
 
 }
+
+func JournalsDelete (c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection) 
+	journalId := c.Param("id") 
+
+	journal := models.Journal{}
+	if err := tx.Find(&journal, journalId); err != nil {
+		c.Logger().Errorf("Error finding Journal with id %s, error: %v", journalId, err)
+		c.Flash().Add("error", "Journal not found")
+		return c.Redirect(http.StatusFound, "/journals/")
+	}
+	
+    	imagePath := filepath.Join("public/uploads", journal.Image)
+
+    	if err := os.Remove(imagePath); err != nil {
+        	c.Logger().Errorf("Error deleting image file %s, error: %v", imagePath, err)
+    	}
+
+	if err := tx.Destroy(&journal); err != nil {
+		c.Logger().Errorf("Error deleting Journal with id %s, error: %v", journalId, err)
+		c.Flash().Add("error", "Error deleting Journal")
+		return c.Redirect(http.StatusFound, "/")
+	}
+
+	c.Flash().Add("success", "Journal successfully deleted")
+	return c.Redirect(http.StatusFound, "/")
+
+}
+
+// Delete journals as part of parent delete
+func DeleteJournalById(tx *pop.Connection, journalID uuid.UUID) error {
+    journal := &models.Journal{}
+    if err := tx.Find(journal, journalID); err != nil {
+        return err
+    }
+
+    if journal.Image != "" {
+        imagePath := filepath.Join("public/uploads", journal.Image)
+        if err := os.Remove(imagePath); err != nil {
+            log.Printf("Warning: Error deleting image file %s, error: %v", imagePath, err)
+        }
+	}    
+    return tx.Destroy(journal)
+}
+

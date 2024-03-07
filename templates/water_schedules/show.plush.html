@@ -27,5 +27,8 @@
 
 <p><strong>Watering Method: </strong><%= ws.Method.MethodStr() %></p>
 <p><strong>Notes: </strong><%= ws.Notes %></p>
+<%= form_for(ws, {action: waterSchedulePath({id: ws.ID}), method: "DELETE"}) { %>
+	<%= f.SubmitTag("Delete") %>
+<% } %>
 
 <button onClick="window.location='/plants/<%= ws.PlantID %>';" type="button" class="btn btn-primary mb-3"><%= ws.Plant.Name %></button>
