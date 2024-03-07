@@ -21,6 +21,10 @@
 </table>
 
 <button onClick="window.location='/gardens/update/<%= garden.ID %>';" type="button" class="btn btn-primary mb-3">Update Garden</button>
+<%= form_for(garden, {action: gardenPath({id: garden.ID}), method: "DELETE"}) { %>
+	<%= f.SubmitTag("Delete Garden") %>
+<% } %>
+
 <button onClick="window.location='/plants/create?gardenId=<%= garden.ID %>';" type="button" class="btn btn-primary mb-3">Add Plant</button>
 
 

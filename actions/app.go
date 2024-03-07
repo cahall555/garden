@@ -73,6 +73,7 @@ func App() *buffalo.App {
 		app.GET("/gardens", GardensIndex)
 		app.POST("/gardens", GardensNew)
 		app.PUT("/gardens/", GardensEdit)
+		app.DELETE("/gardens/{id}", GardensDelete)
 		app.GET("/plants/create", PlantsCreate)
 		app.GET("/plants/update/{id}", PlantsUpdate)
 		app.GET("/plants/{id}", PlantsShow)

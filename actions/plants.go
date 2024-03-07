@@ -7,6 +7,7 @@ import (
 	"strings"
 	"log"
 	"database/sql"
+	"github.com/gofrs/uuid"
 	"github.com/pkg/errors"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"
@@ -316,4 +317,51 @@ func PlantsDelete(c buffalo.Context) error {
 
 	c.Flash().Add("success", "Plant has been deleted.")
 	return c.Redirect(301, "/")
+}
+
+// Delete plant as part of parent delete
+func DeletePlantById(tx *pop.Connection, plantID uuid.UUID) error {
+    plant := &models.Plant{}
+	if err := tx.Find(plant, plantID); err != nil {
+        	return err
+    	}
+
+	journals := []models.Journal{}
+	if err := tx.Where("plant_id = ?", plantID).All(&journals); err != nil {
+		return err
+	}
+
+	for _, j := range journals {
+		id := j.ID
+		 if err := DeleteJournalById(tx, id); err != nil {
+        		return err
+		}
+	}
+	
+	ws := models.WaterSchedule{}
+	if err := tx.Where("plant_id = ?", plantID).First(&ws); err != nil {
+		log.Printf("There is no water schedule for this plant, continuing.")
+	} else {
+
+		wsId := ws.ID
+
+		if err := DeleteWSById(tx, wsId); err != nil {
+			return err
+		}
+	}
+
+	pt := []models.PlantsTag{}
+	if err := tx.Where("plant_id = ?", plantID).All(&pt); err != nil {
+		return err
+	}
+
+	for _, t := range pt {
+		id := t.ID
+		if err := DeletePlantTagsById(tx, id); err != nil {
+			return err
+		}
+	}
+
+
+	return tx.Destroy(plant)
 }
