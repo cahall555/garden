@@ -44,7 +44,6 @@ func TagsCreate(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.HTML("tags/create.html"))
 }
 
-// GardensNew default implementation.
 func TagsNew(c buffalo.Context) error {
 	tx :=c.Value("tx").(*pop.Connection)
 	tag := &models.Tag{}
