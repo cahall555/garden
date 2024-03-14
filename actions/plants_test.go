@@ -21,3 +21,20 @@ func (as *ActionSuite) Test_Plants_Show() {
 	as.Contains(body, "Vegetable", "Tag name not found on page")
 
 }
+
+
+func (as *ActionSuite) Test_Plants_Delete() {
+	as.LoadFixture("model test")
+
+	plant := models.Plant{}
+	err := as.DB.First(&plant)
+
+	if err != nil {
+		panic(err)
+	}
+
+	res := as.HTML(fmt.Sprintf("/plants/%s", plant.ID)).Delete()
+
+	as.Equal(301, res.Code)
+
+}
