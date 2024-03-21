@@ -36,7 +36,7 @@ func GardensIndex(c buffalo.Context) error {
 	}
 
 	c.Set("garden", garden)
-	return c.Render(http.StatusOK, r.HTML("gardens/index.html"))
+	return c.Render(http.StatusOK, r.JSON(garden))//r.HTML("gardens/index.html"))
 }
 
 // GardensCreate default implementation.

@@ -26,9 +26,24 @@ func PlantsShow(c buffalo.Context) error {
 	}
 
 	c.Set("plant", plant)
-	return c.Render(http.StatusOK, r.HTML("plants/show.html"))
+	return c.Render(http.StatusOK, r.JSON(plant))//r.HTML("plants/show.html"))
 }
 
+// PlantsIndex default implementation is spicifically filtering  by plants in a garden.
+func PlantsIndex(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	plant := models.Plants{}
+	gardenID := c.Param("garden_id")
+
+	err := tx.Where("garden_id = ?", gardenID).All(&plant)
+	if err != nil {
+		c.Flash().Add("warning", "Plants not found")
+		c.Redirect(301, "/")
+	}
+
+	c.Set("plant", plant)
+	return c.Render(http.StatusOK, r.JSON(plant))
+}
 // PlantsCreate default implementation.
 func PlantsCreate(c buffalo.Context) error {
 	plant := models.Plant{}

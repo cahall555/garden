@@ -16,10 +16,10 @@ type Plant struct {
 	Name          string    `json:"name" db:"name"`
 	Germinated    bool      `json:"germinated" db:"germinated"`
 	DaysToHarvest int       `json:"days_to_harvest" db:"days_to_harvest"`
-	GardenID      uuid.UUID `json:"-" db:"garden_id"`
+	GardenID      uuid.UUID `json:"garden_id" db:"garden_id"`
 	Garden        *Garden   `json:"Garden,omitempty" belongs_to:"garden"`
 	PlantTags     Tags      `many_to_many:"plants_tags"`
-	Journals      []Journal `json:"journals,omitempty" has_many:"journals"`
+	Journals      []Journal `json:"journals" has_many:"journals"`
 	WaterSchedules WaterSchedule `json:"water_schedules,omitempty" has_one:"water_schedules"`
 	CreatedAt     time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at" db:"updated_at"`

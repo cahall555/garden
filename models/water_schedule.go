@@ -30,7 +30,7 @@ type WaterSchedule struct {
 	Sunday    bool      `json:"sunday" db:"sunday"`
 	Method    Method    `json:"method" db:"method"`
 	Notes     string    `json:"notes" db:"notes"`
-	PlantID   uuid.UUID `json:"-" db:"plant_id"`
+	PlantID   uuid.UUID `json:"plant_id" db:"plant_id"`
 	Plant     *Plant    `json:"Plant,omitempty" belongs_to:"plant"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`

@@ -4,6 +4,8 @@ import (
 	"garden/models"
 	"net/http"
 	"fmt"
+	"database/sql"
+	"github.com/pkg/errors"
 	"github.com/gofrs/uuid"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/gobuffalo/pop/v6"
@@ -24,7 +26,25 @@ func WaterSchedulesShow(c buffalo.Context) error {
 
 	c.Set("ws", ws)
 
-	return c.Render(http.StatusOK, r.HTML("water_schedules/show.html"))
+	return c.Render(http.StatusOK, r.JSON(ws))//r.HTML("water_schedules/show.html"))
+}
+
+func WaterSchedulesIndex(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	ws := models.WaterSchedule{}
+	plantID := c.Param("plant_id")
+
+	err := tx.Where("plant_id = ?", plantID).First(&ws)
+
+	if errors.Is(err, sql.ErrNoRows) {
+	        return c.Render(http.StatusNotFound, r.JSON(map[string]string{"warning": "Water Schedule not found for the provided plant ID"}))
+    	} else if err != nil {
+        	// For other types of errors, return a 500 Internal Server Error
+        	return errors.WithStack(err)
+    	}
+
+	c.Set("ws", ws)
+	return c.Render(http.StatusOK, r.JSON(ws))
 }
 
 func WaterSchedulesCreate(c buffalo.Context) error {

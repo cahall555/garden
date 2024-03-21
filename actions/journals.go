@@ -28,22 +28,38 @@ func JournalsShow(c buffalo.Context) error {
 	}
 
 	c.Set("journal", journal)
-	return c.Render(http.StatusOK, r.HTML("journals/show.html"))
+	return c.Render(http.StatusOK, r.JSON(journal))//r.HTML("journals/show.html"))
 }
 
 // JournalsIndex default implementation.
-func JournalsIndex(c buffalo.Context) error {
+//func JournalsIndex(c buffalo.Context) error {
+//	tx := c.Value("tx").(*pop.Connection)
+//	journal := models.Journals{}
+
+//	err := tx.All(&journal)
+//	if err != nil {
+//		c.Flash().Add("warning", "Journals not found")
+//		c.Redirect(301, "/")
+//	}
+//
+//	c.Set("journal", journal)
+//	return c.Render(http.StatusOK, r.JSON(journal))//r.HTML("journals/index.html"))
+//}
+
+// JournalsIndex default implementation filtering by plant.
+func PlantJournals(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	journal := models.Journals{}
+	plantID := c.Param("plant_id")
 
-	err := tx.All(&journal)
+	err := tx.Where("plant_id = ?", plantID).All(&journal)
 	if err != nil {
 		c.Flash().Add("warning", "Journals not found")
 		c.Redirect(301, "/")
 	}
 
 	c.Set("journal", journal)
-	return c.Render(http.StatusOK, r.HTML("journals/index.html"))
+	return c.Render(http.StatusOK, r.JSON(journal))//r.HTML("journals/index.html"))
 }
 
 func JournalsCreate(c buffalo.Context) error {
