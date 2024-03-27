@@ -4,6 +4,7 @@ import (
 	"garden/models"
 	"net/http"
 	"fmt"
+	"github.com/pkg/errors"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"
 )
@@ -43,11 +44,29 @@ func GardensIndex(c buffalo.Context) error {
 func GardensCreate(c buffalo.Context) error {
 	garden := models.Garden{}
 	c.Set("garden", garden)
-	return c.Render(http.StatusOK, r.HTML("gardens/create.html"))
+	return c.Render(http.StatusOK, r.JSON(garden)) //r.HTML("gardens/create.html"))
 }
 
 // GardensNew default implementation.
 func GardensNew(c buffalo.Context) error {
+	tx, ok := c.Value("tx").(*pop.Connection)
+    if !ok {
+        return c.Error(500, errors.New("no transaction found"))
+    }
+    garden := &models.Garden{}
+    if err := c.Bind(garden); err != nil {
+        return err
+    }
+    verrs, err := tx.ValidateAndCreate(garden)
+    if err != nil {
+        return c.Error(500, err)
+    }
+    if verrs.HasAny() {
+        return c.Render(422, r.JSON(verrs))
+    }
+    return c.Render(201, r.JSON(garden))
+
+/*
 	tx :=c.Value("tx").(*pop.Connection)
 	garden := &models.Garden{}
 	err := c.Bind(garden)
@@ -69,7 +88,7 @@ func GardensNew(c buffalo.Context) error {
 	}
 
 	c.Flash().Add("success", "Garden created")
-	return c.Redirect(301, fmt.Sprintf("/gardens/%s", garden.ID))
+	return c.Redirect(301, fmt.Sprintf("/gardens/%s", garden.ID)) */
 }
 
 func GardensUpdate(c buffalo.Context) error {

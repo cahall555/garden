@@ -10,6 +10,21 @@ import (
 	"github.com/gobuffalo/pop/v6"
 )
 
+func PlantTagIndex(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	pt := models.PlantsTags{}
+	plantID := c.Param("plant_id")
+
+	err := tx.Where("plant_id = ?", plantID).All(&pt)
+	if err != nil {
+		c.Flash().Add("warning", "Plant Tags not found")
+		c.Redirect(301, "/")
+	}
+
+	c.Set("pt", pt)
+	return c.Render(http.StatusOK, r.JSON(pt))
+}
+
 func PlantTagDelete(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	tagID := c.Param("tagid")

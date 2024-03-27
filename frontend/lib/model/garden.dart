@@ -24,11 +24,11 @@ class Garden {
 
   	Map<String, dynamic> toJson() {
     		return {
-      			'id': id,
+      		//	'id': id,
       			'name': name,
       			'zone': zone,
-			'created_at': createdAt.toIso8601String(),
-			'updated_at': updatedAt.toIso8601String(),
+		//	'created_at': createdAt.toIso8601String(),
+		//	'updated_at': updatedAt.toIso8601String(),
 			'plants': plants?.map((plant) => plant.toJson()).toList(),
     		};
   	}

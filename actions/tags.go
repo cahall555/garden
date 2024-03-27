@@ -21,7 +21,7 @@ func TagsShow(c buffalo.Context) error {
 	}
 
 	c.Set("tag", tag)
-	return c.Render(http.StatusOK, r.HTML("tags/show.html"))
+	return c.Render(http.StatusOK, r.JSON(tag)) //r.HTML("tags/show.html"))
 }
 
 func TagsIndex(c buffalo.Context) error {
@@ -35,7 +35,7 @@ func TagsIndex(c buffalo.Context) error {
 	}
 
 	c.Set("tag", tag)
-	return c.Render(http.StatusOK, r.HTML("tags/index.html"))
+	return c.Render(http.StatusOK, r.JSON(tag)) //r.HTML("tags/index.html"))
 }
 
 func TagsCreate(c buffalo.Context) error {

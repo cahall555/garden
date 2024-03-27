@@ -6,7 +6,7 @@ import 'dart:io';
 
 Future<List<WaterSchedule>> fetchWaterSchedule(String plantId) async {
   final uri = Uri.parse('http://localhost:3000/water_schedules?plant_id=$plantId');
-  final response = await http.get(uri).timeout(const Duration(seconds: 10));
+  final response = await http.get(uri).timeout(const Duration(seconds: 30));
 
   if (response.statusCode == 404) {
     // If plant id does not have a water schedule, 404 will be thrown
