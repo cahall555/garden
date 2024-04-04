@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../garden.dart';
 import 'csrf.dart';
 
-Future<List<Garden>> fetchGarden() async {
+Future<List<Garden>> fetchGardenApi() async {
   final response = await http.get(Uri.parse('http://localhost:3000/gardens/'));
 
   if (response.statusCode == 200) {
@@ -13,12 +13,10 @@ Future<List<Garden>> fetchGarden() async {
       return data.map<Garden>((json) => Garden.fromJson(json)).toList();
     } on FormatException catch (e) {
       print('The response was not JSON. $e');
-      
       throw Exception('Failed to decode JSON data: $e');
     }
   } else {
     print('Request failed with status: ${response.statusCode}.');
-
     throw Exception('Request failed with status: ${response.statusCode}.');
   }
 }
@@ -31,7 +29,7 @@ Future<List<Garden>> fetchGarden() async {
   //  await csrfTokenProvider.fetchCsrfToken();
    // print('Fetched CSRF Token: ${csrfTokenProvider.csrfToken}');
   //}
-	Future<void> createGarden(Map<String, dynamic> gardenData) async {
+	Future<void> createGardenApi(Map<String, dynamic> gardenData) async {
   		final url = Uri.parse('http://localhost:3000/gardens');
   		final headers = {"Content-Type": "application/json"};//, "X-CSRF-Token": csrfTokenProvider.csrfToken};
 		 //print('Using CSRF Token: ${csrfTokenProvider.csrfToken}');
@@ -50,17 +48,16 @@ Future<List<Garden>> fetchGarden() async {
 	}
 //}
 
-Future<List<Garden>> updateGarden(Map<String, dynamic> gardenData, String gardenId) async {
-  final url = Uri.parse('http://localhost:3000/gardens/update/$gardenId');
+Future<List<Garden>> updateGarden(Map<String, dynamic> gardenData, var gardenId) async {
+  final url = Uri.parse('http://localhost:3000/gardens?gardenId=$gardenId');
   final headers = {"Content-Type": "application/json"};
 
-  final response = await http.put(url, headers: headers, body: json.encode(gardenData));
+  final response = await http.put(url, headers: headers, body: jsonEncode(gardenData));
 
   if (response.statusCode == 200) {
     try {
-      final List<dynamic> data = json.decode(response.body);
-
-      return data.map<Garden>((json) => Garden.fromJson(json)).toList();
+	final Map<String, dynamic> data = json.decode(response.body);
+	return [Garden.fromJson(data)];
     } on FormatException catch (e) {
       print('The response was not JSON. $e');
       

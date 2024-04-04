@@ -105,7 +105,7 @@ func GardensUpdate(c buffalo.Context) error {
 		c.Logger().Error("Garden not found: ", err)
 	}
 	c.Set("garden", garden)
-	return c.Render(http.StatusOK, r.HTML("gardens/update.html"))
+	return c.Render(http.StatusOK, r.JSON(garden))// r.HTML("gardens/update.html"))
 }
 
 func GardensEdit(c buffalo.Context) error {
@@ -132,11 +132,11 @@ func GardensEdit(c buffalo.Context) error {
 		c.Set("garden", garden)
 		c.Set("errors", verrs)
 		c.Logger().Error("Validation errors: ", verrs)
-		return c.Render(422, r.HTML("gardens/update.html"))
+		return c.Render(422, r.JSON(garden)) //r.HTML("gardens/update.html"))
 	}
 
 	c.Flash().Add("success", "Garden updated")
-	return c.Redirect(301, fmt.Sprintf("/gardens/%s", garden.ID))
+	return c.Render(http.StatusOK, r.JSON(garden)) //fmt.Sprintf("/gardens/%s", garden.ID))
 }
 
 func GardensDelete(c buffalo.Context) error {

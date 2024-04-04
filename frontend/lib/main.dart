@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'view/garden_list.dart';
+import 'package:provider/provider.dart';
+import 'provider/garden_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => GardenProvider()),
+    ],
+
+  child: MyApp(),
+   ),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -4,6 +4,7 @@ import '../model/apis/garden_api.dart';
 import '../model/plant.dart';
 import '../model/apis/plant_api.dart';
 import 'plant_detail.dart';
+import 'garden_update.dart';
 
 class GardenDetail extends StatelessWidget {
   final Garden garden;
@@ -16,7 +17,7 @@ class GardenDetail extends StatelessWidget {
       appBar: AppBar(
         title: Text(garden.name),
       ),
-      body: SingleChildScrollView( // Added SingleChildScrollView to handle possible overflow
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Card(
@@ -76,9 +77,10 @@ class GardenDetail extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(context,
+	    MaterialPageRoute(builder: (context) => GardenUpdate(garden: this.garden)));
           },
-          child: Text('Add Plant'),
+          child: Text('Update Garden'),
         ),
 	      ),
     );

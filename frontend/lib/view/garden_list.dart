@@ -1,17 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../model/garden.dart';
 import '../model/apis/garden_api.dart';
+import '../provider/garden_provider.dart';
 import 'garden_detail.dart';
 import 'garden_create.dart';
 
-class GardenList extends StatelessWidget {
+class GardenList extends StatefulWidget {
+  @override
+  _GardenListState createState() => _GardenListState();
+}
+
+class _GardenListState extends State<GardenList> {
+  Future<List<Garden>>? futureGardens;
+
+   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (futureGardens == null) {
+      final gardenProvider = Provider.of<GardenProvider>(context, listen: false);
+      futureGardens = gardenProvider.fetchGarden();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+
+  return Consumer<GardenProvider>(
+    builder: (context, gardenProvider, child) {
     return Scaffold(
       body: Stack(
         children: <Widget>[
           FutureBuilder<List<Garden>>(
-            future: fetchGarden(),
+            future: futureGardens,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CircularProgressIndicator();
@@ -68,7 +89,9 @@ class GardenList extends StatelessWidget {
             ),
           ),
         ],
-      ),
+	),
+      );
+      },
     );
   }
 }
