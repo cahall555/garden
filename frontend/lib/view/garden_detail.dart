@@ -4,7 +4,12 @@ import '../model/apis/garden_api.dart';
 import '../model/plant.dart';
 import '../model/apis/plant_api.dart';
 import 'plant_detail.dart';
+import 'plant_create.dart';
 import 'garden_update.dart';
+import '../provider/garden_provider.dart';
+import '../provider/plant_provider.dart';
+import 'package:provider/provider.dart';
+
 
 class GardenDetail extends StatelessWidget {
   final Garden garden;
@@ -28,7 +33,7 @@ class GardenDetail extends StatelessWidget {
               ),
             ),
             FutureBuilder<List<Plant>>(
-              future: fetchPlants(garden.id), 
+              future: Provider.of<PlantProvider>(context, listen: false).fetchPlants(garden.id), 
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
@@ -68,22 +73,50 @@ class GardenDetail extends StatelessWidget {
                 } else {
                   return Text("No plants found");
                 }
-              },
+             },
+	),
+	// Buttons for actions
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navigate to update garden page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GardenUpdate(garden: this.garden)),
+                  );
+                },
+                child: Text('Update Garden'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  // Call delete garden method
+                  // For example, using Provider to delete garden
+                  // Provider.of<GardenProvider>(context, listen: false).deleteGarden(garden.id);
+                  // Then pop back
+                  Navigator.of(context).pop();
+                },
+                child: Text('Delete Garden'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PlantCreate(garden: this.garden)),
+                  );
+                },
+                child: Text('Add Plant'),
+              ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(context,
-	    MaterialPageRoute(builder: (context) => GardenUpdate(garden: this.garden)));
-          },
-          child: Text('Update Garden'),
-        ),
-	      ),
     );
   }
 }
-

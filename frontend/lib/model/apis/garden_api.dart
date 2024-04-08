@@ -48,7 +48,7 @@ Future<List<Garden>> fetchGardenApi() async {
 	}
 //}
 
-Future<List<Garden>> updateGarden(Map<String, dynamic> gardenData, var gardenId) async {
+Future<List<Garden>> updateGardenApi(Map<String, dynamic> gardenData, var gardenId) async {
   final url = Uri.parse('http://localhost:3000/gardens?gardenId=$gardenId');
   final headers = {"Content-Type": "application/json"};
 

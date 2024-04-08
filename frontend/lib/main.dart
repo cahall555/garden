@@ -3,12 +3,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'view/garden_list.dart';
 import 'package:provider/provider.dart';
 import 'provider/garden_provider.dart';
+import 'provider/plant_provider.dart';
 
 void main() {
   runApp(
   MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => GardenProvider()),
+      ChangeNotifierProvider(create: (context) => PlantProvider()),
     ],
 
   child: MyApp(),
@@ -83,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      	body: Center(
+     	body: Center(
 
                child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

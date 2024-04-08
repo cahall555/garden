@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../model/garden.dart';
 import '../model/apis/garden_api.dart';
+import '../provider/garden_provider.dart';
+import 'package:provider/provider.dart';
+
 
 class GardenUpdate extends StatefulWidget {
   final Garden garden;
@@ -26,6 +29,7 @@ class _GardenUpdateState extends State<GardenUpdate> {
 
   @override
   Widget build(BuildContext context) {
+  
     return Scaffold(
       appBar: AppBar(
         title: Text('Update Garden'),
@@ -66,15 +70,10 @@ class _GardenUpdateState extends State<GardenUpdate> {
         'name': _nameController.text.trim(),
         'zone': _zoneController.text.trim(),
       };
-      
+      final gardenProvider = Provider.of<GardenProvider>(context, listen: false);
+   
 	var gardenId = gardenData['id'];
-	 await updateGarden(gardenData, gardenId);
-//     setState(() {
-  //   	_futureGarden = {updatedGardenData['name'], updatedGardenData['zone']} 
-      
-//	});
-     // widget.onUpdateSuccess(updatedGarden);
-
+	 await gardenProvider.updateGarden(gardenData, gardenId);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Garden updated successfully!')),
       );

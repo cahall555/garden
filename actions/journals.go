@@ -23,7 +23,7 @@ func JournalsShow(c buffalo.Context) error {
 
 	err := tx.Find(&journal, JournalID)
 	if err != nil {
-		c.Flash().Add("warning", "Journal not found")
+//		c.Flash().Add("warning", "Journal not found")
 		c.Redirect(301, "/")
 	}
 

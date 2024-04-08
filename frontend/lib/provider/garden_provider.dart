@@ -5,7 +5,7 @@ import '../model/apis/garden_api.dart';
 class GardenProvider with ChangeNotifier {
   List<Garden> gardens = [];
   //Garden garden;
-  //Garden? prevGarden;
+  Garden? prevGarden;
 
   //GardenProvider({this.gardens, this.garden});
 
@@ -37,15 +37,22 @@ class GardenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  //Future<void> updateGarden(Garden garden) async {
-   // this.garden = await updateGarden(garden);
-   // gardens[this.gardens.indexOf(this.prevGarden)] = this.garden;
-   // notifyListeners();
- // }
+  Future<void> updateGarden(Map<String, dynamic> garden, var gardenId) async {
+    updateGardenApi(garden, gardenId);
 
-  //Future<void> deleteGarden(Garden garden) async {
-   // await deleteGarden(garden.id);
-   // gardens.removeAt(this.gardens.indexOf(garden));
-   // notifyListeners();
+       notifyListeners();
+    if (prevGarden != null) {
+    	int index = gardens.indexWhere((g) => g.id == prevGarden!.id);
+    
+    	if (index != -1) {
+      		gardens[index] = Garden.fromJson(garden);
+    	}
+    }
+}
+
+ // Future<void> deleteGarden(Garden garden) async {
+  //  await deleteGardenApi(garden.id);
+  //  gardens.removeAt(this.gardens.indexOf(garden));
+  //  notifyListeners();
  // }
 }

@@ -56,29 +56,32 @@ func PlantsCreate(c buffalo.Context) error {
 	gardens := &models.Gardens{}
 	err := tx.All(gardens)
 	if err != nil {
-		return c.Redirect(302, "/")
+		return err//c.Redirect(302, "/")
 	}
 	c.Set("gardens", gardens)
 
 	c.Logger().WithField("gardens", gardens).Info("Gardens found")
-	return c.Render(http.StatusOK, r.HTML("plants/create.html"))
+	return c.Render(http.StatusOK, r.JSON(plant))//r.HTML("plants/create.html"))
 }
 
 // PlantsNew default implementation.
 func PlantsNew(c buffalo.Context) error {
-	tx :=c.Value("tx").(*pop.Connection)
+    tx, ok := c.Value("tx").(*pop.Connection)
+    if !ok {
+        return c.Error(500, errors.New("no transaction found"))
+    }
 	plant := &models.Plant{}
 	err := c.Bind(plant)
 	if err != nil {
-		c.Flash().Add("warning", "Plant form binding error")
-		return c.Redirect(301, "/")
+	//	c.Flash().Add("warning", "Plant form binding error")
+		return err //c.Redirect(301, "/")
 	}
 
 
 	err = c.Request().ParseForm()
 	if err != nil {
-		c.Flash().Add("error", "Plant form parsing error")
-		return c.Redirect(301, "/")
+	//	c.Flash().Add("error", "Plant form parsing error")
+		return err//c.Redirect(301, "/")
 	}
 
 
@@ -95,7 +98,7 @@ func PlantsNew(c buffalo.Context) error {
 			err2 := tx.Create(t)
 			if err2 != nil {
 				log.Fatal(err2)
-				c.Flash().Add("error", "Tags creation error")
+			//	c.Flash().Add("error", "Tags creation error")
 			}
 			} else {
 				log.Fatal(err)
@@ -105,12 +108,12 @@ func PlantsNew(c buffalo.Context) error {
 		plant.PlantTags = append(plant.PlantTags, *t)
 	}
 
-	gp := c.Request().FormValue("Gardens")
+	gp := c.Param("gardenId")//c.Request().FormValue("Gardens")
 	garden := &models.Garden{}
 	err = tx.Find(garden, gp)
 	if err != nil {
-		c.Flash().Add("warning", "Garden not found")
-		return c.Redirect(301, "/")
+	//	c.Flash().Add("warning", "Garden not found")
+		return err//c.Redirect(301, "/")
 	}
 
 	plant.GardenID = garden.ID
@@ -119,18 +122,18 @@ func PlantsNew(c buffalo.Context) error {
 
 	verrs, err := tx.Eager().ValidateAndCreate(plant)
 	if err != nil {
-		return c.Redirect(301, "/")
+		return c.Error(500, err)//c.Redirect(301, "/")
 	}
 
 	if verrs.HasAny() {
-		c.Flash().Add("warning", "Plant validation error")
+	//	c.Flash().Add("warning", "Plant validation error")
 		c.Set("plant", plant)
 		c.Set("errors", verrs)
-		return c.Render(422, r.HTML("plants/create.html"))
+		return c.Render(422, r.JSON(verrs))//r.HTML("plants/create.html"))
 	}
 
 	c.Flash().Add("success", "Plant created")
-	return c.Redirect(301, fmt.Sprintf("/plants/%s", plant.ID))
+	return c.Render(201, r.JSON(plant))//(301, fmt.Sprintf("/plants/%s", plant.ID))
 }
 
 func PlantsUpdate(c buffalo.Context) error {

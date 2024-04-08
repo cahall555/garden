@@ -15,7 +15,7 @@ class Plant {
 	final DateTime createdAt;
 	final DateTime updatedAt;
 
-  	Plant({required this.id, required this.name, required this.germinated, required this.days_to_harvest, required this. garden_id, this.journals, this.waterSchedules, required this.createdAt, required this.updatedAt});
+  	Plant({required this.id, required this.name, required this.germinated, required this.days_to_harvest, required this.garden_id, this.journals, this.waterSchedules, required this.createdAt, required this.updatedAt});
 
   	factory Plant.fromJson(Map<String, dynamic> json) {
     		return Plant(
