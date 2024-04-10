@@ -75,7 +75,6 @@ class GardenDetail extends StatelessWidget {
                 }
              },
 	),
-	// Buttons for actions
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ElevatedButton(

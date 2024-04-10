@@ -9,6 +9,7 @@ Future<List<WaterSchedule>> fetchWaterSchedule(String plantId) async {
   final response = await http.get(uri).timeout(const Duration(seconds: 30));
 
   if (response.statusCode == 404) {
+    return [];
     // If plant id does not have a water schedule, 404 will be thrown
     throw CustomHttpException('404 Not Found', uri: response.request!.url);
   } else if (response.statusCode != 200) {
@@ -29,4 +30,42 @@ Future<List<WaterSchedule>> fetchWaterSchedule(String plantId) async {
     throw Exception('Expected a list or a map but got ${data.runtimeType}');
   }
 }
+Future<void> createWsApi(Map<String, dynamic> wsData, var plantId) async {
+  	final url = Uri.parse('http://localhost:3000/water_schedules?plantId=$plantId');
+  	final headers = {"Content-Type": "application/json"};
+	 
+	try{
+  		final response = await http.post(url, headers: headers, body: json.encode(wsData));
 
+  		if (response.statusCode == 201) {
+    			print('Water schedule created successfully');
+  		} else {
+    			print('Failed to create water schedule: ${response.body}');
+    			throw Exception('Failed to create water schedule');
+  		}
+	} catch (e) {
+		print(e.toString());
+	}
+}
+
+Future<List<WaterSchedule>> updateWsApi(Map<String, dynamic> wsData, var plantId, var wsId) async {
+  final url = Uri.parse('http://localhost:3000/water_schedules?plantId=$plantId&wsId=$wsId');
+  final headers = {"Content-Type": "application/json"};
+
+  final response = await http.put(url, headers: headers, body: jsonEncode(wsData));
+
+  if (response.statusCode == 201) {
+    try {
+	final Map<String, dynamic> data = json.decode(response.body);
+	return [WaterSchedule.fromJson(data)];
+    } on FormatException catch (e) {
+      print('The response was not JSON. $e');
+      
+      throw Exception('Failed to decode JSON data: $e');
+    }
+  } else {
+    print('Request failed with status: ${response.statusCode}.');
+
+    throw Exception('Request failed with status: ${response.statusCode}.');
+  }
+}

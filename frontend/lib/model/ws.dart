@@ -7,12 +7,13 @@ class WaterSchedule {
   	final bool friday;
   	final bool saturday;
   	final bool sunday;
+	final String method;
 	final String notes;
 	final String plant_id;
 	final DateTime createdAt;
 	final DateTime updatedAt;
 
-  	WaterSchedule({required this.id, required this.monday, required this.tuesday, required this.wednesday, required this.thursday, required this.friday, required this.saturday, required this.sunday, required this.notes, required this.plant_id, required this.createdAt, required this.updatedAt});
+  	WaterSchedule({required this.id, required this.monday, required this.tuesday, required this.wednesday, required this.thursday, required this.friday, required this.saturday, required this.sunday, required this.method, required this.notes, required this.plant_id, required this.createdAt, required this.updatedAt});
 
   	factory WaterSchedule.fromJson(Map<String, dynamic> json) {
     		return WaterSchedule(
@@ -24,6 +25,7 @@ class WaterSchedule {
 			friday: json['friday'],
 			saturday: json['saturday'],
 			sunday: json['sunday'],
+			method: json['method'],
 			notes: json['notes'],
 			plant_id: json['plant_id'],
 			createdAt: DateTime.parse(json['created_at']),
@@ -41,6 +43,7 @@ class WaterSchedule {
 			'friday': friday,
 			'saturday': saturday,
 			'sunday': sunday,
+			'method': method,
 			'notes': notes,
 			'plant_id': plant_id,
 			'created_at': createdAt.toIso8601String(),

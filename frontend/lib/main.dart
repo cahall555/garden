@@ -4,6 +4,7 @@ import 'view/garden_list.dart';
 import 'package:provider/provider.dart';
 import 'provider/garden_provider.dart';
 import 'provider/plant_provider.dart';
+import 'provider/ws_provider.dart';
 
 void main() {
   runApp(
@@ -11,6 +12,7 @@ void main() {
     providers: [
       ChangeNotifierProvider(create: (context) => GardenProvider()),
       ChangeNotifierProvider(create: (context) => PlantProvider()),
+      ChangeNotifierProvider(create: (context) => WsProvider()),
     ],
 
   child: MyApp(),
