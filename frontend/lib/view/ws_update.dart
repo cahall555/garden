@@ -166,8 +166,27 @@ class _WsUpdateState extends State<WsUpdate> {
       				);			
 			}
 			},
-			child: const Text('submit'),
+			child: const Text('Submit'),
 			),
+		const SizedBox(height: 20.0),
+              	ElevatedButton(
+                	onPressed: () async {
+			try {
+			final wsProvider = Provider.of<WsProvider>(context, listen: false);
+			await wsProvider.deleteWs(widget.ws.id);
+				ScaffoldMessenger.of(context).showSnackBar(
+        				SnackBar(content: Text('Schedule successfully deleted.')),
+      				);
+				Navigator.pop(context);
+			} catch (e) {
+				ScaffoldMessenger.of(context).showSnackBar(
+        				SnackBar(content: Text('Failed to delete water schedule: $e.')),
+      				);	
+			}
+			},
+			child: const Text('Delete Water Schedule'),
+			),
+
           ],
 	  ),
     );

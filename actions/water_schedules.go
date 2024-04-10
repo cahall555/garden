@@ -201,14 +201,14 @@ func WaterSchedulesDelete(c buffalo.Context) error {
 	ws := models.WaterSchedule{}
 	if err := tx.Find(&ws, wsId); err != nil {
 		c.Logger().Errorf("Error finding Water Schedule with id %s, error: %v", wsId, err)
-		c.Flash().Add("error", "Water Schedule not found")
+//		c.Flash().Add("error", "Water Schedule not found")
 		return c.Redirect(http.StatusFound, "/water_schedules/")
 	}
 	
 
 	if err := tx.Destroy(&ws); err != nil {
 		c.Logger().Errorf("Error deleting Water Schedule with id %s, error: %v", wsId, err)
-		c.Flash().Add("error", "Error deleting Water Schedule")
+//		c.Flash().Add("error", "Error deleting Water Schedule")
 		return c.Redirect(http.StatusFound, "/")
 	}
 

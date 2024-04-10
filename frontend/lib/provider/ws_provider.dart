@@ -6,17 +6,6 @@ class WsProvider with ChangeNotifier {
   List<WaterSchedule> wsList = [];
   WaterSchedule? prevWs;
 
- // Future<List<Plant>> fetchPlants(var gardenId) async {
-   // try {
-    //	plants = await fetchPlantsApi(gardenId);
-    //	notifyListeners();
-//	return plants;
-  //  } catch (e) {
-    //	print(e);
-//	return[];
-  //  }
-  //}
-
   Future<void> createWs(Map<String, dynamic> ws, var plantId) async {
     createWsApi(ws, plantId);
     notifyListeners();
@@ -35,5 +24,8 @@ class WsProvider with ChangeNotifier {
     }
     notifyListeners();
 }
-
+Future<void> deleteWs(var wsId) async {
+	await deleteWsApi(wsId);
+	notifyListeners();
+}
 }

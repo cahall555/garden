@@ -69,3 +69,10 @@ Future<List<WaterSchedule>> updateWsApi(Map<String, dynamic> wsData, var plantId
     throw Exception('Request failed with status: ${response.statusCode}.');
   }
 }
+
+Future<void> deleteWsApi(var wsId) async {
+	final url = Uri.parse('http://localhost:3000/water_schedules/$wsId');
+	final headers = {"content-Type": "application/json"};
+
+	final response = await http.delete(url, headers: headers);//, body: jsonEncode());
+}

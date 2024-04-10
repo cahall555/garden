@@ -110,7 +110,12 @@ class PlantDetail extends StatelessWidget {
                         margin: EdgeInsets.all(8),
                         child: ListTile(
                           onTap: () {
-                           
+			   Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WsUpdate(plant: this.plant, ws: snapshot.data![index]),
+                            ),
+                          );
                           },
                           leading: Icon(Icons.local_florist),
                           title: Text(
