@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../journal.dart';
 
-Future<List<Journal>> fetchJournal() async {
+Future<List<Journal>> fetchJournalApi() async {
   final response = await http.get(Uri.parse('http://localhost:3000/journals'));
 
   if (response.statusCode == 200) {
@@ -22,8 +22,8 @@ Future<List<Journal>> fetchJournal() async {
   }
 }
 
-Future<List<Journal>> fetchPlantJournal(String plantId) async {
-  final response = await http.get(Uri.parse('http://localhost:3000/journals?plant_id=$plantId'));
+Future<List<Journal>> fetchPlantJournalApi(var plantId) async {
+  final response = await http.get(Uri.parse('http://localhost:3000/plant_journals?plant_id=$plantId'));
 
   if (response.statusCode == 200) {
     try {
@@ -40,4 +40,21 @@ Future<List<Journal>> fetchPlantJournal(String plantId) async {
 
     throw Exception('Request failed with status: ${response.statusCode}.');
   }
+}
+Future<void> createJournalApi(Map<String, dynamic> journalData, var plantId) async {
+  	final url = Uri.parse('http://localhost:3000/journals?plantId=$plantId');
+  	final headers = {"Content-Type": "application/json"};
+	 
+	try{
+  		final response = await http.post(url, headers: headers, body: json.encode(journalData));
+
+  		if (response.statusCode == 201) {
+    			print('Journal created successfully');
+  		} else {
+    			print('Failed to create journal: ${response.body}');
+    			throw Exception('Failed to create journal');
+  		}
+	} catch (e) {
+		print(e.toString());
+	}
 }

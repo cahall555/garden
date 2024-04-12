@@ -32,19 +32,19 @@ func JournalsShow(c buffalo.Context) error {
 }
 
 // JournalsIndex default implementation.
-//func JournalsIndex(c buffalo.Context) error {
-//	tx := c.Value("tx").(*pop.Connection)
-//	journal := models.Journals{}
+func JournalsIndex(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	journal := models.Journals{}
 
-//	err := tx.All(&journal)
-//	if err != nil {
+	err := tx.All(&journal)
+	if err != nil {
 //		c.Flash().Add("warning", "Journals not found")
-//		c.Redirect(301, "/")
-//	}
-//
-//	c.Set("journal", journal)
-//	return c.Render(http.StatusOK, r.JSON(journal))//r.HTML("journals/index.html"))
-//}
+		c.Redirect(301, "/")
+	}
+
+	c.Set("journal", journal)
+	return c.Render(http.StatusOK, r.JSON(journal))//r.HTML("journals/index.html"))
+}
 
 // JournalsIndex default implementation filtering by plant.
 func PlantJournals(c buffalo.Context) error {
@@ -54,7 +54,7 @@ func PlantJournals(c buffalo.Context) error {
 
 	err := tx.Where("plant_id = ?", plantID).All(&journal)
 	if err != nil {
-		c.Flash().Add("warning", "Journals not found")
+	//	c.Flash().Add("warning", "Journals not found")
 		c.Redirect(301, "/")
 	}
 
@@ -84,7 +84,7 @@ func JournalsCreate(c buffalo.Context) error {
 	c.Logger().Error("plantId: ", plantId)
 	c.Logger().WithField("Plants", plants).Info("Plants found.")
 
-	return c.Render(http.StatusOK, r.HTML("journals/create.html"))
+	return c.Render(http.StatusOK, r.JSON(journal))//r.HTML("journals/create.html"))
 }
 
 func JournalsNew(c buffalo.Context) error {
@@ -92,22 +92,22 @@ func JournalsNew(c buffalo.Context) error {
 	journal := &models.Journal{}
 	err := c.Bind(journal)
 	if err != nil {
-		c.Flash().Add("warning", "Journal form binding error")
+//		c.Flash().Add("warning", "Journal form binding error")
 		return c.Redirect(301, "/")
 	}
 
 	err = c.Request().ParseForm()
 	if err != nil {
-		c.Flash().Add("error", "Journal form parsing error")
+//		c.Flash().Add("error", "Journal form parsing error")
 		return c.Redirect(301, "/")
 	}
 
-	pj := c.Request().FormValue("Plant")
+	pj := c.Param("plantId") //c.Request().FormValue("Plant")
 	plant := &models.Plant{}
 	err = tx.Find(plant, pj)
 	if err != nil {
 		c.Logger().Error("Plant not found")
-		c.Flash().Add("warning", "Plant not found")
+	//	c.Flash().Add("warning", "Plant not found")
 		return c.Redirect(301, "/")
 	}
 
@@ -115,11 +115,11 @@ func JournalsNew(c buffalo.Context) error {
 
 	plant.Journals = append(plant.Journals, *journal)
 
-	rawEntry := c.Request().FormValue("Entry")
-	cleanEntry := bluemonday.StrictPolicy().Sanitize(rawEntry)
-	journal.Entry = cleanEntry
+	//rawEntry := c.Request().FormValue("Entry")
+	//cleanEntry := bluemonday.StrictPolicy().Sanitize(rawEntry)
+	//journal.Entry = cleanEntry
 
-	file, header, err := c.Request().FormFile("Image")
+	file, header, err := c.Request().FormFile("_imagePath")
 	if err == http.ErrMissingFile {
 		c.Logger().Error("No file uploaded, skipping image logic.")
 
@@ -160,12 +160,12 @@ func JournalsNew(c buffalo.Context) error {
 		c.Flash().Add("warning", "Journal validation error")
 		c.Set("journal", journal)
 		c.Set("errors", verrs)
-		return c.Render(422, r.HTML("journals/create.html"))
+		return c.Render(422, r.JSON(verrs))//r.HTML("journals/create.html"))
 	}
 	
 
-	c.Flash().Add("success", "Journal created")
-	return c.Redirect(301, fmt.Sprintf("/journals/%s", journal.ID))
+	//c.Flash().Add("success", "Journal created")
+	return c.Render(301, r.JSON(journal))//fmt.Sprintf("/journals/%s", journal.ID))
 }
 
 func JournalsUpdate(c buffalo.Context) error {

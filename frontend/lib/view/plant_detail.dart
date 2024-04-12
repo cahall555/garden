@@ -12,7 +12,10 @@ import '../model/tag.dart';
 import '../model/apis/tag_api.dart';
 import 'ws_create.dart';
 import 'ws_update.dart';
+import 'journal_detail.dart';
+import 'journal_create.dart';
 import '../provider/ws_provider.dart';
+import '../provider/journal_provider.dart';
 import 'package:provider/provider.dart';
 
 
@@ -35,6 +38,8 @@ class PlantDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+final journalProvider = Provider.of<JournalProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(plant.name),
@@ -50,7 +55,7 @@ class PlantDetail extends StatelessWidget {
 	     ),
             ),
            FutureBuilder<List<Journal>>(
-	      future: fetchPlantJournal(plant.id), 
+	      future: journalProvider.fetchPlantJournal(plant.id), 
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
@@ -67,7 +72,12 @@ class PlantDetail extends StatelessWidget {
                         margin: EdgeInsets.all(8),
                         child: ListTile(
                           onTap: () {
-                           
+			  Navigator.push(
+			    context,
+			    MaterialPageRoute(
+			      builder: (context) => JournalDetail(journal: snapshot.data![index]),
+			    ),
+			  );
                           },
                           leading: Icon(Icons.local_florist),
                           title: Text(
@@ -213,11 +223,11 @@ class PlantDetail extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ElevatedButton(
                 onPressed: () {
-                  //Navigator.push(
-                    //context,
-                    //MaterialPageRoute(builder: (context) => PlantCreate(garden: this.garden)),
-                  //);
-		  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => JournalCreate(plant: this.plant)),
+                  );
+		 // Navigator.of(context).pop();
                 },
                 child: Text('Add Journal'),
               ),

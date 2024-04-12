@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'view/garden_list.dart';
+import 'view/journal_list.dart';
 import 'package:provider/provider.dart';
 import 'provider/garden_provider.dart';
 import 'provider/plant_provider.dart';
 import 'provider/ws_provider.dart';
+import 'provider/journal_provider.dart';
 
 void main() {
   runApp(
@@ -13,6 +15,7 @@ void main() {
       ChangeNotifierProvider(create: (context) => GardenProvider()),
       ChangeNotifierProvider(create: (context) => PlantProvider()),
       ChangeNotifierProvider(create: (context) => WsProvider()),
+      ChangeNotifierProvider(create: (context) => JournalProvider()),
     ],
 
   child: MyApp(),
@@ -73,8 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Journal'),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                 Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => JournalList()));
               },
             ),
             ListTile(
