@@ -8,12 +8,12 @@ class PlantProvider with ChangeNotifier {
 
   Future<List<Plant>> fetchPlants(var gardenId) async {
     try {
-    	plants = await fetchPlantsApi(gardenId);
-    	notifyListeners();
-	return plants;
+      plants = await fetchPlantsApi(gardenId);
+      notifyListeners();
+      return plants;
     } catch (e) {
-    	print(e);
-	return[];
+      print(e);
+      return [];
     }
   }
 
@@ -28,16 +28,16 @@ class PlantProvider with ChangeNotifier {
 //       notifyListeners();
 //    if (prevPlant != null) {
 //    	int index = plants.indexWhere((p) => p.id == prevPlant!.id);
-    
+
 //    	if (index != -1) {
 //      		plants[index] = Plant.fromJson(plant);
 //    	}
 //    }
 //}
 
- // Future<void> deletePlant(Plant plant) async {
+  // Future<void> deletePlant(Plant plant) async {
   //  await deletePlantApi(plant.id);
   //  plants.removeAt(this.plants.indexOf(plant));
   //  notifyListeners();
- // }
+  // }
 }

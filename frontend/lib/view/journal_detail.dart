@@ -9,7 +9,6 @@ import '../provider/journal_provider.dart';
 import '../provider/plant_provider.dart';
 import 'package:provider/provider.dart';
 
-
 class JournalDetail extends StatelessWidget {
   final Journal journal;
 
@@ -23,36 +22,36 @@ class JournalDetail extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: <Widget> [
-	  Card(
-	  	elevation: 5,
-		margin: EdgeInsets.all(8),
-		child: Column(
-		children: <Widget> [
-			ListTile(
-	  		title: Text(journal.category),
-			//leading: Image.asset(journal.image),
-			subtitle: Text(journal.entry),
-		),
-		//Image.asset(
+          children: <Widget>[
+            Card(
+              elevation: 5,
+              margin: EdgeInsets.all(8),
+              child: Column(
+                children: <Widget>[
+                  ListTile(
+                    title: Text(journal.category),
+                    //leading: Image.asset(journal.image),
+                    subtitle: Text(journal.entry),
+                  ),
+                  //Image.asset(
                   //  journal.image,
-                    //width: double.infinity, 
-                    //fit: BoxFit.cover, 
+                  //width: double.infinity,
+                  //fit: BoxFit.cover,
                   //),
-		],
-	),
-	),
-	                           Padding(
+                ],
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ElevatedButton(
                 onPressed: () {
                   //Navigator.push(
-                    //context,
-                    //MaterialPageRoute(builder: (context) => JournalCreate()),
+                  //context,
+                  //MaterialPageRoute(builder: (context) => JournalUpdate()),
                   //);
-		  Navigator.pop(context);
+                  Navigator.pop(context);
                 },
-                child: Text('Update Create'),
+                child: Text('Update Journal'),
               ),
             ),
             Padding(
@@ -68,7 +67,7 @@ class JournalDetail extends StatelessWidget {
                 child: Text('Delete Journal'),
               ),
             ),
-                      ],
+          ],
         ),
       ),
     );

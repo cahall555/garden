@@ -17,41 +17,49 @@ class JournalCreate extends StatefulWidget {
 }
 
 class _JournalCreateState extends State<JournalCreate> {
-	final _titleController = TextEditingController();
-	final _entryController = TextEditingController();
-	String? _imagePath = null;
-	bool _display_on_gardenController = false;
-  	final _plant_idController = TextEditingController();
-	String? _currentSelectedValue;
-  	final List<String> _dropdownValues = ["Pests", "Planting", "Watering", "Pruning", "Harvesting", "Weather", "Germination"];
+  final _titleController = TextEditingController();
+  final _entryController = TextEditingController();
+  String? _imagePath = null;
+  bool _display_on_gardenController = false;
+  final _plant_idController = TextEditingController();
+  String? _currentSelectedValue;
+  final List<String> _dropdownValues = [
+    "Pests",
+    "Planting",
+    "Watering",
+    "Pruning",
+    "Harvesting",
+    "Weather",
+    "Germination"
+  ];
 
   @override
   Widget build(BuildContext context) {
-  JournalProvider journalProvider = Provider.of<JournalProvider>(context);
+    JournalProvider journalProvider = Provider.of<JournalProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Create Journal'),
       ),
       body: ListView(
-      	padding: const EdgeInsets.all(20),
-          children: <Widget>[
-	  const SizedBox(height: 20.0),
-	  TextField(
-              decoration: InputDecoration(
-                labelText: 'Title',
-		border: OutlineInputBorder(),
-              ),
-	      controller: _titleController,
+        padding: const EdgeInsets.all(20),
+        children: <Widget>[
+          const SizedBox(height: 20.0),
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Title',
+              border: OutlineInputBorder(),
             ),
-	const SizedBox(height: 20.0),
-	  TextField(
-              decoration: InputDecoration(
-                labelText: 'Entry',
-		border: OutlineInputBorder(),
-              ),
-	      controller: _entryController,
+            controller: _titleController,
+          ),
+          const SizedBox(height: 20.0),
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Entry',
+              border: OutlineInputBorder(),
             ),
-	const SizedBox(height: 20.0),
+            controller: _entryController,
+          ),
+          const SizedBox(height: 20.0),
           GestureDetector(
             onTap: () => _pickImage(),
             child: _imagePath == null
@@ -65,7 +73,7 @@ class _JournalCreateState extends State<JournalCreate> {
                   )
                 : Image.file(File(_imagePath!)),
           ),
-	DropdownButtonFormField<String>(
+          DropdownButtonFormField<String>(
             decoration: InputDecoration(
               labelText: "Category",
               border: OutlineInputBorder(),
@@ -76,14 +84,15 @@ class _JournalCreateState extends State<JournalCreate> {
                 _currentSelectedValue = newValue;
               });
             },
-            items: _dropdownValues.map<DropdownMenuItem<String>>((String value) {
+            items:
+                _dropdownValues.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
               );
             }).toList(),
           ),
-           ListTile(
+          ListTile(
             leading: const Text('Display in Garden'),
             trailing: Switch(
               value: _display_on_gardenController,
@@ -91,25 +100,27 @@ class _JournalCreateState extends State<JournalCreate> {
                 setState(() {
                   _display_on_gardenController = value;
                 });
-		},
-		),
-		),
-		    const SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: () {
-			
-			if (_titleController.text.isNotEmpty && _entryController.text.isNotEmpty) {
-      				submitJournal();
-    			} else {
-      				ScaffoldMessenger.of(context).showSnackBar(
-        				SnackBar(content: Text('Please ensure title and entry are complete.')),
-      				);			
-			}
-			},
-			child: const Text('Submit'),
-			),
-          ],
-	  ),
+              },
+            ),
+          ),
+          const SizedBox(height: 20.0),
+          ElevatedButton(
+            onPressed: () {
+              if (_titleController.text.isNotEmpty &&
+                  _entryController.text.isNotEmpty) {
+                submitJournal();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content:
+                          Text('Please ensure title and entry are complete.')),
+                );
+              }
+            },
+            child: const Text('Submit'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -124,34 +135,32 @@ class _JournalCreateState extends State<JournalCreate> {
     }
   }
 
- void submitJournal() async {
-  try {
-	final journalProvider = Provider.of<JournalProvider>(context, listen: false);
-    await journalProvider.createJournal({
-      'title': _titleController.text.trim(),
-      'entry': _entryController.text.trim(),
-      'image': _imagePath,
-      'category': _currentSelectedValue,
-      'display_in_garden': _display_on_gardenController,
-      'plant_id': widget.plant.id,
-    }, widget.plant.id);
-    
-	ScaffoldMessenger.of(context).showSnackBar(
-        	SnackBar(content: Text('Journal created successfully!')),
-      	);
-    Navigator.pop(context); 
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Failed to create journal: $e')),
-    );
+  void submitJournal() async {
+    try {
+      final journalProvider =
+          Provider.of<JournalProvider>(context, listen: false);
+      await journalProvider.createJournal({
+        'title': _titleController.text.trim(),
+        'entry': _entryController.text.trim(),
+        'image': _imagePath,
+        'category': _currentSelectedValue,
+        'display_in_garden': _display_on_gardenController,
+        'plant_id': widget.plant.id,
+      }, widget.plant.id, _imagePath);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Journal created successfully!')),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to create journal: $e')),
+      );
+    }
+    @override
+    void dispose() {
+      _titleController.dispose();
+      _entryController.dispose();
+      super.dispose();
+    }
   }
-  	@override
-	void dispose() {
-  	_titleController.dispose();
-  	_entryController.dispose();
-  	super.dispose();
-	}
-
-}
-
 }

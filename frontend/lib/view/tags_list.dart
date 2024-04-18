@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../model/journal.dart';
-import '../model/apis/journal_api.dart';
-import '../provider/journal_provider.dart';
-import 'journal_create.dart';
-import 'journal_detail.dart';
+import '../model/tag.dart';
+import '../model/apis/tag_api.dart';
+import 'tag_create.dart';
+//import 'tag_detail.dart';
+import '../provider/tag_provider.dart';
 
-class JournalList extends StatefulWidget {
+class TagList extends StatefulWidget {
   @override
-  _JournalListState createState() => _JournalListState();
+  _TagListState createState() => _TagListState();
 }
 
-class _JournalListState extends State<JournalList> {
-  Future<List<Journal>>? futureJournal;
-
+class _TagListState extends State<TagList> {
+  Future<List<Tag>>? futureTag;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (futureJournal == null) {
-      final journalProvider =
-          Provider.of<JournalProvider>(context, listen: false);
-      futureJournal = journalProvider.fetchJournal();
+    if (futureTag == null) {
+      final tagProvider = Provider.of<TagProvider>(context, listen: false);
+      futureTag = tagProvider.fetchTags();
     }
   }
 
@@ -28,14 +26,14 @@ class _JournalListState extends State<JournalList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Journal Entries"),
+        title: Text("Tags"),
       ),
-      body: Consumer<JournalProvider>(
-        builder: (context, journalProvider, child) {
+      body: Consumer<TagProvider>(
+        builder: (context, tagProvider, child) {
           return Stack(
             children: <Widget>[
-              FutureBuilder<List<Journal>>(
-                future: futureJournal,
+              FutureBuilder<List<Tag>>(
+                future: futureTag,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
@@ -50,30 +48,29 @@ class _JournalListState extends State<JournalList> {
                           margin: EdgeInsets.all(8),
                           child: ListTile(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => JournalDetail(
-                                      journal: snapshot.data![index]),
-                                ),
-                              );
+                              // Navigator.push(
+                              // context,
+                              // MaterialPageRoute(
+                              // builder: (context) =>
+                              //        TagDetail(tag: snapshot.data![index]),
+                              //),
+                              //);
                             },
                             leading: Icon(Icons.local_florist),
                             title: Text(
-                              snapshot.data![index].title,
+                              snapshot.data![index].name,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.green[800],
                               ),
                             ),
-                            subtitle: Text(snapshot.data![index].entry),
                             trailing: Icon(Icons.favorite),
                           ),
                         );
                       },
                     );
                   } else {
-                    return Text("No journal entries found");
+                    return Text("No tags found");
                   }
                 },
               ),
@@ -81,12 +78,10 @@ class _JournalListState extends State<JournalList> {
                 bottom: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    //Navigator.push(
-                    //context,
-                    //MaterialPageRoute(builder: (context) => JournalCreate()));
-                    Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => TagCreate()));
                   },
-                  child: Text('Add Journal'),
+                  child: Text('Add Tag'),
                   style: ElevatedButton.styleFrom(
                     shape: StadiumBorder(),
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),

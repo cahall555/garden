@@ -2,24 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'view/garden_list.dart';
 import 'view/journal_list.dart';
+import 'view/tags_list.dart';
 import 'package:provider/provider.dart';
 import 'provider/garden_provider.dart';
 import 'provider/plant_provider.dart';
+import 'provider/tag_provider.dart';
+import 'provider/plants_tag_provider.dart';
 import 'provider/ws_provider.dart';
 import 'provider/journal_provider.dart';
 
 void main() {
   runApp(
-  MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (context) => GardenProvider()),
-      ChangeNotifierProvider(create: (context) => PlantProvider()),
-      ChangeNotifierProvider(create: (context) => WsProvider()),
-      ChangeNotifierProvider(create: (context) => JournalProvider()),
-    ],
-
-  child: MyApp(),
-   ),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => GardenProvider()),
+        ChangeNotifierProvider(create: (context) => PlantProvider()),
+        ChangeNotifierProvider(create: (context) => WsProvider()),
+        ChangeNotifierProvider(create: (context) => JournalProvider()),
+        ChangeNotifierProvider(create: (context) => TagProvider()),
+        ChangeNotifierProvider(create: (context) => PlantsTagProvider()),
+      ],
+      child: MyApp(),
+    ),
   );
 }
 
@@ -31,7 +35,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Garden Journal',
       theme: ThemeData(
-       	textTheme: GoogleFonts.tavirajTextTheme(),
+        textTheme: GoogleFonts.tavirajTextTheme(),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green.shade700),
         useMaterial3: true,
       ),
@@ -49,21 +53,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-    @override
+  @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    return Scaffold(
       appBar: AppBar(
-              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-               title: Text(widget.title,
-			style: GoogleFonts.homemadeApple( 
-				textStyle: TextStyle(
-					fontWeight: FontWeight.bold,
-					color: Colors.green[800],
-			),
-		),
-      	),
-	),
-	drawer: Drawer(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(
+          widget.title,
+          style: GoogleFonts.homemadeApple(
+            textStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.green[800],
+            ),
+          ),
+        ),
+      ),
+      drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -76,40 +81,36 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Journal'),
               onTap: () {
-                 Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => JournalList()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => JournalList()));
               },
             ),
             ListTile(
               title: const Text('Tags'),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TagList()));
               },
             ),
           ],
         ),
       ),
-     	body: Center(
-
-               child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
-		Expanded(
-            child: MaterialApp( 
-	    	debugShowCheckedModeBanner: false,
-		initialRoute: '/',
-        	routes: {
-          		'/': (context) => GardenList(),
-	  	},
-	    ),
-          ),
-	    
+            Expanded(
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                initialRoute: '/',
+                routes: {
+                  '/': (context) => GardenList(),
+                },
+              ),
+            ),
           ],
         ),
       ),
-          );
+    );
   }
 }

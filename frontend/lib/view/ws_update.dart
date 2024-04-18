@@ -9,50 +9,55 @@ import 'package:provider/provider.dart';
 class WsUpdate extends StatefulWidget {
   final Plant plant;
   final WaterSchedule ws;
-  const WsUpdate({Key? key, required this.plant, required this.ws}) : super(key: key);
+  const WsUpdate({Key? key, required this.plant, required this.ws})
+      : super(key: key);
 
   @override
   State<WsUpdate> createState() => _WsUpdateState();
 }
 
 class _WsUpdateState extends State<WsUpdate> {
-	bool _mondayController = false;
-	bool _tuesdayController = false;
-	bool _wednesdayController = false;
-	bool _thursdayController = false;
-	bool _fridayController = false;
-	bool _saturdayController = false;
-	bool _sundayController = false;
-  	late TextEditingController _notesController;
-	String? _currentSelectedValue;
-  	final List<String> _dropdownValues = ["Drip", "Hand Watering", "Sprinkler", "Soaker Hose"];
+  bool _mondayController = false;
+  bool _tuesdayController = false;
+  bool _wednesdayController = false;
+  bool _thursdayController = false;
+  bool _fridayController = false;
+  bool _saturdayController = false;
+  bool _sundayController = false;
+  late TextEditingController _notesController;
+  String? _currentSelectedValue;
+  final List<String> _dropdownValues = [
+    "Drip",
+    "Hand Watering",
+    "Sprinkler",
+    "Soaker Hose"
+  ];
 
-@override
+  @override
   void initState() {
     super.initState();
-    	_mondayController = widget.ws.monday;
-	_tuesdayController = widget.ws.tuesday;
-	_wednesdayController = widget.ws.wednesday;
-	_thursdayController = widget.ws.thursday;
-	_fridayController = widget.ws.friday;
-	_saturdayController = widget.ws.saturday;
-	_sundayController = widget.ws.sunday;
-  	_notesController = TextEditingController(text: widget.ws.notes);
-	_currentSelectedValue = widget.ws.method;
+    _mondayController = widget.ws.monday;
+    _tuesdayController = widget.ws.tuesday;
+    _wednesdayController = widget.ws.wednesday;
+    _thursdayController = widget.ws.thursday;
+    _fridayController = widget.ws.friday;
+    _saturdayController = widget.ws.saturday;
+    _sundayController = widget.ws.sunday;
+    _notesController = TextEditingController(text: widget.ws.notes);
+    _currentSelectedValue = widget.ws.method;
   }
-
 
   @override
   Widget build(BuildContext context) {
-  WsProvider wsProvider = Provider.of<WsProvider>(context);
+    WsProvider wsProvider = Provider.of<WsProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Update Water Schedule'),
       ),
       body: ListView(
-      	padding: const EdgeInsets.all(20),
-          children: <Widget>[
-           ListTile(
+        padding: const EdgeInsets.all(20),
+        children: <Widget>[
+          ListTile(
             leading: const Text('Monday'),
             trailing: Switch(
               value: _mondayController,
@@ -60,10 +65,10 @@ class _WsUpdateState extends State<WsUpdate> {
                 setState(() {
                   _mondayController = value;
                 });
-		},
-		),
-		),
-	ListTile(
+              },
+            ),
+          ),
+          ListTile(
             leading: const Text('Tuesday'),
             trailing: Switch(
               value: _tuesdayController,
@@ -71,10 +76,10 @@ class _WsUpdateState extends State<WsUpdate> {
                 setState(() {
                   _tuesdayController = value;
                 });
-		},
-		),
-		),
-	ListTile(
+              },
+            ),
+          ),
+          ListTile(
             leading: const Text('Wednesday'),
             trailing: Switch(
               value: _wednesdayController,
@@ -82,10 +87,10 @@ class _WsUpdateState extends State<WsUpdate> {
                 setState(() {
                   _wednesdayController = value;
                 });
-		},
-		),
-		),
-	ListTile(
+              },
+            ),
+          ),
+          ListTile(
             leading: const Text('Thursday'),
             trailing: Switch(
               value: _thursdayController,
@@ -93,10 +98,10 @@ class _WsUpdateState extends State<WsUpdate> {
                 setState(() {
                   _thursdayController = value;
                 });
-		},
-		),
-		),
-	ListTile(
+              },
+            ),
+          ),
+          ListTile(
             leading: const Text('Friday'),
             trailing: Switch(
               value: _fridayController,
@@ -104,10 +109,10 @@ class _WsUpdateState extends State<WsUpdate> {
                 setState(() {
                   _fridayController = value;
                 });
-		},
-		),
-		),
-	ListTile(
+              },
+            ),
+          ),
+          ListTile(
             leading: const Text('Saturday'),
             trailing: Switch(
               value: _saturdayController,
@@ -115,10 +120,10 @@ class _WsUpdateState extends State<WsUpdate> {
                 setState(() {
                   _saturdayController = value;
                 });
-		},
-		),
-		),
-	ListTile(
+              },
+            ),
+          ),
+          ListTile(
             leading: const Text('Sunday'),
             trailing: Switch(
               value: _sundayController,
@@ -126,10 +131,10 @@ class _WsUpdateState extends State<WsUpdate> {
                 setState(() {
                   _sundayController = value;
                 });
-		},
-		),
-		),
-	   DropdownButtonFormField<String>(
+              },
+            ),
+          ),
+          DropdownButtonFormField<String>(
             decoration: InputDecoration(
               labelText: "Watering Method",
               border: OutlineInputBorder(),
@@ -140,88 +145,91 @@ class _WsUpdateState extends State<WsUpdate> {
                 _currentSelectedValue = newValue;
               });
             },
-            items: _dropdownValues.map<DropdownMenuItem<String>>((String value) {
+            items:
+                _dropdownValues.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
               );
             }).toList(),
           ),
-	   TextField(
-              decoration: InputDecoration(
-                labelText: 'Notes',
-		border: OutlineInputBorder(),
-              ),
-	      controller: _notesController,
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Notes',
+              border: OutlineInputBorder(),
             ),
-	    const SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: () {
-			
-			if (_notesController.text.isNotEmpty && (_currentSelectedValue?.isNotEmpty ?? false)) {
-      				updateWaterSchedule();
-    			} else {
-      				ScaffoldMessenger.of(context).showSnackBar(
-        				SnackBar(content: Text('Please ensure notes and method are complete.')),
-      				);			
-			}
-			},
-			child: const Text('Submit'),
-			),
-		const SizedBox(height: 20.0),
-              	ElevatedButton(
-                	onPressed: () async {
-			try {
-			final wsProvider = Provider.of<WsProvider>(context, listen: false);
-			await wsProvider.deleteWs(widget.ws.id);
-				ScaffoldMessenger.of(context).showSnackBar(
-        				SnackBar(content: Text('Schedule successfully deleted.')),
-      				);
-				Navigator.pop(context);
-			} catch (e) {
-				ScaffoldMessenger.of(context).showSnackBar(
-        				SnackBar(content: Text('Failed to delete water schedule: $e.')),
-      				);	
-			}
-			},
-			child: const Text('Delete Water Schedule'),
-			),
-
-          ],
-	  ),
+            controller: _notesController,
+          ),
+          const SizedBox(height: 20.0),
+          ElevatedButton(
+            onPressed: () {
+              if (_notesController.text.isNotEmpty &&
+                  (_currentSelectedValue?.isNotEmpty ?? false)) {
+                updateWaterSchedule();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content:
+                          Text('Please ensure notes and method are complete.')),
+                );
+              }
+            },
+            child: const Text('Submit'),
+          ),
+          const SizedBox(height: 20.0),
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                final wsProvider =
+                    Provider.of<WsProvider>(context, listen: false);
+                await wsProvider.deleteWs(widget.ws.id);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Schedule successfully deleted.')),
+                );
+                Navigator.pop(context);
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text('Failed to delete water schedule: $e.')),
+                );
+              }
+            },
+            child: const Text('Delete Water Schedule'),
+          ),
+        ],
+      ),
     );
   }
- void updateWaterSchedule() async {
-  try {
-	final wsProvider = Provider.of<WsProvider>(context, listen: false);
-    await wsProvider.updateWs({
-      'id': widget.ws.id,
-      'monday': _mondayController,
-      'tuesday': _tuesdayController,
-      'wednesday': _wednesdayController,
-      'thursday': _thursdayController,
-      'friday': _fridayController,
-      'saturday': _saturdayController,
-      'sunday': _sundayController,
-      'plant_id': widget.plant.id,
-      'method': _currentSelectedValue,
-      'notes': _notesController.text.trim(),
-    }, widget.plant.id, widget.ws.id);
-	ScaffoldMessenger.of(context).showSnackBar(
-        	SnackBar(content: Text('Water schedule updated successfully!')),
-      	);
-    Navigator.pop(context); 
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Failed to update water schedule: $e')),
-    );
+
+  void updateWaterSchedule() async {
+    try {
+      final wsProvider = Provider.of<WsProvider>(context, listen: false);
+      await wsProvider.updateWs({
+        'id': widget.ws.id,
+        'monday': _mondayController,
+        'tuesday': _tuesdayController,
+        'wednesday': _wednesdayController,
+        'thursday': _thursdayController,
+        'friday': _fridayController,
+        'saturday': _saturdayController,
+        'sunday': _sundayController,
+        'plant_id': widget.plant.id,
+        'method': _currentSelectedValue,
+        'notes': _notesController.text.trim(),
+      }, widget.plant.id, widget.ws.id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Water schedule updated successfully!')),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update water schedule: $e')),
+      );
+    }
+    @override
+    void dispose() {
+      _notesController.dispose();
+      super.dispose();
+    }
   }
-  	@override
-	void dispose() {
-  	_notesController.dispose();
-  	super.dispose();
-	}
-
-}
-
 }

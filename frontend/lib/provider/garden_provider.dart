@@ -17,20 +17,20 @@ class GardenProvider with ChangeNotifier {
 
   Future<List<Garden>> fetchGarden() async {
     try {
-    	gardens = await fetchGardenApi();
-    	notifyListeners();
-	return gardens;
+      gardens = await fetchGardenApi();
+      notifyListeners();
+      return gardens;
     } catch (e) {
-    	print(e);
-	return[];
+      print(e);
+      return [];
     }
   }
 
   //Future<void> fetchGarden({Garden garden}) async {
-   // this.garden = await fetchGarden(garden?.id);
-   // this.prevGarden = garden;
-   // notifyListeners();
- // }
+  // this.garden = await fetchGarden(garden?.id);
+  // this.prevGarden = garden;
+  // notifyListeners();
+  // }
 
   Future<void> createGarden(Map<String, dynamic> garden) async {
     createGardenApi(garden);
@@ -40,19 +40,19 @@ class GardenProvider with ChangeNotifier {
   Future<void> updateGarden(Map<String, dynamic> garden, var gardenId) async {
     updateGardenApi(garden, gardenId);
 
-       notifyListeners();
+    notifyListeners();
     if (prevGarden != null) {
-    	int index = gardens.indexWhere((g) => g.id == prevGarden!.id);
-    
-    	if (index != -1) {
-      		gardens[index] = Garden.fromJson(garden);
-    	}
-    }
-}
+      int index = gardens.indexWhere((g) => g.id == prevGarden!.id);
 
- // Future<void> deleteGarden(Garden garden) async {
+      if (index != -1) {
+        gardens[index] = Garden.fromJson(garden);
+      }
+    }
+  }
+
+  // Future<void> deleteGarden(Garden garden) async {
   //  await deleteGardenApi(garden.id);
   //  gardens.removeAt(this.gardens.indexOf(garden));
   //  notifyListeners();
- // }
+  // }
 }

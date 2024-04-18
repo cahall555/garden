@@ -11,21 +11,22 @@ class WsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
-  Future<void> updateWs(Map<String, dynamic> wsData, var plantId, var wsId) async {
+  Future<void> updateWs(
+      Map<String, dynamic> wsData, var plantId, var wsId) async {
     await updateWsApi(wsData, plantId, wsId);
 
     if (prevWs != null) {
-    	int index = wsList.indexWhere((w) => w.id == prevWs!.id);
-    
-    	if (index != -1) {
-      		wsList[index] = WaterSchedule.fromJson(wsData);
-    	}
+      int index = wsList.indexWhere((w) => w.id == prevWs!.id);
+
+      if (index != -1) {
+        wsList[index] = WaterSchedule.fromJson(wsData);
+      }
     }
     notifyListeners();
-}
-Future<void> deleteWs(var wsId) async {
-	await deleteWsApi(wsId);
-	notifyListeners();
-}
+  }
+
+  Future<void> deleteWs(var wsId) async {
+    await deleteWsApi(wsId);
+    notifyListeners();
+  }
 }

@@ -5,7 +5,6 @@ import '../model/apis/garden_api.dart';
 import '../provider/garden_provider.dart';
 import 'package:provider/provider.dart';
 
-
 class GardenUpdate extends StatefulWidget {
   final Garden garden;
   //final Function(Garden) onUpdateSuccess;
@@ -16,9 +15,9 @@ class GardenUpdate extends StatefulWidget {
 }
 
 class _GardenUpdateState extends State<GardenUpdate> {
-	late TextEditingController _nameController;
-        late TextEditingController _zoneController;
-	//Future<Garden>? _futureGarden;
+  late TextEditingController _nameController;
+  late TextEditingController _zoneController;
+  //Future<Garden>? _futureGarden;
 
   @override
   void initState() {
@@ -29,40 +28,40 @@ class _GardenUpdateState extends State<GardenUpdate> {
 
   @override
   Widget build(BuildContext context) {
-  
     return Scaffold(
       appBar: AppBar(
         title: Text('Update Garden'),
       ),
       body: ListView(
-      	padding: const EdgeInsets.all(20),
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Name',
-		border: OutlineInputBorder(),
-              ),
-	      controller: _nameController,
+        padding: const EdgeInsets.all(20),
+        children: <Widget>[
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Name',
+              border: OutlineInputBorder(),
             ),
-	    const SizedBox(height: 20.0),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Zone',
-		border: OutlineInputBorder(),
-              ),
-	      controller: _zoneController,
+            controller: _nameController,
+          ),
+          const SizedBox(height: 20.0),
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Zone',
+              border: OutlineInputBorder(),
             ),
-	    const SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: () {
-			updateGardenInfo();
-			},
-			child: const Text('submit'),
-			),
-          ],
-	  ),
+            controller: _zoneController,
+          ),
+          const SizedBox(height: 20.0),
+          ElevatedButton(
+            onPressed: () {
+              updateGardenInfo();
+            },
+            child: const Text('submit'),
+          ),
+        ],
+      ),
     );
   }
+
   void updateGardenInfo() async {
     try {
       Map<String, dynamic> gardenData = {
@@ -70,10 +69,11 @@ class _GardenUpdateState extends State<GardenUpdate> {
         'name': _nameController.text.trim(),
         'zone': _zoneController.text.trim(),
       };
-      final gardenProvider = Provider.of<GardenProvider>(context, listen: false);
-   
-	var gardenId = gardenData['id'];
-	 await gardenProvider.updateGarden(gardenData, gardenId);
+      final gardenProvider =
+          Provider.of<GardenProvider>(context, listen: false);
+
+      var gardenId = gardenData['id'];
+      await gardenProvider.updateGarden(gardenData, gardenId);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Garden updated successfully!')),
       );

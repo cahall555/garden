@@ -16,7 +16,7 @@ func TagsShow(c buffalo.Context) error {
 
 	err := tx.Eager().Find(&tag, tagID)
 	if err != nil {
-		c.Flash().Add("warning", "Tag not found")
+//		c.Flash().Add("warning", "Tag not found")
 		c.Redirect(301, "/")
 	}
 
@@ -30,7 +30,7 @@ func TagsIndex(c buffalo.Context) error {
 
 	err := tx.All(&tag)
 	if err != nil {
-		c.Flash().Add("warning", "Tags not found")
+//		c.Flash().Add("warning", "Tags not found")
 		c.Redirect(301, "/")
 	}
 
@@ -41,7 +41,7 @@ func TagsIndex(c buffalo.Context) error {
 func TagsCreate(c buffalo.Context) error {
 	tag := models.Tag{}
 	c.Set("tag", tag)
-	return c.Render(http.StatusOK, r.HTML("tags/create.html"))
+	return c.Render(http.StatusOK, r.JSON(tag))//r.HTML("tags/create.html"))
 }
 
 func TagsNew(c buffalo.Context) error {
@@ -49,7 +49,7 @@ func TagsNew(c buffalo.Context) error {
 	tag := &models.Tag{}
 	err := c.Bind(tag)
 	if err != nil {
-		c.Flash().Add("warning", "Tag form binding error")
+		//c.Flash().Add("warning", "Tag form binding error")
 		return c.Redirect(301, "/")
 	}
 	
@@ -59,14 +59,15 @@ func TagsNew(c buffalo.Context) error {
 	}
 
 	if verrs.HasAny() {
-		c.Flash().Add("warning", "Tag validation error")
+		//c.Flash().Add("warning", "Tag validation error")
 		c.Set("tag", tag)
 		c.Set("errors", verrs)
 		return c.Render(422, r.HTML("tags/create.html"))
 	}
 
-	c.Flash().Add("success", "Tag created")
-	return c.Redirect(301, fmt.Sprintf("/tags/%s", tag.ID))
+	//c.Flash().Add("success", "Tag created")
+	//return c.Redirect(301, fmt.Sprintf("/tags/%s", tag.ID))
+	return c.Render(201, r.JSON(tag))
 }
 
 func TagsUpdate(c buffalo.Context) error {

@@ -4,7 +4,7 @@ import '../plants_tag.dart';
 import 'custom_exception.dart';
 import 'dart:io'; 
 
-Future<List<PlantTags>> fetchPlantsTag(String plantId) async {
+Future<List<PlantTags>> fetchPlantsTagApi(var plantId) async {
   final uri = Uri.parse('http://localhost:3000/plantstag?plant_id=$plantId');
   final response = await http.get(uri).timeout(const Duration(seconds: 30));
 

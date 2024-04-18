@@ -1,3 +1,5 @@
+import 'plant.dart';
+
 class Tag {
 	final String id;
 	final String name;

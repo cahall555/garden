@@ -10,7 +10,6 @@ import '../provider/garden_provider.dart';
 import '../provider/plant_provider.dart';
 import 'package:provider/provider.dart';
 
-
 class GardenDetail extends StatelessWidget {
   final Garden garden;
 
@@ -33,7 +32,8 @@ class GardenDetail extends StatelessWidget {
               ),
             ),
             FutureBuilder<List<Plant>>(
-              future: Provider.of<PlantProvider>(context, listen: false).fetchPlants(garden.id), 
+              future: Provider.of<PlantProvider>(context, listen: false)
+                  .fetchPlants(garden.id),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
@@ -41,8 +41,8 @@ class GardenDetail extends StatelessWidget {
                   return Text("Error: ${snapshot.error}");
                 } else if (snapshot.hasData) {
                   return ListView.builder(
-                    shrinkWrap: true, 
-                    physics: NeverScrollableScrollPhysics(), 
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return Card(
@@ -51,11 +51,12 @@ class GardenDetail extends StatelessWidget {
                         child: ListTile(
                           onTap: () {
                             Navigator.push(
-      				context,
-      				MaterialPageRoute(
-        				builder: (context) => PlantDetail(plant: snapshot.data![index]),
-      				),
-    				);
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    PlantDetail(plant: snapshot.data![index]),
+                              ),
+                            );
                           },
                           leading: Icon(Icons.local_florist),
                           title: Text(
@@ -73,8 +74,8 @@ class GardenDetail extends StatelessWidget {
                 } else {
                   return Text("No plants found");
                 }
-             },
-	),
+              },
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ElevatedButton(
@@ -82,7 +83,9 @@ class GardenDetail extends StatelessWidget {
                   // Navigate to update garden page
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => GardenUpdate(garden: this.garden)),
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            GardenUpdate(garden: this.garden)),
                   );
                 },
                 child: Text('Update Garden'),
@@ -107,7 +110,8 @@ class GardenDetail extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PlantCreate(garden: this.garden)),
+                    MaterialPageRoute(
+                        builder: (context) => PlantCreate(garden: this.garden)),
                   );
                 },
                 child: Text('Add Plant'),

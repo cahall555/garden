@@ -15,31 +15,33 @@ import 'ws_update.dart';
 import 'journal_detail.dart';
 import 'journal_create.dart';
 import '../provider/ws_provider.dart';
+import '../provider/tag_provider.dart';
+import '../provider/plants_tag_provider.dart';
 import '../provider/journal_provider.dart';
 import 'package:provider/provider.dart';
 
-
-
 class PlantDetail extends StatelessWidget {
   final Plant plant;
- // final WaterSchedule ws;
 
   PlantDetail({Key? key, required this.plant}) : super(key: key);
 
-   Future<List<Tag>> fetchDataTags() async {
-  	final plantTags = await fetchPlantsTag(plant.id);
-	List<Tag> tags = [];
-  	for (var pt in plantTags) {
-    		final tag = await fetchTag(pt.tag_id);
-    		tags.addAll(tag);
-  	}
-  	return tags;
+  Future<List<Tag>> fetchDataTags(BuildContext context) async {
+    final tagProvider = Provider.of<TagProvider>(context, listen: false);
+    final plantsTagProvider =
+        Provider.of<PlantsTagProvider>(context, listen: false);
+    final plantTags = await plantsTagProvider.fetchPlantsTag(plant.id);
+    List<Tag> tags = [];
+    for (var pt in plantTags) {
+      final tag = await tagProvider.fetchTag(pt.tag_id);
+      tags.addAll(tag);
     }
+    return tags;
+  }
 
   @override
   Widget build(BuildContext context) {
-final journalProvider = Provider.of<JournalProvider>(context, listen: false);
-
+    final journalProvider =
+        Provider.of<JournalProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(plant.name),
@@ -51,11 +53,13 @@ final journalProvider = Provider.of<JournalProvider>(context, listen: false);
               elevation: 5,
               margin: EdgeInsets.all(8),
               child: ListTile(
-	     	 title: Text(plant.germinated ? "plant has germinated" : "Plant is not germinated"),
-	     ),
+                title: Text(plant.germinated
+                    ? "plant has germinated"
+                    : "Plant is not germinated"),
+              ),
             ),
-           FutureBuilder<List<Journal>>(
-	      future: journalProvider.fetchPlantJournal(plant.id), 
+            FutureBuilder<List<Journal>>(
+              future: journalProvider.fetchPlantJournal(plant.id),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
@@ -63,8 +67,8 @@ final journalProvider = Provider.of<JournalProvider>(context, listen: false);
                   return Text("Error: ${snapshot.error}");
                 } else if (snapshot.hasData) {
                   return ListView.builder(
-                    shrinkWrap: true, 
-                    physics: NeverScrollableScrollPhysics(), 
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return Card(
@@ -72,12 +76,13 @@ final journalProvider = Provider.of<JournalProvider>(context, listen: false);
                         margin: EdgeInsets.all(8),
                         child: ListTile(
                           onTap: () {
-			  Navigator.push(
-			    context,
-			    MaterialPageRoute(
-			      builder: (context) => JournalDetail(journal: snapshot.data![index]),
-			    ),
-			  );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => JournalDetail(
+                                    journal: snapshot.data![index]),
+                              ),
+                            );
                           },
                           leading: Icon(Icons.local_florist),
                           title: Text(
@@ -87,7 +92,7 @@ final journalProvider = Provider.of<JournalProvider>(context, listen: false);
                               color: Colors.green[800],
                             ),
                           ),
-			  subtitle: Text( snapshot.data![index].entry),
+                          subtitle: Text(snapshot.data![index].entry),
                           trailing: Icon(Icons.favorite),
                         ),
                       );
@@ -98,21 +103,23 @@ final journalProvider = Provider.of<JournalProvider>(context, listen: false);
                 }
               },
             ),
-	FutureBuilder<List<WaterSchedule>>(
-	      future: fetchWaterSchedule(plant.id), 
+            FutureBuilder<List<WaterSchedule>>(
+              future: fetchWaterSchedule(plant.id),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-			if (snapshot.error is CustomHttpException && (snapshot.error as CustomHttpException).message == '404 Not Found') {
-        			return Text("No Water Schedules found for this plant");
-			} else {
-                  		return Text("Error: ${snapshot.error}");
-			}
+                  if (snapshot.error is CustomHttpException &&
+                      (snapshot.error as CustomHttpException).message ==
+                          '404 Not Found') {
+                    return Text("No Water Schedules found for this plant");
+                  } else {
+                    return Text("Error: ${snapshot.error}");
+                  }
                 } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                   return ListView.builder(
-                    shrinkWrap: true, 
-                    physics: NeverScrollableScrollPhysics(), 
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return Card(
@@ -120,12 +127,14 @@ final journalProvider = Provider.of<JournalProvider>(context, listen: false);
                         margin: EdgeInsets.all(8),
                         child: ListTile(
                           onTap: () {
-			   Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WsUpdate(plant: this.plant, ws: snapshot.data![index]),
-                            ),
-                          );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WsUpdate(
+                                    plant: this.plant,
+                                    ws: snapshot.data![index]),
+                              ),
+                            );
                           },
                           leading: Icon(Icons.local_florist),
                           title: Text(
@@ -145,27 +154,24 @@ final journalProvider = Provider.of<JournalProvider>(context, listen: false);
                 }
               },
             ),
-
-	FutureBuilder<List<Tag>>(
-	      future: fetchDataTags(), 
+            FutureBuilder<List<Tag>>(
+              future: fetchDataTags(context),
               builder: (context, snapshot) {
-               if (snapshot.connectionState == ConnectionState.waiting) {
-      			return CircularProgressIndicator();
-    		} else if (snapshot.hasError) {
-      			return Text("Error: ${snapshot.error}");
-    		} else if (snapshot.hasData) {
-                    return ListView.builder(
-                    shrinkWrap: true, 
-                    physics: NeverScrollableScrollPhysics(), 
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text("Error: ${snapshot.error}");
+                } else if (snapshot.hasData) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return Card(
                         elevation: 5,
                         margin: EdgeInsets.all(8),
                         child: ListTile(
-                          onTap: () {
-                           
-                          },
+                          onTap: () {},
                           leading: Icon(Icons.local_florist),
                           title: Text(
                             snapshot.data![index].name,
@@ -184,24 +190,28 @@ final journalProvider = Provider.of<JournalProvider>(context, listen: false);
                 }
               },
             ),
-	Padding(
+            Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ElevatedButton(
                 onPressed: () async {
-		 List<WaterSchedule> schedules = await fetchWaterSchedule(plant.id);
-		
-		if (schedules.isNotEmpty) {
-		  WaterSchedule ws = schedules.first;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => WsUpdate(plant: this.plant, ws: ws)),
-                  );
-		} else {
-		  Navigator.push(
-       		  context,
-                  MaterialPageRoute(builder: (context) => WsCreate(plant: this.plant)),
-        	);
-      		}
+                  List<WaterSchedule> schedules =
+                      await fetchWaterSchedule(plant.id);
+
+                  if (schedules.isNotEmpty) {
+                    WaterSchedule ws = schedules.first;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              WsUpdate(plant: this.plant, ws: ws)),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WsCreate(plant: this.plant)),
+                    );
+                  }
                 },
                 child: Text('Water Schedule'),
               ),
@@ -225,18 +235,17 @@ final journalProvider = Provider.of<JournalProvider>(context, listen: false);
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => JournalCreate(plant: this.plant)),
+                    MaterialPageRoute(
+                        builder: (context) => JournalCreate(plant: this.plant)),
                   );
-		 // Navigator.of(context).pop();
+                  // Navigator.of(context).pop();
                 },
                 child: Text('Add Journal'),
               ),
             ),
-
           ],
         ),
       ),
-         );
+    );
   }
 }
-
