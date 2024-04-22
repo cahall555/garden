@@ -14,6 +14,8 @@ import 'ws_create.dart';
 import 'ws_update.dart';
 import 'journal_detail.dart';
 import 'journal_create.dart';
+import 'tag_create.dart';
+import 'tag_detail.dart';
 import '../provider/ws_provider.dart';
 import '../provider/tag_provider.dart';
 import '../provider/plants_tag_provider.dart';
@@ -32,7 +34,9 @@ class PlantDetail extends StatelessWidget {
     final plantTags = await plantsTagProvider.fetchPlantsTag(plant.id);
     List<Tag> tags = [];
     for (var pt in plantTags) {
+	    print(pt.tag_id);
       final tag = await tagProvider.fetchTag(pt.tag_id);
+      
       tags.addAll(tag);
     }
     return tags;
@@ -171,7 +175,15 @@ class PlantDetail extends StatelessWidget {
                         elevation: 5,
                         margin: EdgeInsets.all(8),
                         child: ListTile(
-                          onTap: () {},
+                          onTap: () {
+			    Navigator.push(
+			      context,
+			      MaterialPageRoute(
+				builder: (context) =>
+				    TagDetail(tag: snapshot.data![index]),
+			      ),
+			    );
+			  },
                           leading: Icon(Icons.local_florist),
                           title: Text(
                             snapshot.data![index].name,
@@ -241,6 +253,20 @@ class PlantDetail extends StatelessWidget {
                   // Navigator.of(context).pop();
                 },
                 child: Text('Add Journal'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TagCreate(plant: this.plant)),
+                  );
+                  // Navigator.of(context).pop();
+                },
+                child: Text('Add Tag'),
               ),
             ),
           ],

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../model/tag.dart';
 import '../model/apis/tag_api.dart';
 import 'tag_create.dart';
-//import 'tag_detail.dart';
+import 'tag_detail.dart';
 import '../provider/tag_provider.dart';
 
 class TagList extends StatefulWidget {
@@ -48,13 +48,13 @@ class _TagListState extends State<TagList> {
                           margin: EdgeInsets.all(8),
                           child: ListTile(
                             onTap: () {
-                              // Navigator.push(
-                              // context,
-                              // MaterialPageRoute(
-                              // builder: (context) =>
-                              //        TagDetail(tag: snapshot.data![index]),
-                              //),
-                              //);
+                               Navigator.push(
+                               context,
+                               MaterialPageRoute(
+                               builder: (context) =>
+                                      TagDetail(tag: snapshot.data![index]),
+                              ),
+                              );
                             },
                             leading: Icon(Icons.local_florist),
                             title: Text(

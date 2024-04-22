@@ -3,7 +3,7 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-	"fmt"
+//	"fmt"
 	"log"
 	"github.com/gofrs/uuid"
 	"github.com/gobuffalo/buffalo"
@@ -25,6 +25,33 @@ func PlantTagIndex(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.JSON(pt))
 }
 
+func PlantTagCreate(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	pt := &models.PlantsTag{}
+	err := c.Bind(pt)
+	if err != nil {
+	//	c.Flash().Add("warning", "Plant Tag form binding error")
+		c.Logger().Errorf("Error binding Plant Tag form: %v", err)
+		return c.Redirect(301, "/")
+	}
+
+	verrs, err := tx.ValidateAndCreate(pt)
+	if err != nil {
+	//	c.Flash().Add("warning", "Plant Tag validation error")
+		c.Logger().Errorf("Error validating Plant Tag: %v", err)
+		return c.Redirect(301, "/")
+	}
+
+	if verrs.HasAny() {
+		c.Set("errors", verrs)
+		return c.Render(http.StatusUnprocessableEntity, r.JSON(pt))
+	}
+
+	c.Flash().Add("success", "Plant Tag created")
+	return c.Render(http.StatusOK, r.JSON(pt))
+	//return c.Redirect(301, fmt.Sprintf("/tags/%s", pt.TagID))
+}
+
 func PlantTagDelete(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	tagID := c.Param("tagid")
@@ -36,18 +63,21 @@ func PlantTagDelete(c buffalo.Context) error {
     	err := query.First(&pt)
     	if err != nil {
         	c.Logger().Errorf("Error finding PlantTag with PlantID %s and TagID %s, error: %v", plantID, tagID, err)
-        	c.Flash().Add("error", "PlantTag not found")
-        	return c.Redirect(http.StatusFound, "/tags/") 
+//        	c.Flash().Add("error", "PlantTag not found")
+//        	return c.Redirect(http.StatusFound, "/tags/") 
+		return c.Render(http.StatusNotFound, r.JSON("PlantTag not found"))
     	}
 
 	if err := tx.Destroy(&pt); err != nil {
 		c.Logger().Errorf("Error deleting Plant Tag with tagid %s and plantid %s, error: %v", tagID, plantID, err)
-		c.Flash().Add("error", "Error deleting Plant Tag")
-		return c.Redirect(http.StatusFound, "/")
+//		c.Flash().Add("error", "Error deleting Plant Tag")
+//		return c.Redirect(http.StatusFound, "/")
+		return c.Render(http.StatusNotFound, r.JSON("PlantTag not found"))
 	}
 
-	c.Flash().Add("success", "Plant Tag relationship updated")
-	return c.Redirect(301, fmt.Sprintf("/tags/%s", tagID))
+//	c.Flash().Add("success", "Plant Tag relationship updated")
+//	return c.Redirect(301, fmt.Sprintf("/tags/%s", tagID))
+	return c.Render(http.StatusOK, r.JSON("Plant Tag relationship deleted"))
 
 }
 

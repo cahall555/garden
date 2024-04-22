@@ -110,6 +110,7 @@ func App() *buffalo.App {
 		app.PUT("/water_schedules/", WaterSchedulesEdit)
 		app.DELETE("/water_schedules/{id}", WaterSchedulesDelete)
 		app.GET("/plantstag", PlantTagIndex)
+		app.POST("/plantstag", PlantTagCreate)
 		app.DELETE("/plantstag/{tagid}/{plantid}", PlantTagDelete)
 		app.ServeFiles("/", http.FS(public.FS())) // serve files from the public directory
 	})

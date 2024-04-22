@@ -33,3 +33,16 @@ Future<List<PlantTags>> fetchPlantsTagApi(var plantId) async {
     throw Exception('Request failed with status: ${response.statusCode}.');
   }
 }
+
+Future<void> createPlantsTagApi(Map<String, dynamic> plantTagData) async {
+  final uri = Uri.parse('http://localhost:3000/plantstag');
+  final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+  final body = json.encode(plantTagData);
+
+  final response = await http.post(uri, headers: headers, body: body).timeout(const Duration(seconds: 30));
+
+  if (response.statusCode != 201) {
+    throw HttpException('Failed to create plant tag', uri: uri);
+  }
+}
+

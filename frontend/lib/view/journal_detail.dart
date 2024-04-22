@@ -30,14 +30,13 @@ class JournalDetail extends StatelessWidget {
                 children: <Widget>[
                   ListTile(
                     title: Text(journal.category),
-                    //leading: Image.asset(journal.image),
                     subtitle: Text(journal.entry),
                   ),
-                  //Image.asset(
-                  //  journal.image,
-                  //width: double.infinity,
-                  //fit: BoxFit.cover,
-                  //),
+                  Image.asset(
+                    'assets/' + (journal.image ?? 'tomato.jpg'),
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ],
               ),
             ),

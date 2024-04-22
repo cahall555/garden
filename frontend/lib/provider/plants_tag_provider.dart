@@ -16,4 +16,12 @@ class PlantsTagProvider with ChangeNotifier {
       return [];
     }
   }
+  Future<void> createPlantsTag(Map<String, dynamic> plantTag) async {
+    try {
+      await createPlantsTagApi(plantTag);
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
 }

@@ -1,10 +1,14 @@
 import 'package:flutter/widgets.dart';
 import '../model/tag.dart';
 import '../model/apis/tag_api.dart';
+import 'package:provider/provider.dart';
+import '../model/plants_tag.dart';
+import '../model/apis/plants_tag_api.dart';
+import 'plants_tag_provider.dart';
 
 class TagProvider with ChangeNotifier {
   List<Tag> tags = [];
-  //Tag? prevTag;
+  Tag? newTag;
 
   Future<List<Tag>> fetchTags() async {
     try {
@@ -28,8 +32,34 @@ class TagProvider with ChangeNotifier {
     }
   }
 
-  Future<void> createTag(Map<String, dynamic> tag) async {
-    createTagApi(tag);
-    notifyListeners();
+  Future<Tag> createTag(Map<String, dynamic> tag) async {
+    try {
+      newTag = await createTagApi(tag);
+      notifyListeners();
+      return newTag!;
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to create tag');
+    }
+  }
+
+  Future<void> updateTag(Map<String, dynamic> tagData, var tagId) async {
+    try {
+      await updateTagApi(tagData, tagId);
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to update tag');
+    }
+  }
+
+  Future<void> deleteTag(var tagId) async {
+    try {
+      await deleteTagApi(tagId);
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to delete tag');
+    }
   }
 }

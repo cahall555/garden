@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../model/plant.dart';
 import '../model/tag.dart';
 import '../model/apis/tag_api.dart';
+import '../model/plants_tag.dart';
+import '../model/apis/plants_tag_api.dart';
 import '../provider/tag_provider.dart';
+import '../provider/plants_tag_provider.dart';
 import 'package:provider/provider.dart';
 
 class TagCreate extends StatefulWidget {
-  const TagCreate({Key? key}) : super(key: key);
+  final Plant? plant;
+  const TagCreate({Key? key, this.plant}) : super(key: key);
 
   @override
   State<TagCreate> createState() => _TagCreateState();
@@ -53,9 +58,23 @@ class _TagCreateState extends State<TagCreate> {
   void submitTag() async {
     try {
       final tagProvider = Provider.of<TagProvider>(context, listen: false);
-      await tagProvider.createTag({
-        'name': _nameController.text.trim(),
-      });
+      if (widget.plant != null) {
+        Tag newTag = await tagProvider.createTag({
+          'name': _nameController.text.trim(),
+        });
+        var tagid = newTag.id;
+        PlantsTagProvider plantsTagProvider =
+            Provider.of<PlantsTagProvider>(context, listen: false);
+
+	await plantsTagProvider.createPlantsTag({
+		'plant_id': widget.plant!.id,
+		'tag_id': tagid,
+	});
+      } else {
+        await tagProvider.createTag({
+          'name': _nameController.text.trim(),
+        });
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Tag updated successfully!')),
       );

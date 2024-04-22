@@ -120,6 +120,20 @@ func PlantsNew(c buffalo.Context) error {
 
 	garden.Plants = append(garden.Plants, *plant)
 
+	
+	waterSchedules := models.WaterSchedule{
+		Monday: false, // default
+		Tuesday: false, // default
+		Wednesday: false, // default
+		Thursday: false, // default
+		Friday: false, // default
+		Saturday: false, // default
+		Sunday: false, // default
+		Method: "Drip", // default
+        	Notes: "Defalt watering schedule", //defalt
+    }
+    plant.WaterSchedules = waterSchedules
+
 	verrs, err := tx.Eager().ValidateAndCreate(plant)
 	if err != nil {
 		return c.Error(500, err)//c.Redirect(301, "/")

@@ -31,6 +31,11 @@ class _GardenListState extends State<GardenList> {
         return Scaffold(
           body: Stack(
             children: <Widget>[
+              Image.asset(
+                'assets/' + ('garden_sunset.webp'),
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
               FutureBuilder<List<Garden>>(
                 future: futureGardens,
                 builder: (context, snapshot) {
