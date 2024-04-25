@@ -3,7 +3,7 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-	"fmt"
+//	"fmt"
 	"strings"
 	"log"
 	"database/sql"
@@ -159,7 +159,8 @@ func PlantsUpdate(c buffalo.Context) error {
 	err := tx.Eager("PlantTags").Find(&plant, plantID)
    	if err != nil {
 		c.Logger().Error("Plant tags: ", plant.PlantTags)
-		return c.Redirect(302, "/")
+	//	return c.Redirect(302, "/")
+		return c.Render(500, r.JSON(plant))
     	}
     
     	var tags []string
@@ -175,39 +176,45 @@ func PlantsUpdate(c buffalo.Context) error {
 	gardens := &models.Gardens{}
 	err = tx.All(gardens)
 	if err != nil {
-		return c.Redirect(302, "/")
+//		return c.Redirect(302, "/")
+		return c.Render(500, r.JSON(gardens))
 	}
 	c.Set("gardens", gardens)
 
 	err = tx.Eager().Find(&plant, plantID)
 	if err != nil {
-		c.Flash().Add("warning", "Plant not found")
-		c.Redirect(301, "/")
+//		c.Flash().Add("warning", "Plant not found")
+//		c.Redirect(301, "/")
+		return c.Render(500, r.JSON(plant))
 		c.Logger().Debug(plantID)
 		c.Logger().Error("Plant not found: ", err)
 	}
 	c.Set("tagsStr", tagsStr)
 	c.Set("plant", plant)
-	return c.Render(http.StatusOK, r.HTML("plants/update.html"))
+//	return c.Render(http.StatusOK, r.HTML("plants/update.html"))
+	return c.Render(200, r.JSON(plant))
 }
 
 func PlantsEdit(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	plant := &models.Plant{}
-	if err := tx.Find(plant, c.Param("plantId")); err != nil {
-		return err
+	if err := tx.Find(plant, c.Param("id")); err != nil {
+//		return err
+		return c.Render(500, r.JSON(plant))
 	}
 	
 	err := c.Bind(plant)
 	if err != nil {
-		c.Flash().Add("warning", "Plant form binding error")
-		return c.Redirect(301, "/")
+//		c.Flash().Add("warning", "Plant form binding error")
+//		return c.Redirect(301, "/")
+		return c.Render(500, r.JSON(plant))
 	}
 
 	err = c.Request().ParseForm()
 	if err != nil {
-		c.Flash().Add("error", "Plant form parsing error")
-		return c.Redirect(301, "/")
+//		c.Flash().Add("error", "Plant form parsing error")
+//		return c.Redirect(301, "/")
+		return c.Render(500, r.JSON(plant))
 	}
 
 
@@ -226,7 +233,7 @@ func PlantsEdit(c buffalo.Context) error {
 			err2 := tx.Create(t)
 			if err2 != nil {
 				log.Fatal(err2)
-				c.Flash().Add("error", "Tags creation error")
+//				c.Flash().Add("error", "Tags creation error")
 			}
 			} else {
 				log.Fatal(err)
@@ -251,14 +258,16 @@ func PlantsEdit(c buffalo.Context) error {
 
         		verrs, err := tx.ValidateAndCreate(newRelationship)
         		if err != nil {
-            			return c.Redirect(301, "/")
+  //          			return c.Redirect(301, "/")
+  				return c.Render(500, r.JSON(plant))
         		}
         		if verrs.HasAny() {
-            			c.Flash().Add("warning", "Relationship validation error")
+//            			c.Flash().Add("warning", "Relationship validation error")
 	    			c.Set("plant", plant)
 	    			c.Set("errors", verrs)
 	    			c.Logger().Error("Validation errors: ", verrs)
-	    			return c.Render(422, r.HTML("plants/update.html"))
+//	    			return c.Render(422, r.HTML("plants/update.html"))
+				return c.Render(422, r.JSON(verrs))
 
     			} else {
         			c.Logger().Error("Relationship error: ", err)
@@ -273,19 +282,22 @@ func PlantsEdit(c buffalo.Context) error {
 	verrs, err := tx.Eager().ValidateAndUpdate(plant)
 	if err != nil {
 		c.Logger().Error("Plant update error: ", err)
-		return c.Redirect(301, "/")
+//		return c.Redirect(301, "/")
+		return c.Render(500, r.JSON(plant))
 	}
 
 	if verrs.HasAny() {
-		c.Flash().Add("warning", "Plant validation error")
+//		c.Flash().Add("warning", "Plant validation error")
 		c.Set("plant", plant)
 		c.Set("errors", verrs)
 		c.Logger().Error("Validation errors: ", verrs)
-		return c.Render(422, r.HTML("plants/update.html"))
+//		return c.Render(422, r.HTML("plants/update.html"))
+		return c.Render(422, r.JSON(verrs))
 	}
 
-	c.Flash().Add("success", "Plant updated")
-	return c.Redirect(301, fmt.Sprintf("/plants/%s", plant.ID))
+//	c.Flash().Add("success", "Plant updated")
+//	return c.Redirect(301, fmt.Sprintf("/plants/%s", plant.ID))
+	return c.Render(200, r.JSON(plant))
 }
 
 func PlantsDelete(c buffalo.Context) error {
@@ -294,21 +306,24 @@ func PlantsDelete(c buffalo.Context) error {
 	
 	plant := &models.Plant{}
 	if err := tx.Find(plant, plantID); err != nil {
-		c.Flash().Add("warning", "Plant not found")
-		return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+//		c.Flash().Add("warning", "Plant not found")
+//		return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+		return c.Render(500, r.JSON(plant))
 	}
 
 	journals := []models.Journal{}
 	if err := tx.Where("plant_id = ?", plantID).All(&journals); err != nil {
-		c.Flash().Add("warning", "Error retreiving journals for plant")
-		return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+//		c.Flash().Add("warning", "Error retreiving journals for plant")
+//		return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+		return c.Render(500, r.JSON(plant))
 	}
 
 	for _, j := range journals {
 		id := j.ID
 		 if err := DeleteJournalById(tx, id); err != nil {
-	        	c.Flash().Add("error", "Error deleting journals for plant")
-        		return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+//	        	c.Flash().Add("error", "Error deleting journals for plant")
+//        		return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+			return c.Render(500, r.JSON(plant))
 		}
 	}
 	
@@ -320,35 +335,40 @@ func PlantsDelete(c buffalo.Context) error {
 		wsId := ws.ID
 
 		if err := DeleteWSById(tx, wsId); err != nil {
-			c.Flash().Add("error", "Error deleting water schedule for plant")
-			return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+//			c.Flash().Add("error", "Error deleting water schedule for plant")
+//			return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+			return c.Render(500, r.JSON(plant))
 		}
 	}
 
 	pt := []models.PlantsTag{}
 	if err := tx.Where("plant_id = ?", plantID).All(&pt); err != nil {
-		c.Flash().Add("warning", "Error retreiving tags for plant")
-		c.Logger().Info("Could not retrieve tages for plant")
-		return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+//		c.Flash().Add("warning", "Error retreiving tags for plant")
+		c.Logger().Info("Could not retrieve tags for plant")
+//		return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+		return c.Render(500, r.JSON(plant))
 	}
 
 	for _, t := range pt {
 		id := t.ID
 		if err := DeletePlantTagsById(tx, id); err != nil {
-			c.Flash().Add("error", "Error deleting tags from pant")
+//			c.Flash().Add("error", "Error deleting tags from pant")
 			c.Logger().Info("Error deleting tags from plant")
-			return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+//			return c.Redirect(302, fmt.Sprintf("/plants/%s", plant.ID))
+			return c.Render(500, r.JSON(plant))
 		}
 	}
 
 	if err := tx.Destroy(plant); err != nil {
 		c.Logger().Errorf("Error deleting plant with id %s, error: %v", plantID, err)
-		c.Flash().Add("error", "Error deleting plant")
-		return c.Redirect(http.StatusFound, "/")
+//		c.Flash().Add("error", "Error deleting plant")
+//		return c.Redirect(http.StatusFound, "/")
+		return c.Render(500, r.JSON(plant))
 	}
 
-	c.Flash().Add("success", "Plant has been deleted.")
-	return c.Redirect(301, "/")
+//	c.Flash().Add("success", "Plant has been deleted.")
+//	return c.Redirect(301, "/")
+	return c.Render(200, r.JSON(plant))
 }
 
 // Delete plant as part of parent delete

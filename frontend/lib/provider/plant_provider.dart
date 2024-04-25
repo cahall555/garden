@@ -22,22 +22,14 @@ class PlantProvider with ChangeNotifier {
     notifyListeners();
   }
 
-//  Future<void> updatePlant(Map<String, dynamic> plant, var plantId) async {
-//    updatePlantApi(plant, plantId);
 
-//       notifyListeners();
-//    if (prevPlant != null) {
-//    	int index = plants.indexWhere((p) => p.id == prevPlant!.id);
+  Future<void> updatePlant(Map<String, dynamic> plant) async {
+    updatePlantApi(plant);
+    notifyListeners();
+  }
 
-//    	if (index != -1) {
-//      		plants[index] = Plant.fromJson(plant);
-//    	}
-//    }
-//}
-
-  // Future<void> deletePlant(Plant plant) async {
-  //  await deletePlantApi(plant.id);
-  //  plants.removeAt(this.plants.indexOf(plant));
-  //  notifyListeners();
-  // }
+  Future<void> deletePlant(var plantId) async {
+    deletePlantApi(plantId);
+    notifyListeners();
+  }
 }

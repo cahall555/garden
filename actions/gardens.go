@@ -3,7 +3,7 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-	"fmt"
+//	"fmt"
 	"github.com/pkg/errors"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"
@@ -145,31 +145,36 @@ func GardensDelete(c buffalo.Context) error {
 	
 	garden := &models.Garden{}
 	if err := tx.Find(garden, gardenID); err != nil {
-		c.Flash().Add("warning", "Garden not found")
-		return c.Redirect(302, fmt.Sprintf("/gardens/%s", garden.ID))
+//		c.Flash().Add("warning", "Garden not found")
+//		return c.Redirect(302, fmt.Sprintf("/gardens/%s", garden.ID))
+		return c.Render(http.StatusNotFound, r.JSON("Garden not found"))
 	}
 
 	plants := []models.Plant{}
 	if err := tx.Where("garden_id = ?", gardenID).All(&plants); err != nil {
-		c.Flash().Add("warning", "Error retreiving plants for garden.")
-		return c.Redirect(302, fmt.Sprintf("/gardens/%s", garden.ID))
+//		c.Flash().Add("warning", "Error retreiving plants for garden.")
+//		return c.Redirect(302, fmt.Sprintf("/gardens/%s", garden.ID))
+		return c.Render(http.StatusNotFound, r.JSON("Error retreiving plants for garden."))
 	}
 
 	for _, p := range plants {
 		id := p.ID
 		 if err := DeletePlantById(tx, id); err != nil {
-	        	c.Flash().Add("error", "Error deleting plants for garden.")
-        		return c.Redirect(302, fmt.Sprintf("/gardens/%s", garden.ID))
+//	        	c.Flash().Add("error", "Error deleting plants for garden.")
+//        		return c.Redirect(302, fmt.Sprintf("/gardens/%s", garden.ID))
+			return c.Render(http.StatusNotFound, r.JSON("Error deleting plants for garden."))
 		}
 	}
 
 	if err := tx.Destroy(garden); err != nil {
 		c.Logger().Errorf("Error deleting garden with id %s, error: %v", gardenID, err)
-		c.Flash().Add("error", "Error deleting garden.")
-		return c.Redirect(http.StatusFound, "/")
+//		c.Flash().Add("error", "Error deleting garden.")
+//		return c.Redirect(http.StatusFound, "/")
+		return c.Render(http.StatusNotFound, r.JSON("Error deleting garden."))
 	}
 
-	c.Flash().Add("success", "Garden successfully deleted")
-	return c.Redirect(http.StatusFound, "/")
+//	c.Flash().Add("success", "Garden successfully deleted")
+//	return c.Redirect(http.StatusFound, "/")
+	return c.Render(http.StatusOK, r.JSON("Garden successfully deleted"))
 
 }

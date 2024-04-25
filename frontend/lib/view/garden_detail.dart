@@ -95,10 +95,7 @@ class GardenDetail extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ElevatedButton(
                 onPressed: () {
-                  // Call delete garden method
-                  // For example, using Provider to delete garden
-                  // Provider.of<GardenProvider>(context, listen: false).deleteGarden(garden.id);
-                  // Then pop back
+                  Provider.of<GardenProvider>(context, listen: false).deleteGarden(garden.id);
                   Navigator.of(context).pop();
                 },
                 child: Text('Delete Garden'),

@@ -10,12 +10,14 @@ import '../model/plants_tag.dart';
 import '../model/apis/plants_tag_api.dart';
 import '../model/tag.dart';
 import '../model/apis/tag_api.dart';
+import 'plant_update.dart';
 import 'ws_create.dart';
 import 'ws_update.dart';
 import 'journal_detail.dart';
 import 'journal_create.dart';
 import 'tag_create.dart';
 import 'tag_detail.dart';
+import '../provider/plant_provider.dart';
 import '../provider/ws_provider.dart';
 import '../provider/tag_provider.dart';
 import '../provider/plants_tag_provider.dart';
@@ -202,6 +204,20 @@ class PlantDetail extends StatelessWidget {
                 }
               },
             ),
+	    Padding(
+	      padding: const EdgeInsets.symmetric(vertical: 8.0),
+	      child: ElevatedButton(
+		onPressed: () {
+		  Navigator.push(
+		    context,
+		    MaterialPageRoute(
+			builder: (context) => PlantUpdate(plant: plant)),
+		  );
+		  // Navigator.of(context).pop();
+		},
+		child: Text('Update Plant'),
+	      ),
+	    ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ElevatedButton(
@@ -232,10 +248,7 @@ class PlantDetail extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ElevatedButton(
                 onPressed: () {
-                  // Call delete garden method
-                  // For example, using Provider to delete garden
-                  // Provider.of<GardenProvider>(context, listen: false).deleteGarden(garden.id);
-                  // Then pop back
+                  Provider.of<PlantProvider>(context, listen: false).deletePlant(plant.id);
                   Navigator.of(context).pop();
                 },
                 child: Text('Delete Plant'),

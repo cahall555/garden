@@ -3,13 +3,13 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-	"fmt"
+//	"fmt"
 	"os"
 	"io"
 	"log"
 	"path/filepath"
 	"github.com/gofrs/uuid"
-	"github.com/microcosm-cc/bluemonday"
+//	"github.com/microcosm-cc/bluemonday"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"
 )
@@ -55,7 +55,8 @@ func PlantJournals(c buffalo.Context) error {
 	err := tx.Where("plant_id = ?", plantID).All(&journal)
 	if err != nil {
 	//	c.Flash().Add("warning", "Journals not found")
-		c.Redirect(301, "/")
+//		c.Redirect(301, "/")
+		return c.Render(500, r.JSON(map[string]string{"error": "Journals not found"}))
 	}
 
 	c.Set("journal", journal)
@@ -71,7 +72,8 @@ func JournalsCreate(c buffalo.Context) error {
 	err := tx.All(plants)
 	if err != nil {
 		c.Logger().Error("Plants not found")
-		return c.Redirect(302, "/")
+		//return c.Redirect(302, "/")
+		return c.Render(500, r.JSON(map[string]string{"error": "Plants not found"}))
 	}
 	
 	c.Set("plants", plants)
@@ -92,7 +94,7 @@ func JournalsNew(c buffalo.Context) error {
 
 	if err := c.Request().ParseMultipartForm(10 << 20); err != nil { 
 		c.Logger().Error("Failed to parse multipart form: ", err)
-		return c.Error(400, err)
+		return c.Render(400, r.JSON(map[string]string{"error": "Error parsing form"}))
 	}
 
 	journal.Title = c.Request().FormValue("title")
@@ -104,6 +106,7 @@ func JournalsNew(c buffalo.Context) error {
 	file, header, err := c.Request().FormFile("_imagePath")
 	if err == http.ErrMissingFile {
 		c.Logger().Info("No file uploaded, skipping image logic.")
+		journal.Image = ""
 	} else if err != nil {
 		c.Logger().Error("Error getting uploaded file: ", err)
 		return c.Render(400, r.JSON(map[string]string{"error": "Error processing uploaded file"}))
@@ -129,7 +132,7 @@ func JournalsNew(c buffalo.Context) error {
 	verrs, err := tx.Eager().ValidateAndCreate(journal)
 	if err != nil {
 		c.Logger().Error("Journal creation failed: ", err)
-		return c.Error(500, err)
+		return c.Render(500, r.JSON(map[string]string{"error": "Error saving journal"}))
 	}
 
 	if verrs.HasAny() {
@@ -138,7 +141,7 @@ func JournalsNew(c buffalo.Context) error {
 		return c.Render(422, r.JSON(verrs))
 	}
 
-	return c.Render(201, r.JSON(journal))
+	return c.Render(200, r.JSON(journal))
 }
 
 func JournalsUpdate(c buffalo.Context) error {
@@ -150,8 +153,9 @@ func JournalsUpdate(c buffalo.Context) error {
 	err := tx.Eager().Find(&journal, journalID)
 	if err != nil {
 		c.Logger().Error("Journal not found, id: ", journalID)
-		c.Flash().Add("warning", "Journal not found")
-		c.Redirect(301, "/")
+//		c.Flash().Add("warning", "Journal not found")
+//		c.Redirect(301, "/")
+		c.Render(404, r.JSON(map[string]string{"error": "Journal not found, id: " + journalID}))
 	}
 
 	c.Set("journal", journal)
@@ -160,112 +164,81 @@ func JournalsUpdate(c buffalo.Context) error {
 	err = tx.All(plants)
 	if err != nil {
 		c.Logger().Error("Plants not found")
-		return c.Redirect(302, "/")
+//		return c.Redirect(302, "/")
+		return c.Render(500, r.JSON(map[string]string{"error": "Plants not found"}))
 	}
 	
 	plantId := journal.PlantID
 	c.Set("plantId", plantId)
 	c.Set("plants", plants)
 
-	return c.Render(http.StatusOK, r.HTML("journals/update.html"))
+	return c.Render(http.StatusOK, r.JSON(journal))//r.HTML("journals/update.html"))
 
 }
 
 func JournalsEdit(c buffalo.Context) error {
-	tx :=c.Value("tx").(*pop.Connection)
+	tx := c.Value("tx").(*pop.Connection)
 	journal := &models.Journal{}
-	if err := tx.Find(journal, c.Param("journalId")); err != nil {
-		return err
+	if err := tx.Find(journal, c.Param("id")); err != nil {
+		return c.Render(404, r.JSON(map[string]string{"error": "Journal not found"}))
 	}
-	
-	originalImageName := journal.Image
-	c.Logger().Info("Original image name: ", originalImageName)
+
+	if err := c.Request().ParseMultipartForm(10 << 20); err != nil {
+		c.Logger().Error("Failed to parse multipart form: ", err)
+		return c.Render(400, r.JSON(map[string]string{"error": "Error parsing form"}))
+	}
 
 	err := c.Bind(journal)
 	if err != nil {
-		c.Flash().Add("warning", "Journal form binding error")
-		return c.Redirect(301, "/")
+		return c.Render(400, r.JSON(map[string]string{"error": "Error binding form"}))
 	}
 
-	err = c.Request().ParseForm()
-	if err != nil {
-		c.Flash().Add("error", "Journal form parsing error")
-		return c.Redirect(301, "/")
-	}
-
-	pws := c.Request().FormValue("Plant")
-	plant := &models.Plant{}
-	err = tx.Find(plant, pws)
-	if err != nil {
-		c.Logger().Error("Plant not found")
-		c.Flash().Add("warning", "Plant not found")
-		return c.Redirect(301, "/")
-	}
-
-
-	rawEntry := c.Request().FormValue("Entry")
-	cleanEntry := bluemonday.StrictPolicy().Sanitize(rawEntry)
-	journal.Entry = cleanEntry
-
-
-	file, header, err := c.Request().FormFile("Image")
-	c.Logger().Info("This is file: ", file)
-	c.Logger().Info("This is header: ", header)
-	c.Logger().Info("This is err: ", err)
-	if err == http.ErrMissingFile {
+	file, header, err := c.Request().FormFile("_imagePath")
+	if err == http.ErrMissingFile{
 		c.Logger().Info("No new file uploaded, preserving existing image if exists.")
-		journal.Image = originalImageName
-
 	} else if err != nil {
-		c.Logger().Error("Error getting uploaded file")
+		c.Logger().Error("Error getting uploaded file: ", err)
 		return c.Render(400, r.JSON(map[string]string{"error": "Error processing uploaded file"}))
 	} else {
 		defer file.Close()
 
 		newFileName := uuid.Must(uuid.NewV4()).String() + filepath.Ext(header.Filename)
-		savePath := filepath.Join("public/uploads", newFileName)
-			
+		savePath := filepath.Join("frontend/assets", newFileName)
+
 		outFile, err := os.Create(savePath)
 		if err != nil {
-			c.Logger().Error("Outfile error, save path variable error: ", err, " outfile: ", outFile)
-			c.Logger().Error("Error creating file on server")
+			c.Logger().Error("Error creating file on server: ", err)
 			return c.Render(500, r.JSON(map[string]string{"error": "Error saving file on server"}))
 		}
-		
 		defer outFile.Close()
-		
+
 		if _, err = io.Copy(outFile, file); err != nil {
-			c.Logger().Error("Error copying file")
-			c.Logger().Error("Error saving file on server")
+			c.Logger().Error("Error copying file to server: ", err)
 			return c.Render(500, r.JSON(map[string]string{"error": "Error saving file on server"}))
 		}
 
 		if journal.Image != "" && journal.Image != newFileName {
-    			oldImagePath := filepath.Join("frontend/assets", journal.Image)
-    			if err := os.Remove(oldImagePath); err != nil {
-             			c.Logger().Error("Failed to delete old image: ", err)
-            		}
-        	}
-
-		journal.Image = newFileName 
-		c.Logger().Info("switching to new image: ", newFileName)
+			oldImagePath := filepath.Join("frontend/assets", journal.Image)
+			if err := os.Remove(oldImagePath); err != nil {
+				c.Logger().Error("Failed to delete old image: ", err)
+			}
+		}
+		journal.Image = newFileName
+		c.Logger().Info("Switching to new image: ", newFileName)
 	}
 
 	verrs, err := tx.Eager().ValidateAndUpdate(journal)
 	if err != nil {
-		return c.Redirect(301, "/")
+		return c.Render(500, r.JSON(map[string]string{"error": "Error saving journal"}))
 	}
 
 	if verrs.HasAny() {
-		c.Flash().Add("warning", "Journal validation error")
 		c.Set("journal", journal)
 		c.Set("errors", verrs)
-		return c.Render(422, r.HTML("journals/update.html"))
+		return c.Render(422, r.JSON(verrs))
 	}
 
-	c.Flash().Add("success", "Journal updated")
-	return c.Redirect(301, fmt.Sprintf("/journals/%s", journal.ID))
-
+	return c.Render(200, r.JSON(journal))
 }
 
 func JournalsDelete (c buffalo.Context) error {
@@ -275,11 +248,12 @@ func JournalsDelete (c buffalo.Context) error {
 	journal := models.Journal{}
 	if err := tx.Find(&journal, journalId); err != nil {
 		c.Logger().Errorf("Error finding Journal with id %s, error: %v", journalId, err)
-		c.Flash().Add("error", "Journal not found")
-		return c.Redirect(http.StatusFound, "/journals/")
+	//	c.Flash().Add("error", "Journal not found")
+		//return c.Redirect(http.StatusFound, "/journals/")
+		return c.Render(404, r.JSON(map[string]string{"error": "Journal not found"}))
 	}
 	
-    	imagePath := filepath.Join("public/uploads", journal.Image)
+    	imagePath := filepath.Join("frontend/assets", journal.Image)
 
     	if err := os.Remove(imagePath); err != nil {
         	c.Logger().Errorf("Error deleting image file %s, error: %v", imagePath, err)
@@ -287,12 +261,14 @@ func JournalsDelete (c buffalo.Context) error {
 
 	if err := tx.Destroy(&journal); err != nil {
 		c.Logger().Errorf("Error deleting Journal with id %s, error: %v", journalId, err)
-		c.Flash().Add("error", "Error deleting Journal")
-		return c.Redirect(http.StatusFound, "/")
+	//	c.Flash().Add("error", "Error deleting Journal")
+//		return c.Redirect(http.StatusFound, "/")
+		return c.Render(500, r.JSON(map[string]string{"error": "Error deleting Journal"}))
 	}
 
 	c.Flash().Add("success", "Journal successfully deleted")
-	return c.Redirect(http.StatusFound, "/")
+//	return c.Redirect(http.StatusFound, "/")
+	return c.Render(200, r.JSON(map[string]string{"success": "Journal successfully deleted"}))
 
 }
 
@@ -304,7 +280,7 @@ func DeleteJournalById(tx *pop.Connection, journalID uuid.UUID) error {
     }
 
     if journal.Image != "" {
-        imagePath := filepath.Join("public/uploads", journal.Image)
+        imagePath := filepath.Join("frontend/assets", journal.Image)
         if err := os.Remove(imagePath); err != nil {
             log.Printf("Warning: Error deleting image file %s, error: %v", imagePath, err)
         }

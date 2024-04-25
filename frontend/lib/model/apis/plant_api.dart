@@ -56,3 +56,39 @@ Future<void> createPlantApi(Map<String, dynamic> plantData, var gardenId) async 
 		print(e.toString());
 	}
 }
+
+Future<void> updatePlantApi(Map<String, dynamic> plantData) async {
+  	final url = Uri.parse('http://localhost:3000/plants?id=${plantData['id']}');
+  	final headers = {"Content-Type": "application/json"};
+	 
+	try{
+  		final response = await http.put(url, headers: headers, body: json.encode(plantData));
+
+  		if (response.statusCode == 200) {
+    			print('Plant updated successfully');
+  		} else {
+    			print('Failed to update plant: ${response.body}');
+    			throw Exception('Failed to update plant');
+  		}
+	} catch (e) {
+		print(e.toString());
+	}
+}
+
+Future<void> deletePlantApi(var plantId) async {
+  	final url = Uri.parse('http://localhost:3000/plants/$plantId?id=$plantId');
+  	final headers = {"Content-Type": "application/json"};
+	 
+	try{
+  		final response = await http.delete(url, headers: headers);
+
+  		if (response.statusCode == 200) {
+    			print('Plant deleted successfully');
+  		} else {
+    			print('Failed to delete plant: ${response.body}');
+    			throw Exception('Failed to delete plant');
+  		}
+	} catch (e) {
+		print(e.toString());
+	}
+}

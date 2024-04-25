@@ -44,24 +44,6 @@ Future<List<Journal>> fetchPlantJournalApi(var plantId) async {
   }
 }
 
-//Future<void> createJournalApi(Map<String, dynamic> journalData, var plantId) async {
-//  	final url = Uri.parse('http://localhost:3000/journals?plantId=$plantId');
-//  	final headers = {"Content-Type": "application/json"};
-//
-//	try{
-//  		final response = await http.post(url, headers: headers, body: json.encode(journalData));
-//
-//  		if (response.statusCode == 201) {
-//    			print('Journal created successfully');
-//  		} else {
-//    			print('Failed to create journal: ${response.body}');
-//    			throw Exception('Failed to create journal');
-//  		}
-//	} catch (e) {
-//		print(e.toString());
-//	}
-//}
-
 Future<void> createJournalApi(
     Map<String, dynamic> journalData, String plantId, String? filePath) async {
   final url = Uri.parse('http://localhost:3000/journals?plantId=$plantId');
@@ -91,5 +73,50 @@ Future<void> createJournalApi(
     }
   } catch (e) {
     print('Exception caught: $e');
+  }
+}
+
+Future<void> updateJournalApi(
+    Map<String, dynamic> journalData, var journalId, var plantId, String? filePath) async {
+  final url = Uri.parse('http://localhost:3000/journals?id=$journalId&plantId=$plantId');
+  var request = http.MultipartRequest('PUT', url);
+  request.fields['id'] = journalData['id'];
+  request.fields['title'] = journalData['title'];
+  request.fields['entry'] = journalData['entry'];
+  request.fields['category'] = journalData['category'];
+  request.fields['plant_id'] = journalData['plant_id'];
+  request.fields['display_in_garden'] = journalData['display_in_garden'].toString();
+
+  if (filePath != null && filePath.isNotEmpty) {
+    request.files
+	.add(await http.MultipartFile.fromPath('_imagePath', filePath));
+  }
+  try {
+    var streamedResponse = await request.send();
+
+    if (streamedResponse.statusCode == 200) {
+      print('Journal updated successfully');
+    } else {
+      print(
+	  'Failed to update journal: Status code ${streamedResponse.statusCode}');
+      streamedResponse.stream.transform(utf8.decoder).listen((value) {
+	print(value);
+      });
+      throw Exception('Failed to update journal');
+    }
+  } catch (e) {
+    print('Exception caught: $e');
+  }
+}
+
+Future<void> deleteJournalApi(var journalId) async {
+  final url = Uri.parse('http://localhost:3000/journals/$journalId?id=$journalId');
+  final response = await http.delete(url);
+
+  if (response.statusCode == 200) {
+    print('Journal deleted successfully');
+  } else {
+    print('Failed to delete journal: Status code ${response.statusCode}');
+    throw Exception('Failed to delete journal');
   }
 }

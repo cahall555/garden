@@ -4,16 +4,7 @@ import '../model/apis/garden_api.dart';
 
 class GardenProvider with ChangeNotifier {
   List<Garden> gardens = [];
-  //Garden garden;
   Garden? prevGarden;
-
-  //GardenProvider({this.gardens, this.garden});
-
-  //getGardens() => this.gardens;
-  //setGardens(List<Garden> gardens) => this.gardens = gardens;
-
-  //getGarden() => this.garden;
-  //setGarden(Garden garden) => this.garden = garden;
 
   Future<List<Garden>> fetchGarden() async {
     try {
@@ -25,12 +16,6 @@ class GardenProvider with ChangeNotifier {
       return [];
     }
   }
-
-  //Future<void> fetchGarden({Garden garden}) async {
-  // this.garden = await fetchGarden(garden?.id);
-  // this.prevGarden = garden;
-  // notifyListeners();
-  // }
 
   Future<void> createGarden(Map<String, dynamic> garden) async {
     createGardenApi(garden);
@@ -50,9 +35,8 @@ class GardenProvider with ChangeNotifier {
     }
   }
 
-  // Future<void> deleteGarden(Garden garden) async {
-  //  await deleteGardenApi(garden.id);
-  //  gardens.removeAt(this.gardens.indexOf(garden));
-  //  notifyListeners();
-  // }
+  Future<void> deleteGarden(var gardenId) async {
+    deleteGardenApi(gardenId);
+    notifyListeners();
+  }
 }

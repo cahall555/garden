@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import '../model/journal.dart';
 import '../model/apis/journal_api.dart';
 import '../model/plant.dart';
 import '../model/apis/plant_api.dart';
 import 'plant_detail.dart';
 import 'journal_create.dart';
+import 'journal_update.dart';
 import '../provider/journal_provider.dart';
 import '../provider/plant_provider.dart';
 import 'package:provider/provider.dart';
@@ -32,11 +35,16 @@ class JournalDetail extends StatelessWidget {
                     title: Text(journal.category),
                     subtitle: Text(journal.entry),
                   ),
-                  Image.asset(
-                    'assets/' + (journal.image ?? 'tomato.jpg'),
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                  if (journal.image != "")
+                    Image.asset(
+                      'assets/' + journal.image!,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return const Text('Image not available');
+                      },
+                    ),
                 ],
               ),
             ),
@@ -44,11 +52,11 @@ class JournalDetail extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ElevatedButton(
                 onPressed: () {
-                  //Navigator.push(
-                  //context,
-                  //MaterialPageRoute(builder: (context) => JournalUpdate()),
-                  //);
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => JournalUpdate(journal: journal)),
+                  );
                 },
                 child: Text('Update Journal'),
               ),
@@ -57,11 +65,18 @@ class JournalDetail extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ElevatedButton(
                 onPressed: () {
-                  // Call delete garden method
-                  // For example, using Provider to delete garden
-                  // Provider.of<GardenProvider>(context, listen: false).deleteGarden(garden.id);
-                  // Then pop back
-                  Navigator.of(context).pop();
+                  try {
+                    Provider.of<JournalProvider>(context, listen: false)
+                        .deleteJournal(journal.id);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Journal deleted successfully'),
+                    ));
+                    Navigator.of(context).pop();
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Failed to delete journal: $e'),
+                    ));
+                  }
                 },
                 child: Text('Delete Journal'),
               ),

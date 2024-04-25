@@ -69,3 +69,17 @@ Future<List<Garden>> updateGardenApi(Map<String, dynamic> gardenData, var garden
     throw Exception('Request failed with status: ${response.statusCode}.');
   }
 }
+
+Future<void> deleteGardenApi(var gardenId) async {
+  final url = Uri.parse('http://localhost:3000/gardens/$gardenId?id=$gardenId');
+  final headers = {"Content-Type": "application/json"};
+
+  final response = await http.delete(url, headers: headers);
+
+  if (response.statusCode == 200) {
+    print('Garden deleted successfully');
+  } else {
+    print('Failed to delete garden: ${response.body}');
+    throw Exception('Failed to delete garden');
+  }
+}
