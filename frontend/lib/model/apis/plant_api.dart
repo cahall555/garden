@@ -1,9 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../plant.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String apiUrl = dotenv.env['API_URL']!;
+
 
 Future<List<Plant>> fetchPlantApi(String id) async {
-  final response = await http.get(Uri.parse('http://localhost:3000/plants/${id}'));
+  final response = await http.get(Uri.parse(apiUrl + 'plants/${id}'));
 
   if (response.statusCode == 200) {
     try {
@@ -23,7 +27,7 @@ Future<List<Plant>> fetchPlantApi(String id) async {
 }
 
 Future<List<Plant>> fetchPlantsApi(String gardenId) async {
-  final response = await http.get(Uri.parse('http://localhost:3000/plants?garden_id=$gardenId'));
+  final response = await http.get(Uri.parse(apiUrl + 'plants?garden_id=$gardenId'));
 
   if (response.statusCode == 200) {
     try {
@@ -40,7 +44,7 @@ Future<List<Plant>> fetchPlantsApi(String gardenId) async {
 }
 
 Future<void> createPlantApi(Map<String, dynamic> plantData, var gardenId) async {
-  	final url = Uri.parse('http://localhost:3000/plants?gardenId=$gardenId');
+  	final url = Uri.parse(apiUrl + 'plants?gardenId=$gardenId');
   	final headers = {"Content-Type": "application/json"};
 	 
 	try{
@@ -58,7 +62,7 @@ Future<void> createPlantApi(Map<String, dynamic> plantData, var gardenId) async 
 }
 
 Future<void> updatePlantApi(Map<String, dynamic> plantData) async {
-  	final url = Uri.parse('http://localhost:3000/plants?id=${plantData['id']}');
+  	final url = Uri.parse(apiUrl + 'plants?id=${plantData['id']}');
   	final headers = {"Content-Type": "application/json"};
 	 
 	try{
@@ -76,7 +80,7 @@ Future<void> updatePlantApi(Map<String, dynamic> plantData) async {
 }
 
 Future<void> deletePlantApi(var plantId) async {
-  	final url = Uri.parse('http://localhost:3000/plants/$plantId?id=$plantId');
+  	final url = Uri.parse(apiUrl + 'plants/$plantId?id=$plantId');
   	final headers = {"Content-Type": "application/json"};
 	 
 	try{

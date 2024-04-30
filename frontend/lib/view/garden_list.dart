@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../components/garden_bottom_nav.dart';
+import '../components/garden_card.dart';
 import '../model/garden.dart';
 import '../model/apis/garden_api.dart';
 import '../provider/garden_provider.dart';
@@ -24,54 +26,57 @@ class _GardenListState extends State<GardenList> {
     }
   }
 
+  final GardenCard gardenCard = GardenCard(
+    title: 'Herb Garden',
+    zone: '7',
+    description: 'This is a description of the garden',
+    garden: Garden(
+      id: '1',
+      name: 'Herb Garden',
+      zone: '7',
+      plants: [],
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Consumer<GardenProvider>(
       builder: (context, gardenProvider, child) {
         return Scaffold(
+          appBar: AppBar(
+            title: Text('Gardens'),
+          ),
           body: Stack(
             children: <Widget>[
               Image.asset(
-                'assets/' + ('garden_sunset.webp'),
+                'assets/' + ('herb_garden.webp'),
                 width: double.infinity,
+                height: double.infinity,
                 fit: BoxFit.cover,
               ),
               FutureBuilder<List<Garden>>(
                 future: futureGardens,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Text("Error: ${snapshot.error}");
+                    return Center(child: Text("Error: ${snapshot.error}"));
                   } else if (snapshot.hasData) {
                     return ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
-                        return Card(
-                          elevation: 5,
-                          margin: EdgeInsets.all(8),
-                          child: ListTile(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => GardenDetail(
-                                      garden: snapshot.data![index]),
-                                ),
-                              );
-                            },
-                            leading: Icon(Icons.local_florist),
-                            title: Text(
-                              snapshot.data![index].name,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green[800],
-                              ),
-                            ),
-                            subtitle: Text(snapshot.data![index].zone),
-                            trailing: Icon(Icons.favorite),
-                          ),
-                        );
+                        Garden garden = snapshot.data![index];
+                        String plantCount =
+                            'Put Plant count here'; //snapshot.data![index].plants.length.toString() ?? '0';
+                        String gardenName = snapshot.data![index].name;
+                        String gardenZone = snapshot.data![index].zone;
+                        return GardenCard(
+                            title: gardenName,
+                            zone: gardenZone,
+                            description: plantCount,
+                            garden: garden); //Card(
                       },
                     );
                   } else {
@@ -79,24 +84,9 @@ class _GardenListState extends State<GardenList> {
                   }
                 },
               ),
-              Positioned(
-                bottom: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GardenCreate()));
-                  },
-                  child: Text('Add Garden'),
-                  style: ElevatedButton.styleFrom(
-                    shape: StadiumBorder(),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  ),
-                ),
-              ),
             ],
           ),
+//	  bottomNavigationBar: BottomNavigation(),
         );
       },
     );

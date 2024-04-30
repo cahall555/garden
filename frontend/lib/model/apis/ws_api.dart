@@ -3,9 +3,13 @@ import 'package:http/http.dart' as http;
 import '../ws.dart';
 import 'custom_exception.dart';
 import 'dart:io'; 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String apiUrl = dotenv.env['API_URL']!;
+
 
 Future<List<WaterSchedule>> fetchWaterSchedule(String plantId) async {
-  final uri = Uri.parse('http://localhost:3000/water_schedules?plant_id=$plantId');
+  final uri = Uri.parse(apiUrl + 'water_schedules?plant_id=$plantId');
   final response = await http.get(uri).timeout(const Duration(seconds: 30));
 
   if (response.statusCode == 404) {
@@ -31,7 +35,7 @@ Future<List<WaterSchedule>> fetchWaterSchedule(String plantId) async {
   }
 }
 Future<void> createWsApi(Map<String, dynamic> wsData, var plantId) async {
-  	final url = Uri.parse('http://localhost:3000/water_schedules?plantId=$plantId');
+  	final url = Uri.parse(apiUrl + 'water_schedules?plantId=$plantId');
   	final headers = {"Content-Type": "application/json"};
 	 
 	try{
@@ -49,7 +53,7 @@ Future<void> createWsApi(Map<String, dynamic> wsData, var plantId) async {
 }
 
 Future<List<WaterSchedule>> updateWsApi(Map<String, dynamic> wsData, var plantId, var wsId) async {
-  final url = Uri.parse('http://localhost:3000/water_schedules?plantId=$plantId&wsId=$wsId');
+  final url = Uri.parse(apiUrl + 'water_schedules?plantId=$plantId&wsId=$wsId');
   final headers = {"Content-Type": "application/json"};
 
   final response = await http.put(url, headers: headers, body: jsonEncode(wsData));
@@ -71,7 +75,7 @@ Future<List<WaterSchedule>> updateWsApi(Map<String, dynamic> wsData, var plantId
 }
 
 Future<void> deleteWsApi(var wsId) async {
-	final url = Uri.parse('http://localhost:3000/water_schedules/$wsId');
+	final url = Uri.parse(apiUrl + 'water_schedules/$wsId');
 	final headers = {"content-Type": "application/json"};
 
 	final response = await http.delete(url, headers: headers);//, body: jsonEncode());

@@ -3,9 +3,13 @@ import 'package:http/http.dart' as http;
 import '../plants_tag.dart';
 import 'custom_exception.dart';
 import 'dart:io'; 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String apiUrl = dotenv.env['API_URL']!;
+
 
 Future<List<PlantTags>> fetchPlantsTagApi(var plantId) async {
-  final uri = Uri.parse('http://localhost:3000/plantstag?plant_id=$plantId');
+  final uri = Uri.parse(apiUrl + 'plantstag?plant_id=$plantId');
   final response = await http.get(uri).timeout(const Duration(seconds: 30));
 
 	if (response.statusCode == 404) {
@@ -35,7 +39,7 @@ Future<List<PlantTags>> fetchPlantsTagApi(var plantId) async {
 }
 
 Future<void> createPlantsTagApi(Map<String, dynamic> plantTagData) async {
-  final uri = Uri.parse('http://localhost:3000/plantstag');
+  final uri = Uri.parse(apiUrl + 'plantstag');
   final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
   final body = json.encode(plantTagData);
 

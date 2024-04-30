@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../tag.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String apiUrl = dotenv.env['API_URL']!;
+
 
 Future<List<Tag>> fetchTagApi(var tagId) async {
   final response =
-      await http.get(Uri.parse('http://localhost:3000/tags/$tagId'));
+      await http.get(Uri.parse(apiUrl + 'tags/$tagId'));
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
@@ -24,7 +28,7 @@ Future<List<Tag>> fetchTagApi(var tagId) async {
 }
 
 Future<List<Tag>> fetchTagsApi() async {
-  final response = await http.get(Uri.parse('http://localhost:3000/tags'));
+  final response = await http.get(Uri.parse(apiUrl + 'tags'));
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
@@ -44,7 +48,7 @@ Future<List<Tag>> fetchTagsApi() async {
 }
 
 Future<Tag> createTagApi(Map<String, dynamic> tagData) async {
-  final url = Uri.parse('http://localhost:3000/tags');
+  final url = Uri.parse(apiUrl + 'tags');
   final headers = {"Content-Type": "application/json"};
   try {
     final response =
@@ -64,7 +68,7 @@ Future<Tag> createTagApi(Map<String, dynamic> tagData) async {
 }
 
 Future<void> updateTagApi(Map<String, dynamic> tagData, var tagId) async {
-  final url = Uri.parse('http://localhost:3000/tags?tagId=$tagId');
+  final url = Uri.parse(apiUrl + 'tags?tagId=$tagId');
   final headers = {"Content-Type": "application/json"};
   try {
     final response = await http.put(url, headers: headers, body: json.encode(tagData));
@@ -82,7 +86,7 @@ Future<void> updateTagApi(Map<String, dynamic> tagData, var tagId) async {
 }
 
 Future<void> deleteTagApi(var tagId) async {
-  final url = Uri.parse('http://localhost:3000/tags/$tagId');
+  final url = Uri.parse(apiUrl + 'tags/$tagId');
   final headers = {"Content-Type": "application/json"};
   try {
     final response = await http.delete(url, headers: headers);

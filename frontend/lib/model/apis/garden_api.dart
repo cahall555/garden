@@ -2,9 +2,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../garden.dart';
 import 'csrf.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String apiUrl = dotenv.env['API_URL']!;
 
 Future<List<Garden>> fetchGardenApi() async {
-  final response = await http.get(Uri.parse('http://localhost:3000/gardens/'));
+  final response = await http.get(Uri.parse(apiUrl + 'gardens/'));
 
   if (response.statusCode == 200) {
     try {
@@ -30,7 +33,7 @@ Future<List<Garden>> fetchGardenApi() async {
    // print('Fetched CSRF Token: ${csrfTokenProvider.csrfToken}');
   //}
 	Future<void> createGardenApi(Map<String, dynamic> gardenData) async {
-  		final url = Uri.parse('http://localhost:3000/gardens');
+  		final url = Uri.parse(apiUrl + 'gardens');
   		final headers = {"Content-Type": "application/json"};//, "X-CSRF-Token": csrfTokenProvider.csrfToken};
 		 //print('Using CSRF Token: ${csrfTokenProvider.csrfToken}');
 		try{
@@ -49,7 +52,7 @@ Future<List<Garden>> fetchGardenApi() async {
 //}
 
 Future<List<Garden>> updateGardenApi(Map<String, dynamic> gardenData, var gardenId) async {
-  final url = Uri.parse('http://localhost:3000/gardens?gardenId=$gardenId');
+  final url = Uri.parse(apiUrl +'gardens?gardenId=$gardenId');
   final headers = {"Content-Type": "application/json"};
 
   final response = await http.put(url, headers: headers, body: jsonEncode(gardenData));
@@ -71,7 +74,7 @@ Future<List<Garden>> updateGardenApi(Map<String, dynamic> gardenData, var garden
 }
 
 Future<void> deleteGardenApi(var gardenId) async {
-  final url = Uri.parse('http://localhost:3000/gardens/$gardenId?id=$gardenId');
+  final url = Uri.parse(apiUrl + 'gardens/$gardenId?id=$gardenId');
   final headers = {"Content-Type": "application/json"};
 
   final response = await http.delete(url, headers: headers);

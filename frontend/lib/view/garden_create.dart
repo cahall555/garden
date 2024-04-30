@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../model/garden.dart';
+import 'garden_list.dart';
 import '../model/apis/garden_api.dart';
 import '../provider/garden_provider.dart';
 import 'package:provider/provider.dart';
@@ -24,40 +25,56 @@ class _GardenCreateState extends State<GardenCreate> {
       appBar: AppBar(
         title: Text('Create Garden'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: <Widget>[
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Name',
-              border: OutlineInputBorder(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF344E41),
+              Color(0xFF78B496),
+            ],
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: <Widget>[
+            TextField(
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white),
+              ),
+              controller: _nameController,
             ),
-            controller: _nameController,
-          ),
-          const SizedBox(height: 20.0),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Zone',
-              border: OutlineInputBorder(),
+            const SizedBox(height: 20.0),
+            TextField(
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Zone',
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white),
+              ),
+              controller: _zoneController,
             ),
-            controller: _zoneController,
-          ),
-          const SizedBox(height: 20.0),
-          ElevatedButton(
-            onPressed: () {
-              //	await gardenApi.initCsrfToken(); //see comment in app.go line 14
-              if (_nameController.text.isNotEmpty &&
-                  _zoneController.text.isNotEmpty) {
-                submitGarden();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please fill in all fields')),
-                );
-              }
-            },
-            child: const Text('submit'),
-          ),
-        ],
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
+                //	await gardenApi.initCsrfToken(); //see comment in app.go line 14
+                if (_nameController.text.isNotEmpty &&
+                    _zoneController.text.isNotEmpty) {
+                  submitGarden();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Please fill in all fields')),
+                  );
+                }
+              },
+              child: const Text('submit'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -74,7 +91,11 @@ class _GardenCreateState extends State<GardenCreate> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Garden updated successfully!')),
       );
-      Navigator.pop(context);
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => GardenList(),
+        ),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to create garden: $e')),
