@@ -5,10 +5,28 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 final String apiUrl = dotenv.env['API_URL']!;
 
-
 Future<List<Tag>> fetchTagApi(var tagId) async {
-  final response =
-      await http.get(Uri.parse(apiUrl + 'tags/$tagId'));
+  final response = await http.get(Uri.parse(apiUrl + 'tags/$tagId'));
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    if (data is Map) {
+      return [Tag.fromJson(Map<String, dynamic>.from(data))];
+    } else if (data is List) {
+      return data
+          .map<Tag>((json) => Tag.fromJson(Map<String, dynamic>.from(json)))
+          .toList();
+    } else {
+      throw Exception('Unexpected JSON format: ${response.body}');
+    }
+  } else {
+    throw Exception('Request failed with status: ${response.statusCode}.');
+  }
+}
+
+Future<List<Tag>> fetchTagByNameApi(String name) async {
+  final response = await http.get(Uri.parse(apiUrl + 'tag/$name?name=$name'));
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
@@ -71,7 +89,8 @@ Future<void> updateTagApi(Map<String, dynamic> tagData, var tagId) async {
   final url = Uri.parse(apiUrl + 'tags?tagId=$tagId');
   final headers = {"Content-Type": "application/json"};
   try {
-    final response = await http.put(url, headers: headers, body: json.encode(tagData));
+    final response =
+        await http.put(url, headers: headers, body: json.encode(tagData));
 
     if (response.statusCode == 200) {
       print('Tag updated successfully');

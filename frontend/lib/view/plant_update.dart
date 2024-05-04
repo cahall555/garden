@@ -18,7 +18,6 @@ class PlantUpdate extends StatefulWidget {
 class _PlantUpdateState extends State<PlantUpdate> {
   late TextEditingController _nameController;
   bool _germinatedController = false;
-  late TextEditingController _tagsController;
   late TextEditingController _days_to_harvestController;
 
   @override
@@ -26,13 +25,6 @@ class _PlantUpdateState extends State<PlantUpdate> {
     super.initState();
     _nameController = TextEditingController(text: widget.plant.name);
     _germinatedController = widget.plant.germinated;
-    if (widget.plant.plantTags != null) {
-      _tagsController = TextEditingController(
-          text:
-              widget.plant.plantTags!.map((tag) => tag.toString()).join(', '));
-    } else {
-      _tagsController = TextEditingController();
-    }
     _days_to_harvestController =
         TextEditingController(text: widget.plant.days_to_harvest.toString());
   }
@@ -60,14 +52,6 @@ class _PlantUpdateState extends State<PlantUpdate> {
               border: OutlineInputBorder(),
             ),
             controller: _days_to_harvestController,
-          ),
-          const SizedBox(height: 20.0),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Tags',
-              border: OutlineInputBorder(),
-            ),
-            controller: _tagsController,
           ),
           const SizedBox(height: 20.0),
           ListTile(
@@ -99,7 +83,6 @@ class _PlantUpdateState extends State<PlantUpdate> {
         'id': widget.plant.id,
         'name': _nameController.text.trim(),
         'germinated': _germinatedController,
-        'tags': _tagsController.text.trim(),
         'garden_id': widget.plant.garden_id,
         'days_to_harvest': int.parse(_days_to_harvestController.text.trim()),
       };
@@ -120,7 +103,6 @@ class _PlantUpdateState extends State<PlantUpdate> {
     @override
     void dispose() {
       _nameController.dispose();
-      _tagsController.dispose();
       _days_to_harvestController.dispose();
       super.dispose();
     }

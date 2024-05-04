@@ -32,6 +32,20 @@ class TagProvider with ChangeNotifier {
     }
   }
 
+  Future<Tag?> fetchTagByName(String name) async {
+    try {
+      List<Tag> tags = await fetchTagByNameApi(name);
+      if (tags.isNotEmpty) {
+        return tags[0];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<Tag> createTag(Map<String, dynamic> tag) async {
     try {
       newTag = await createTagApi(tag);

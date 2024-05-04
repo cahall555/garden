@@ -24,6 +24,22 @@ func TagsShow(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.JSON(tag)) //r.HTML("tags/show.html"))
 }
 
+func TagNameShow(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	tag := models.Tag{}
+	tagName := c.Param("name")
+
+	err := tx.Eager().Where("name = ?", tagName).First(&tag)
+	if err != nil {
+		c.Logger().Error("Tag not found: ", err)
+	}
+	c.Set("tag", tag)
+	if tag.Name == "" {
+		return c.Render(http.StatusNotFound, r.JSON("Tag not found"))
+	}
+	return c.Render(http.StatusOK, r.JSON(tag))
+}
+
 func TagsIndex(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	tag := models.Tags{}

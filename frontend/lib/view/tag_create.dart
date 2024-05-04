@@ -59,26 +59,33 @@ class _TagCreateState extends State<TagCreate> {
     try {
       final tagProvider = Provider.of<TagProvider>(context, listen: false);
       if (widget.plant != null) {
-        Tag newTag = await tagProvider.createTag({
-          'name': _nameController.text.trim(),
-        });
-        var tagid = newTag.id;
-        PlantsTagProvider plantsTagProvider =
-            Provider.of<PlantsTagProvider>(context, listen: false);
+        Tag? existingTag =
+            await tagProvider.fetchTagByName(_nameController.text.trim());
+        if (existingTag != null) {
+          PlantsTagProvider plantsTagProvider =
+              Provider.of<PlantsTagProvider>(context, listen: false);
+          await plantsTagProvider.createPlantsTag({
+            'plant_id': widget.plant!.id,
+            'tag_id': existingTag.id,
+          });
+        } else {
+          Tag newTag = await tagProvider.createTag({
+            'name': _nameController.text.trim(),
+          });
+          var tagid = newTag.id;
+          PlantsTagProvider plantsTagProvider =
+              Provider.of<PlantsTagProvider>(context, listen: false);
 
-	await plantsTagProvider.createPlantsTag({
-		'plant_id': widget.plant!.id,
-		'tag_id': tagid,
-	});
-      } else {
-        await tagProvider.createTag({
-          'name': _nameController.text.trim(),
-        });
+          await plantsTagProvider.createPlantsTag({
+            'plant_id': widget.plant!.id,
+            'tag_id': tagid,
+          });
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Tag updated successfully!')),
+        );
+        Navigator.pop(context);
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Tag updated successfully!')),
-      );
-      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to create tag: $e')),

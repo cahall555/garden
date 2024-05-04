@@ -90,6 +90,7 @@ func App() *buffalo.App {
 		app.GET("/tags/create", TagsCreate)
 		app.GET("/tags/update/{id}", TagsUpdate)
 		app.GET("/tags/{id}", TagsShow)
+		app.GET("/tag/{name}", TagNameShow)
 		app.GET("/tags", TagsIndex)
 		app.POST("/tags", TagsNew)
 		app.PUT("/tags/", TagsEdit)

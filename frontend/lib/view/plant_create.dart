@@ -18,7 +18,6 @@ class _PlantCreateState extends State<PlantCreate> {
   final _nameController = TextEditingController();
   bool _germinatedController = false;
   final _days_to_harvestController = TextEditingController();
-  final _tagsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,14 +58,6 @@ class _PlantCreateState extends State<PlantCreate> {
             ),
           ),
           const SizedBox(height: 20.0),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Tags',
-              border: OutlineInputBorder(),
-            ),
-            controller: _tagsController,
-          ),
-          const SizedBox(height: 20.0),
           ElevatedButton(
             onPressed: () {
               if (_nameController.text.isNotEmpty &&
@@ -99,7 +90,6 @@ class _PlantCreateState extends State<PlantCreate> {
         'days_to_harvest': daysToHarvest,
         'germinated': _germinatedController,
         'garden_id': widget.garden.id,
-        'tags': _tagsController.text.trim(),
       }, widget.garden.id);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Plant created successfully!')),
@@ -114,7 +104,6 @@ class _PlantCreateState extends State<PlantCreate> {
     void dispose() {
       _nameController.dispose();
       _days_to_harvestController.dispose();
-      _tagsController.dispose();
       super.dispose();
     }
   }

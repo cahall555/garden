@@ -187,7 +187,6 @@ class PlantDetail extends StatelessWidget {
                                 color: Colors.green[800],
                               ),
                             ),
-                            trailing: Icon(Icons.favorite),
                           ),
                         );
                       },
