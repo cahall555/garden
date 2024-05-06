@@ -52,151 +52,308 @@ class _WsUpdateState extends State<WsUpdate> {
     WsProvider wsProvider = Provider.of<WsProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update Water Schedule'),
+        title: Text('Update Water Schedule',
+            style: TextStyle(fontFamily: 'Taviraj')),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: <Widget>[
-          ListTile(
-            leading: const Text('Monday'),
-            trailing: Switch(
-              value: _mondayController,
-              onChanged: (bool value) {
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/water.webp"),
+            fit: BoxFit.cover,
+            opacity: 0.15,
+          ),
+
+//          gradient: LinearGradient(
+//            begin: Alignment.topLeft,
+//            end: Alignment.bottomRight,
+//            colors: [
+//              Color(0xFF263B61),
+//              Color(0xFF4E7AC7),
+//            ],
+//          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: <Widget>[
+            ListTile(
+              leading: const Text('Monday',
+                  style: TextStyle(
+                      color: Color(0XFF4E7AC7),
+                      fontFamily: 'Taviraj',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15)),
+              trailing: Switch(
+                activeColor: Color(0xFF263B61),
+                activeTrackColor: Color(0xFF4E7AC7),
+                value: _mondayController,
+                onChanged: (bool value) {
+                  setState(() {
+                    _mondayController = value;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              leading: const Text('Tuesday',
+                  style: TextStyle(
+                      color: Color(0XFF4E7AC7),
+                      fontFamily: 'Taviraj',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15)),
+              trailing: Switch(
+                activeColor: Color(0xFF263B61),
+                activeTrackColor: Color(0xFF4E7AC7),
+                value: _tuesdayController,
+                onChanged: (bool value) {
+                  setState(() {
+                    _tuesdayController = value;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              leading: const Text('Wednesday',
+                  style: TextStyle(
+                      color: Color(0XFF4E7AC7),
+                      fontFamily: 'Taviraj',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15)),
+              trailing: Switch(
+                activeColor: Color(0xFF263B61),
+                activeTrackColor: Color(0xFF4E7AC7),
+                value: _wednesdayController,
+                onChanged: (bool value) {
+                  setState(() {
+                    _wednesdayController = value;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              leading: const Text('Thursday',
+                  style: TextStyle(
+                      color: Color(0XFF4E7AC7),
+                      fontFamily: 'Taviraj',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15)),
+              trailing: Switch(
+                activeColor: Color(0xFF263B61),
+                activeTrackColor: Color(0xFF4E7AC7),
+                value: _thursdayController,
+                onChanged: (bool value) {
+                  setState(() {
+                    _thursdayController = value;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              leading: const Text('Friday',
+                  style: TextStyle(
+                      color: Color(0XFF4E7AC7),
+                      fontFamily: 'Taviraj',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15)),
+              trailing: Switch(
+                activeColor: Color(0xFF263B61),
+                activeTrackColor: Color(0xFF4E7AC7),
+                value: _fridayController,
+                onChanged: (bool value) {
+                  setState(() {
+                    _fridayController = value;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              leading: const Text('Saturday',
+                  style: TextStyle(
+                      color: Color(0XFF4E7AC7),
+                      fontFamily: 'Taviraj',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15)),
+              trailing: Switch(
+                activeColor: Color(0xFF263B61),
+                activeTrackColor: Color(0xFF4E7AC7),
+                value: _saturdayController,
+                onChanged: (bool value) {
+                  setState(() {
+                    _saturdayController = value;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              leading: const Text('Sunday',
+                  style: TextStyle(
+                      color: Color(0XFF4E7AC7),
+                      fontFamily: 'Taviraj',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15)),
+              trailing: Switch(
+                activeColor: Color(0xFF263B61),
+                activeTrackColor: Color(0xFF4E7AC7),
+                value: _sundayController,
+                onChanged: (bool value) {
+                  setState(() {
+                    _sundayController = value;
+                  });
+                },
+              ),
+            ),
+            DropdownButtonFormField<String>(
+              style: TextStyle(color: Color(0xFF263B61), fontFamily: 'Taviraj'),
+              decoration: InputDecoration(
+                labelText: "Watering Method",
+                labelStyle:
+                    TextStyle(color: Color(0xFF263B61), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF263B61))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF263B61)),
+                ),
+              ),
+              value: _currentSelectedValue,
+              onChanged: (String? newValue) {
                 setState(() {
-                  _mondayController = value;
+                  _currentSelectedValue = newValue;
                 });
               },
-            ),
-          ),
-          ListTile(
-            leading: const Text('Tuesday'),
-            trailing: Switch(
-              value: _tuesdayController,
-              onChanged: (bool value) {
-                setState(() {
-                  _tuesdayController = value;
-                });
-              },
-            ),
-          ),
-          ListTile(
-            leading: const Text('Wednesday'),
-            trailing: Switch(
-              value: _wednesdayController,
-              onChanged: (bool value) {
-                setState(() {
-                  _wednesdayController = value;
-                });
-              },
-            ),
-          ),
-          ListTile(
-            leading: const Text('Thursday'),
-            trailing: Switch(
-              value: _thursdayController,
-              onChanged: (bool value) {
-                setState(() {
-                  _thursdayController = value;
-                });
-              },
-            ),
-          ),
-          ListTile(
-            leading: const Text('Friday'),
-            trailing: Switch(
-              value: _fridayController,
-              onChanged: (bool value) {
-                setState(() {
-                  _fridayController = value;
-                });
-              },
-            ),
-          ),
-          ListTile(
-            leading: const Text('Saturday'),
-            trailing: Switch(
-              value: _saturdayController,
-              onChanged: (bool value) {
-                setState(() {
-                  _saturdayController = value;
-                });
-              },
-            ),
-          ),
-          ListTile(
-            leading: const Text('Sunday'),
-            trailing: Switch(
-              value: _sundayController,
-              onChanged: (bool value) {
-                setState(() {
-                  _sundayController = value;
-                });
-              },
-            ),
-          ),
-          DropdownButtonFormField<String>(
-            decoration: InputDecoration(
-              labelText: "Watering Method",
-              border: OutlineInputBorder(),
-            ),
-            value: _currentSelectedValue,
-            onChanged: (String? newValue) {
-              setState(() {
-                _currentSelectedValue = newValue;
-              });
-            },
-            items:
-                _dropdownValues.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Notes',
-              border: OutlineInputBorder(),
-            ),
-            controller: _notesController,
-          ),
-          const SizedBox(height: 20.0),
-          ElevatedButton(
-            onPressed: () {
-              if (_notesController.text.isNotEmpty &&
-                  (_currentSelectedValue?.isNotEmpty ?? false)) {
-                updateWaterSchedule();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content:
-                          Text('Please ensure notes and method are complete.')),
+              items:
+                  _dropdownValues.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value,
+                      style: TextStyle(
+                          color: _currentSelectedValue == value
+                              ? Color(0xFF4E7AC7)
+                              : Color(0xFF263B61),
+                          fontFamily: 'Taviraj',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15.0)),
                 );
-              }
-            },
-            child: const Text('Submit'),
-          ),
-          const SizedBox(height: 20.0),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                final wsProvider =
-                    Provider.of<WsProvider>(context, listen: false);
-                await wsProvider.deleteWs(widget.ws.id);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Schedule successfully deleted.')),
-                );
-                Navigator.pop(context);
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text('Failed to delete water schedule: $e.')),
-                );
-              }
-            },
-            child: const Text('Delete Water Schedule'),
-          ),
-        ],
+              }).toList(),
+            ),
+            const SizedBox(height: 20.0),
+            TextField(
+              maxLines: 10,
+              style: TextStyle(
+                  color: Color(0XFF4E7AC7),
+                  fontFamily: 'Taviraj',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
+              decoration: InputDecoration(
+                labelText: 'Notes',
+                labelStyle:
+                    TextStyle(color: Color(0XFF263B61), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF263B61))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0XFF263B61)),
+                ),
+              ),
+              controller: _notesController,
+            ),
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              style: ButtonStyle(
+                elevation: MaterialStateProperty.all<double>(12.0),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                if (_notesController.text.isNotEmpty &&
+                    (_currentSelectedValue?.isNotEmpty ?? false)) {
+                  updateWaterSchedule();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(
+                            'Please ensure notes and method are complete.')),
+                  );
+                }
+              },
+              child: Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF4E7AC7),
+                      Color(0xFF263B61),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                child: Container(
+                  constraints: BoxConstraints(minWidth: 108.0, minHeight: 45.0),
+                  alignment: Alignment.center,
+                  child: const Text('Submit',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontFamily: 'Taviraj')),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              style: ButtonStyle(
+                elevation: MaterialStateProperty.all<double>(12.0),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                ),
+              ),
+              onPressed: () async {
+                try {
+                  final wsProvider =
+                      Provider.of<WsProvider>(context, listen: false);
+                  await wsProvider.deleteWs(widget.ws.id);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Schedule successfully deleted.')),
+                  );
+                  Navigator.pop(context);
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text('Failed to delete water schedule: $e.')),
+                  );
+                }
+              },
+              child: Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF4E7AC7),
+                      Color(0xFF263B61),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                child: Container(
+                  constraints: BoxConstraints(minWidth: 108.0, minHeight: 45.0),
+                  alignment: Alignment.center,
+                  child: const Text('Delete Water Schedule',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontFamily: 'Taviraj')),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

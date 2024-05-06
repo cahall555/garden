@@ -32,32 +32,48 @@ class _GardenUpdateState extends State<GardenUpdate> {
       appBar: AppBar(
         title: Text('Update Garden'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: <Widget>[
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Name',
-              border: OutlineInputBorder(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF344E41),
+              Color(0xFF78B496),
+            ],
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: <Widget>[
+            TextField(
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white),
+              ),
+              controller: _nameController,
             ),
-            controller: _nameController,
-          ),
-          const SizedBox(height: 20.0),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Zone',
-              border: OutlineInputBorder(),
+            const SizedBox(height: 20.0),
+            TextField(
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Zone',
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white),
+              ),
+              controller: _zoneController,
             ),
-            controller: _zoneController,
-          ),
-          const SizedBox(height: 20.0),
-          ElevatedButton(
-            onPressed: () {
-              updateGardenInfo();
-            },
-            child: const Text('submit'),
-          ),
-        ],
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
+                updateGardenInfo();
+              },
+              child: const Text('submit'),
+            ),
+          ],
+        ),
       ),
     );
   }

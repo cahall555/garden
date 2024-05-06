@@ -48,13 +48,13 @@ class PlantDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
- final Size screenSize = MediaQuery.of(context).size;
+    final Size screenSize = MediaQuery.of(context).size;
 
     final journalProvider =
         Provider.of<JournalProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: Text(plant.name),
+        title: Text(plant.name, style: TextStyle(fontFamily: 'Taviraj')),
       ),
       body: Container(
         width: screenSize.width,
@@ -63,18 +63,39 @@ class PlantDetail extends StatelessWidget {
           image: DecorationImage(
             image: AssetImage("assets/herb_garden.webp"),
             fit: BoxFit.cover,
+            opacity: 0.5,
           ),
         ),
         child: SingleChildScrollView(
           child: Column(
             children: [
               Card(
-                elevation: 5,
+                color: Colors.transparent,
+                elevation: 12,
                 margin: EdgeInsets.all(8),
-                child: ListTile(
-                  title: Text(plant.germinated
-                      ? "plant has germinated"
-                      : "Plant is not germinated"),
+                child: Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFF344E41),
+                        Color(0xFF78B496),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  child: ListTile(
+                    title: Text(
+                        plant.germinated
+                            ? "plant has germinated"
+                            : "Plant is not germinated",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Taviraj',
+                          color: Colors.white,
+                        )),
+                  ),
                 ),
               ),
               FutureBuilder<List<Journal>>(
@@ -97,32 +118,52 @@ class PlantDetail extends StatelessWidget {
                             itemCount: snapshot.data!.length,
                             itemBuilder: (context, index) {
                               return Card(
+                                color: Colors.transparent,
                                 elevation: 12,
                                 margin: EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 20),
-                                color: Colors.green[100],
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: ListTile(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => JournalDetail(
-                                            journal: snapshot.data![index],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    leading: Icon(Icons.library_books_rounded),
-                                    title: Text(
-                                      snapshot.data![index].title,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.green[800],
-                                      ),
+                                child: Ink(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Color(0xFFFED16A),
+                                        Color(0xFF987D3F),
+                                      ],
                                     ),
-                                    subtitle: Text(snapshot.data![index].entry),
+                                    borderRadius: BorderRadius.circular(25.0),
+                                  ),
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ListTile(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => JournalDetail(
+                                              journal: snapshot.data![index],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      leading: Icon(Icons.library_books_rounded,
+                                          color: Color(0XFF8E505F)),
+                                      title: Text(
+                                        snapshot.data![index].title,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Taviraj',
+                                          color: Color(0XFF8E505F),
+                                        ),
+                                      ),
+                                      subtitle:
+                                          Text(snapshot.data![index].entry,
+                                              style: TextStyle(
+                                                fontFamily: 'Taviraj',
+                                                color: Color(0XFF2A203D),
+                                              )),
+                                    ),
                                   ),
                                 ),
                               );
@@ -135,8 +176,8 @@ class PlantDetail extends StatelessWidget {
                           effect: WormEffect(
                             dotWidth: 10.0,
                             dotHeight: 10.0,
-                            activeDotColor: Colors.green,
-                            dotColor: Colors.red,
+                            activeDotColor: Color(0xFF2A203D),
+                            dotColor: Color(0xFF8E505F),
                           ),
                         ),
                       ],
@@ -166,25 +207,41 @@ class PlantDetail extends StatelessWidget {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         return Card(
-                          elevation: 5,
+                          color: Colors.transparent,
+                          elevation: 12,
                           margin: EdgeInsets.all(8),
-                          child: ListTile(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => WsUpdate(
-                                      plant: this.plant,
-                                      ws: snapshot.data![index]),
+                          child: Ink(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Color(0xFF4E7AC7),
+                                  Color(0xFF263B61),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            child: ListTile(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => WsUpdate(
+                                        plant: this.plant,
+                                        ws: snapshot.data![index]),
+                                  ),
+                                );
+                              },
+                              leading: Icon(Icons.water_drop_rounded,
+                                  color: Color(0XFF263B61)),
+                              title: Text(
+                                snapshot.data![index].notes,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Taviraj',
+                                  color: Colors.white,
                                 ),
-                              );
-                            },
-                            leading: Icon(Icons.water_drop_rounded),
-                            title: Text(
-                              snapshot.data![index].notes,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green[800],
                               ),
                             ),
                           ),
@@ -214,7 +271,8 @@ class PlantDetail extends StatelessWidget {
                           tag.name,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.green[800],
+                            fontFamily: 'Taviraj',
+                            color: Colors.white,
                           ),
                         );
                         var textPainter = TextPainter(
@@ -229,23 +287,38 @@ class PlantDetail extends StatelessWidget {
                         var screenWidth = MediaQuery.of(context).size.width;
 
                         return Card(
+                          color: Colors.transparent,
                           elevation: 12,
                           margin: EdgeInsets.all(8),
                           child: Container(
-                            width: textWidth > screenWidth
-                                ? screenWidth
-                                : textWidth,
-                            child: ListTile(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => TagDetail(tag: tag),
-                                  ),
-                                );
-                              },
-                              leading: Icon(Icons.label_rounded),
-                              title: textWidget,
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color(0xFF8E505F),
+                                    Color(0xFF2A203D),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(25.0),
+                              ),
+                              width: textWidth > screenWidth
+                                  ? screenWidth
+                                  : textWidth,
+                              child: ListTile(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => TagDetail(tag: tag),
+                                    ),
+                                  );
+                                },
+                                leading: Icon(Icons.label_rounded,
+                                    color: Color(0XFF2A203D)),
+                                title: textWidget,
+                              ),
                             ),
                           ),
                         );

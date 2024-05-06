@@ -33,46 +33,101 @@ class _PlantUpdateState extends State<PlantUpdate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update Plant'),
+        title: Text('Update Plant', style: TextStyle(fontFamily: 'Taviraj')),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: <Widget>[
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Name',
-              border: OutlineInputBorder(),
-            ),
-            controller: _nameController,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF344E41),
+              Color(0xFF78B496),
+            ],
           ),
-          const SizedBox(height: 20.0),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Days to Harvest',
-              border: OutlineInputBorder(),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: <Widget>[
+            TextField(
+              style: TextStyle(color: Colors.white, fontFamily: 'Taviraj'),
+              decoration: InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white, fontFamily: 'Taviraj'),
+              ),
+              controller: _nameController,
             ),
-            controller: _days_to_harvestController,
-          ),
-          const SizedBox(height: 20.0),
-          ListTile(
-            leading: const Text('Plant has germinated'),
-            trailing: Switch(
-              value: _germinatedController,
-              onChanged: (bool value) {
-                setState(() {
-                  _germinatedController = value;
-                });
+            const SizedBox(height: 20.0),
+            TextField(
+              style: TextStyle(color: Colors.white, fontFamily: 'Taviraj'),
+              decoration: InputDecoration(
+                labelText: 'Days to Harvest',
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white, fontFamily: 'Taviraj'),
+              ),
+              controller: _days_to_harvestController,
+            ),
+            const SizedBox(height: 20.0),
+            ListTile(
+              leadingAndTrailingTextStyle: TextStyle(
+                  color: Colors.white, fontSize: 15.0, fontFamily: 'Taviraj'),
+              leading: const Text('Plant has germinated'),
+              trailing: Switch(
+                activeColor: Color(0xFF2A203D),
+		activeTrackColor: Color(0xFF8E505F),
+                value: _germinatedController,
+                onChanged: (bool value) {
+                  setState(() {
+                    _germinatedController = value;
+                  });
+                },
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              style: ButtonStyle(
+		      elevation: MaterialStateProperty.all<double>(12.0),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Colors.transparent),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        25.0),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                updatePlantInfo();
               },
+              child: Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF8E505F),
+                      Color(0xFF2A203D),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(
+                      25.0),
+                ),
+                child: Container(
+                  constraints: BoxConstraints(
+                      minWidth: 108.0,
+                      minHeight: 45.0),
+                  alignment: Alignment.center,
+                  child: const Text('Submit',
+		      style: TextStyle(
+			  color: Colors.white,
+			  fontSize: 15.0,
+			  fontFamily: 'Taviraj')),
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: 20.0),
-          ElevatedButton(
-            onPressed: () {
-              updatePlantInfo();
-            },
-            child: const Text('submit'),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

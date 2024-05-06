@@ -52,75 +52,93 @@ class _JournalUpdateState extends State<JournalUpdate> {
       appBar: AppBar(
         title: Text('Update Journal'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: <Widget>[
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Title',
-              border: OutlineInputBorder(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF344E41),
+              Color(0xFF78B496),
+            ],
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Title',
+                border: OutlineInputBorder(),
+		labelStyle: TextStyle(color: Colors.white),
+              ),
+              controller: _titleController,
             ),
-            controller: _titleController,
-          ),
-          const SizedBox(height: 20.0),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Entry',
-              border: OutlineInputBorder(),
+            const SizedBox(height: 20.0),
+            TextField(
+              maxLines: 10,
+              decoration: InputDecoration(
+                labelText: 'Entry',
+                border: OutlineInputBorder(),
+		labelStyle: TextStyle(color: Colors.white),
+              ),
+              controller: _entryController,
             ),
-            controller: _entryController,
-          ),
-          GestureDetector(
-            onTap: () => _pickImage(),
-            child: _imagePath == _imagePath
-                ? Container(
-                    height: 150,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Icon(Icons.add_a_photo),
-                  )
-                : Image.file(File(_imagePath!)),
-          ),
-          DropdownButtonFormField<String>(
-            decoration: InputDecoration(
-              labelText: "Category",
-              border: OutlineInputBorder(),
+            const SizedBox(height: 20.0),
+            GestureDetector(
+              onTap: () => _pickImage(),
+              child: _imagePath == _imagePath
+                  ? Container(
+                      height: 150,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: Icon(Icons.add_a_photo),
+                    )
+                  : Image.file(File(_imagePath!)),
             ),
-            value: _currentSelectedValue,
-            onChanged: (String? newValue) {
-              setState(() {
-                _currentSelectedValue = newValue;
-              });
-            },
-            items:
-                _dropdownValues.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-          ListTile(
-            leading: const Text('Display in Garden'),
-            trailing: Switch(
-              value: _display_on_gardenController,
-              onChanged: (bool value) {
+            const SizedBox(height: 20.0),
+            DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                labelText: "Category",
+                border: OutlineInputBorder(),
+		labelStyle: TextStyle(color: Colors.white),
+              ),
+              value: _currentSelectedValue,
+              onChanged: (String? newValue) {
                 setState(() {
-                  _display_on_gardenController = value;
+                  _currentSelectedValue = newValue;
                 });
               },
+              items:
+                  _dropdownValues.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
             ),
-          ),
-          const SizedBox(height: 20.0),
-          ElevatedButton(
-            onPressed: () {
-              updateJournalInfo();
-            },
-            child: const Text('submit'),
-          ),
-        ],
+            ListTile(
+              leading: const Text('Display in Garden'),
+              trailing: Switch(
+                value: _display_on_gardenController,
+                onChanged: (bool value) {
+                  setState(() {
+                    _display_on_gardenController = value;
+                  });
+                },
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
+                updateJournalInfo();
+              },
+              child: const Text('submit'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -152,7 +170,8 @@ class _JournalUpdateState extends State<JournalUpdate> {
 
       var journalId = journalData['id'];
       var plantId = journalData['plant_id'];
-      await journalProvider.updateJournal(journalData, journalId, plantId, _imagePath);
+      await journalProvider.updateJournal(
+          journalData, journalId, plantId, _imagePath);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Journal updated successfully!')),
       );

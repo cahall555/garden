@@ -26,52 +26,68 @@ class _PlantCreateState extends State<PlantCreate> {
       appBar: AppBar(
         title: Text('Create Plant'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: <Widget>[
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Name',
-              border: OutlineInputBorder(),
-            ),
-            controller: _nameController,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF344E41),
+              Color(0xFF78B496),
+            ],
           ),
-          const SizedBox(height: 20.0),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Days to Harvest',
-              border: OutlineInputBorder(),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: <Widget>[
+            TextField(
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white),
+              ),
+              controller: _nameController,
             ),
-            controller: _days_to_harvestController,
-            keyboardType: TextInputType.number,
-          ),
-          const SizedBox(height: 20.0),
-          ListTile(
-            leading: const Text('Germinated'),
-            trailing: Switch(
-              value: _germinatedController,
-              onChanged: (bool value) {
-                setState(() {
-                  _germinatedController = value;
-                });
+            const SizedBox(height: 20.0),
+            TextField(
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Days to Harvest',
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white),
+              ),
+              controller: _days_to_harvestController,
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 20.0),
+            ListTile(
+              leading: const Text('Germinated'),
+              trailing: Switch(
+                value: _germinatedController,
+                onChanged: (bool value) {
+                  setState(() {
+                    _germinatedController = value;
+                  });
+                },
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
+                if (_nameController.text.isNotEmpty &&
+                    _days_to_harvestController.text.isNotEmpty) {
+                  submitPlant();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Please fill in all text fields')),
+                  );
+                }
               },
+              child: const Text('submit'),
             ),
-          ),
-          const SizedBox(height: 20.0),
-          ElevatedButton(
-            onPressed: () {
-              if (_nameController.text.isNotEmpty &&
-                  _days_to_harvestController.text.isNotEmpty) {
-                submitPlant();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please fill in all text fields')),
-                );
-              }
-            },
-            child: const Text('submit'),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
