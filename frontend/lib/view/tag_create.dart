@@ -25,32 +25,83 @@ class _TagCreateState extends State<TagCreate> {
     TagProvider tagProvider = Provider.of<TagProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Tag'),
+        title: Text('Create Tag', style: TextStyle(fontFamily: 'Taviraj')),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: <Widget>[
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Name',
-              border: OutlineInputBorder(),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/tag.webp"),
+            fit: BoxFit.cover,
+            opacity: 0.15,
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: <Widget>[
+            TextField(
+              style: TextStyle(
+                  color: Color(0XFF987D3F),
+                  fontFamily: 'Taviraj',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
+              decoration: InputDecoration(
+                labelText: 'Name',
+                labelStyle:
+                    TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF987D3F))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0XFF987D3F)),
+                ),
+              ),
+              controller: _nameController,
             ),
-            controller: _nameController,
-          ),
-          const SizedBox(height: 20.0),
-          ElevatedButton(
-            onPressed: () {
-              if (_nameController.text.isNotEmpty) {
-                submitTag();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please fill in all fields')),
-                );
-              }
-            },
-            child: const Text('submit'),
-          ),
-        ],
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              style: ButtonStyle(
+                elevation: MaterialStateProperty.all<double>(12.0),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                if (_nameController.text.isNotEmpty) {
+                  submitTag();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Please fill in all fields')),
+                  );
+                }
+              },
+              child: Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFFFED16A),
+                      Color(0xFF987D3F),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                child: Container(
+                  constraints: BoxConstraints(minWidth: 108.0, minHeight: 45.0),
+                  alignment: Alignment.center,
+                  child: const Text('Submit',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontFamily: 'Taviraj')),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

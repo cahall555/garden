@@ -33,21 +33,20 @@ class GardenDetail extends StatelessWidget {
   );
   @override
   Widget build(BuildContext context) {
-
-	  final Size screenSize = MediaQuery.of(context).size;
+    final Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       //  bottomNavigationBar: GardenDetailNavigation(garden: garden),
       appBar: AppBar(
-        title: Text(garden.name),
+        title: Text(garden.name, style: TextStyle(fontFamily: 'Taviraj')),
       ),
       body: Container(
-	      width: screenSize.width,
-	      height: screenSize.height,
+        width: screenSize.width,
+        height: screenSize.height,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(
-                "assets/herb_garden.webp"),
-                fit: BoxFit.cover, 
+            image: AssetImage("assets/garden.webp"),
+            fit: BoxFit.cover,
+            opacity: 0.15,
           ),
         ),
         child: SingleChildScrollView(

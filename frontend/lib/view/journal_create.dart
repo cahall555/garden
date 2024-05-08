@@ -38,38 +38,64 @@ class _JournalCreateState extends State<JournalCreate> {
     JournalProvider journalProvider = Provider.of<JournalProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Journal'),
+        title: Text('Create Journal', style: TextStyle(fontFamily: 'Taviraj')),
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF344E41),
-              Color(0xFF78B496),
-            ],
+          image: DecorationImage(
+            image: AssetImage("assets/journal.webp"),
+            fit: BoxFit.cover,
+            opacity: 0.15,
           ),
+
+//          gradient: LinearGradient(
+//            begin: Alignment.topLeft,
+//            end: Alignment.bottomRight,
+//            colors: [
+//              Color(0xFF344E41),
+//              Color(0xFF78B496),
+//            ],
+//          ),
         ),
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: <Widget>[
             const SizedBox(height: 20.0),
             TextField(
+              style: TextStyle(
+                  color: Color(0XFF8E505F),
+                  fontFamily: 'Taviraj',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 labelText: 'Title',
-                border: OutlineInputBorder(),
-		labelStyle: TextStyle(color: Colors.white),
+                labelStyle:
+                    TextStyle(color: Color(0XFF2A203D), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF2A203D))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0XFF2A203D)),
+                ),
               ),
               controller: _titleController,
             ),
             const SizedBox(height: 20.0),
             TextField(
               maxLines: 10,
+              style: TextStyle(
+                  color: Color(0XFF8E505F),
+                  fontFamily: 'Taviraj',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 labelText: 'Entry',
-                border: OutlineInputBorder(),
-		labelStyle: TextStyle(color: Colors.white),
+                labelStyle:
+                    TextStyle(color: Color(0XFF2A203D), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF2A203D))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0XFF2A203D)),
+                ),
               ),
               controller: _entryController,
             ),
@@ -81,18 +107,24 @@ class _JournalCreateState extends State<JournalCreate> {
                       height: 150,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
+                        border: Border.all(color: Color(0XFF2A203D)),
                       ),
-                      child: Icon(Icons.add_a_photo),
+                      child: Icon(Icons.add_a_photo, color: Color(0XFF8E505F)),
                     )
                   : Image.file(File(_imagePath!)),
             ),
             const SizedBox(height: 20.0),
             DropdownButtonFormField<String>(
+              style: TextStyle(color: Color(0xFF8E505F), fontFamily: 'Taviraj'),
               decoration: InputDecoration(
                 labelText: "Category",
-                border: OutlineInputBorder(),
-		labelStyle: TextStyle(color: Colors.white),
+                labelStyle:
+                    TextStyle(color: Color(0xFF2A203D), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF2A203D))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF2A203D)),
+                ),
               ),
               value: _currentSelectedValue,
               onChanged: (String? newValue) {
@@ -104,13 +136,27 @@ class _JournalCreateState extends State<JournalCreate> {
                   _dropdownValues.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Text(value,
+                      style: TextStyle(
+                          color: _currentSelectedValue == value
+                              ? Color(0xFF8E505F)
+                              : Color(0xFF2A203D),
+                          fontFamily: 'Taviraj',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15.0)),
                 );
               }).toList(),
             ),
             ListTile(
-              leading: const Text('Display in Garden'),
+              leading: const Text('Display in Garden',
+                  style: TextStyle(
+                      color: Color(0XFF2A203D),
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Taviraj')),
               trailing: Switch(
+                activeColor: Color(0XFF2A203D),
+                activeTrackColor: Color(0XFF8E505F),
                 value: _display_on_gardenController,
                 onChanged: (bool value) {
                   setState(() {
@@ -121,6 +167,16 @@ class _JournalCreateState extends State<JournalCreate> {
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
+              style: ButtonStyle(
+                elevation: MaterialStateProperty.all<double>(12.0),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                ),
+              ),
               onPressed: () {
                 if (_titleController.text.isNotEmpty &&
                     _entryController.text.isNotEmpty) {
@@ -133,7 +189,28 @@ class _JournalCreateState extends State<JournalCreate> {
                   );
                 }
               },
-              child: const Text('Submit'),
+              child: Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF8E505F),
+                      Color(0xFF2A203D),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                child: Container(
+                  constraints: BoxConstraints(minWidth: 108.0, minHeight: 45.0),
+                  alignment: Alignment.center,
+                  child: const Text('Submit',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontFamily: 'Taviraj')),
+                ),
+              ),
             ),
           ],
         ),

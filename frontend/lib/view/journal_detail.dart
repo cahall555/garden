@@ -21,14 +21,23 @@ class JournalDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(journal.title),
+        title: Text(journal.title, style: TextStyle(fontFamily: 'Taviraj')),
       ),
-      body: SingleChildScrollView(
+ body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/journal.webp"),
+            fit: BoxFit.cover,
+            opacity: 0.15,
+          ),
+	),
+      child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Card(
               elevation: 5,
-              margin: EdgeInsets.all(8),
+	      margin: EdgeInsets.all(8),
+	      child: Padding(padding: EdgeInsets.all(20),
               child: Column(
                 children: <Widget>[
                   ListTile(
@@ -48,6 +57,7 @@ class JournalDetail extends StatelessWidget {
                 ],
               ),
             ),
+	    ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: ElevatedButton(
@@ -83,6 +93,7 @@ class JournalDetail extends StatelessWidget {
             ),
           ],
         ),
+	),
       ),
     );
   }

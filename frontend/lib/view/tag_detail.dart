@@ -23,7 +23,16 @@ class TagDetail extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(tag.name),
+        title: Text(tag.name, style: TextStyle(fontFamily: 'Taviraj')),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/tag.webp"),
+            fit: BoxFit.cover,
+            opacity: 0.15,
+          ),
+        ),
       ),
 //      body: relatedPlants.isEmpty
 //          ? Center(child: Text("No related plants found"))
@@ -59,13 +68,13 @@ class TagDetail extends StatelessWidget {
             child: FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(
-		  MaterialPageRoute(
-		    builder: (context) => TagUpdate(tag: tag),
-		  ),
-		);
+                  MaterialPageRoute(
+                    builder: (context) => TagUpdate(tag: tag),
+                  ),
+                );
               },
-              child: Icon(Icons.edit),
-              backgroundColor: Colors.blue,
+              child: Icon(Icons.edit, color: Color(0XFFFED16A)),
+              backgroundColor: Color(0XFF987D3F),
             ),
           ),
           Padding(
@@ -76,8 +85,8 @@ class TagDetail extends StatelessWidget {
                     .deleteTag(tag.id);
                 Navigator.of(context).pop();
               },
-              child: Icon(Icons.delete),
-              backgroundColor: Colors.red,
+              child: Icon(Icons.delete, color: Color(0XFF987D3F)),
+              backgroundColor: Color(0XFFFED16A),
             ),
           ),
         ],

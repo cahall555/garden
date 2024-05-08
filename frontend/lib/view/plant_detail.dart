@@ -128,8 +128,8 @@ class PlantDetail extends StatelessWidget {
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                       colors: [
-                                        Color(0xFFFED16A),
-                                        Color(0xFF987D3F),
+                                        Color(0xFF8E505F),
+                                        Color(0xFF2A203D),
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(25.0),
@@ -148,20 +148,20 @@ class PlantDetail extends StatelessWidget {
                                         );
                                       },
                                       leading: Icon(Icons.library_books_rounded,
-                                          color: Color(0XFF8E505F)),
+                                          color: Color(0XFF2A203D)),
                                       title: Text(
                                         snapshot.data![index].title,
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontFamily: 'Taviraj',
-                                          color: Color(0XFF8E505F),
+                                          color: Colors.white,
                                         ),
                                       ),
                                       subtitle:
                                           Text(snapshot.data![index].entry,
                                               style: TextStyle(
                                                 fontFamily: 'Taviraj',
-                                                color: Color(0XFF2A203D),
+                                                color: Colors.white,
                                               )),
                                     ),
                                   ),
@@ -297,8 +297,8 @@ class PlantDetail extends StatelessWidget {
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    Color(0xFF8E505F),
-                                    Color(0xFF2A203D),
+                                    Color(0xFFFED16A),
+                                    Color(0xFF987D3F),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(25.0),
@@ -316,7 +316,7 @@ class PlantDetail extends StatelessWidget {
                                   );
                                 },
                                 leading: Icon(Icons.label_rounded,
-                                    color: Color(0XFF2A203D)),
+                                    color: Color(0XFF987D3F)),
                                 title: textWidget,
                               ),
                             ),
