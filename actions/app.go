@@ -11,7 +11,7 @@ import (
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo-pop/v3/pop/popmw"
 	"github.com/gobuffalo/envy"
-	"github.com/gobuffalo/middleware/csrf"
+	//"github.com/gobuffalo/middleware/csrf" TODO: Is there a way to leave csrf active and use when needed?
 	"github.com/gobuffalo/middleware/forcessl"
 	"github.com/gobuffalo/middleware/i18n"
 	"github.com/gobuffalo/middleware/paramlogger"
@@ -56,7 +56,7 @@ func App() *buffalo.App {
 
 		// Protect against CSRF attacks. https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
 		// Remove to disable this.
-		app.Use(csrf.New)
+	//	app.Use(csrf.New) *** See todo on line 14
 
 		// Wraps each request in a transaction.
 		//   c.Value("tx").(*pop.Connection)
@@ -64,9 +64,15 @@ func App() *buffalo.App {
 		app.Use(popmw.Transaction(models.DB))
 		// Setup and use translations:
 		app.Use(translations())
+	 
+//		app.GET("/csrf", func(c buffalo.Context) error {
+//        		csrfToken := csrf.Token(c)
+//        		return c.Render(200, r.JSON(map[string]string{"csrf_token": csrfToken}))
+//    		})
 
 		app.GET("/", GardensIndex) //replacing HomeHandler
-	
+
+		app.GET("/csrf", CsrfToken)
 		app.GET("/gardens/create", GardensCreate)
 		app.GET("/gardens/update/{id}", GardensUpdate)
 		app.GET("/gardens/{id}", GardensShow)
@@ -77,12 +83,14 @@ func App() *buffalo.App {
 		app.GET("/plants/create", PlantsCreate)
 		app.GET("/plants/update/{id}", PlantsUpdate)
 		app.GET("/plants/{id}", PlantsShow)
+		app.GET("/plants", PlantsIndex)
 		app.POST("/plants", PlantsNew)
 		app.PUT("/plants/", PlantsEdit)
 		app.DELETE("/plants/{id}", PlantsDelete)
 		app.GET("/tags/create", TagsCreate)
 		app.GET("/tags/update/{id}", TagsUpdate)
 		app.GET("/tags/{id}", TagsShow)
+		app.GET("/tag/{name}", TagNameShow)
 		app.GET("/tags", TagsIndex)
 		app.POST("/tags", TagsNew)
 		app.PUT("/tags/", TagsEdit)
@@ -91,15 +99,19 @@ func App() *buffalo.App {
 		app.GET("/journals/update/{id}", JournalsUpdate)
 		app.GET("/journals/{id}", JournalsShow)
 		app.GET("/journals", JournalsIndex)
+		app.GET("/plant_journals", PlantJournals)
 		app.POST("/journals", JournalsNew)
 		app.PUT("/journals/", JournalsEdit)
 		app.DELETE("/journals/{id}", JournalsDelete)
 		app.GET("/water_schedules/create", WaterSchedulesCreate)
 		app.GET("/water_schedules/update/{id}", WaterSchedulesUpdate)
 		app.GET("/water_schedules/{id}", WaterSchedulesShow)
+		app.GET("/water_schedules", WaterSchedulesIndex)
 		app.POST("/water_schedules", WaterSchedulesNew)
 		app.PUT("/water_schedules/", WaterSchedulesEdit)
 		app.DELETE("/water_schedules/{id}", WaterSchedulesDelete)
+		app.GET("/plantstag", PlantTagIndex)
+		app.POST("/plantstag", PlantTagCreate)
 		app.DELETE("/plantstag/{tagid}/{plantid}", PlantTagDelete)
 		app.ServeFiles("/", http.FS(public.FS())) // serve files from the public directory
 	})

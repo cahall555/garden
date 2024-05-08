@@ -30,7 +30,7 @@ type Journal struct {
 	DisplayOnGarden bool      `json:"display_on_garden" db:"display_on_garden"`
 	Image           string    `json:"image" db:"image"`
 	Category        Category  `json:"category" db:"category"`
-	PlantID         uuid.UUID `json:"-" db:"plant_id"`
+	PlantID         uuid.UUID `json:"plant_id" db:"plant_id"`
 	Plant           *Plant    `json:"Plant,omitempty" belongs_to:"plant"`
 	CreatedAt       time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at" db:"updated_at"`
