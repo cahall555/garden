@@ -23,43 +23,68 @@ class _GardenCreateState extends State<GardenCreate> {
     GardenProvider gardenProvider = Provider.of<GardenProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Garden'),
+        title: Text('Create Garden', style: TextStyle(fontFamily: 'Taviraj')),
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF344E41),
-              Color(0xFF78B496),
-            ],
+          image: DecorationImage(
+            image: AssetImage("assets/garden.webp"),
+            fit: BoxFit.cover,
+            opacity: 0.15,
           ),
         ),
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: <Widget>[
             TextField(
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Color(0XFF987D3F),
+                  fontFamily: 'Taviraj',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 labelText: 'Name',
-                border: OutlineInputBorder(),
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle:
+                    TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF987D3F))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0XFF987D3F)),
+                ),
               ),
               controller: _nameController,
             ),
             const SizedBox(height: 20.0),
             TextField(
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Color(0XFF987D3F),
+                  fontFamily: 'Taviraj',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 labelText: 'Zone',
-                border: OutlineInputBorder(),
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle:
+                    TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF987D3F))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0XFF987D3F)),
+                ),
               ),
               controller: _zoneController,
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
+              style: ButtonStyle(
+                elevation: MaterialStateProperty.all<double>(12.0),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                ),
+              ),
               onPressed: () {
                 //	await gardenApi.initCsrfToken(); //see comment in app.go line 14
                 if (_nameController.text.isNotEmpty &&
@@ -71,7 +96,28 @@ class _GardenCreateState extends State<GardenCreate> {
                   );
                 }
               },
-              child: const Text('submit'),
+              child: Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFFFED16A),
+                      Color(0xFF987D3F),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                child: Container(
+                  constraints: BoxConstraints(minWidth: 108.0, minHeight: 45.0),
+                  alignment: Alignment.center,
+                  child: const Text('Submit',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontFamily: 'Taviraj')),
+                ),
+              ),
             ),
           ],
         ),

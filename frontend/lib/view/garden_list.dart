@@ -46,12 +46,12 @@ class _GardenListState extends State<GardenList> {
       builder: (context, gardenProvider, child) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Gardens'),
+            title: Text('Gardens', style: TextStyle(fontFamily: 'Taviraj')),
           ),
           body: Stack(
             children: <Widget>[
               Image.asset(
-                'assets/' + ('herb_garden.webp'),
+                'assets/' + ('garden.webp'),
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
@@ -76,7 +76,7 @@ class _GardenListState extends State<GardenList> {
                             title: gardenName,
                             zone: gardenZone,
                             description: plantCount,
-                            garden: garden); //Card(
+                            garden: garden); 
                       },
                     );
                   } else {
@@ -86,7 +86,6 @@ class _GardenListState extends State<GardenList> {
               ),
             ],
           ),
-//	  bottomNavigationBar: BottomNavigation(),
         );
       },
     );

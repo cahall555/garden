@@ -22,39 +22,57 @@ class PlantCard extends StatelessWidget {
     return Center(
       child: Card(
         elevation: 12,
-        shadowColor: Colors.pink[900],
+        shadowColor: Color(0XFF2A203D),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50.0),
         ),
-        color: Color(0XFF588157),
         margin: EdgeInsets.all(12),
-        child: ListTile(
-          contentPadding: EdgeInsets.all(10),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PlantDetail(plant: plant),
-              ),
-            );
-            print('changing to plant detail');
-          },
-          //    leading: Icon(Icons.local_florist),
-          title: Text(
-            title,
-	    textAlign: TextAlign.center,
-	    textScaleFactor: 1.5,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.blueGrey[50],
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF344E41),
+                Color(0xFFFED16A),
+              ],
             ),
+            borderRadius: BorderRadius.circular(50.0),
           ),
-          subtitle: Text('Days to Harvest: ' + days_to_harvest.toString() + '\n' + (germinated ? 'Plant has germinated' : 'Plant has not germinated'),
+          child: ListTile(
+            contentPadding: EdgeInsets.all(10),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PlantDetail(plant: plant),
+                ),
+              );
+              print('changing to plant detail');
+            },
+            title: Text(
+              title,
               textAlign: TextAlign.center,
-		  style: TextStyle(
-                color: Colors.blueGrey[50],
-              )),
-          //  trailing: Icon(Icons.favorite),
+              textScaleFactor: 1.5,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Taviraj',
+                color: Colors.white,
+              ),
+            ),
+            subtitle: Text(
+                'Days to Harvest: ' +
+                    days_to_harvest.toString() +
+                    '\n' +
+                    (germinated
+                        ? 'Plant has germinated'
+                        : 'Plant has not germinated'),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Taviraj',
+                  color: Colors.white,
+                )),
+          ),
         ),
       ),
     );

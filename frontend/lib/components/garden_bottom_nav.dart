@@ -24,21 +24,22 @@ class _BottomNavigationState extends State<BottomNavigation> {
           });
         },
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-        backgroundColor: Color(0XFF8E505F),
+        backgroundColor: Color(0XFF987D3F),
         selectedIndex: _currentPageIndex,
+	indicatorColor: Color(0XFFFED16A),
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
+            selectedIcon: Icon(Icons.home, color: Color(0XFF344E41)),
             icon: Icon(Icons.home, color: Colors.white),
             label: 'Home',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.add_rounded),
+            selectedIcon: Icon(Icons.add_rounded, color: Color(0XFF344E41)),
             icon: Icon(Icons.add_rounded, color: Colors.white),
             label: 'Add Garden',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.bar_chart_rounded),
+            selectedIcon: Icon(Icons.bar_chart_rounded, color: Color(0XFF344E41)),
             icon: Icon(Icons.bar_chart_rounded, color: Colors.white),
             label: 'Chart',
           ),

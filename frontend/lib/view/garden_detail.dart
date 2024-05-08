@@ -54,9 +54,28 @@ class GardenDetail extends StatelessWidget {
             children: [
               Card(
                 elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
                 margin: EdgeInsets.all(8),
-                child: ListTile(
-                  title: Text('Zone: ' + garden.zone),
+                child: Container(
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFFFED16A),
+                          Color(0xFF987D3F),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                    child: ListTile(
+                      title: Text('Zone: ' + garden.zone,
+                          style: TextStyle(fontFamily: 'Taviraj', fontWeight: FontWeight.bold, color: Colors.white)),
+                    ),
+                  ),
                 ),
               ),
               FutureBuilder<List<Plant>>(

@@ -63,7 +63,7 @@ class PlantDetail extends StatelessWidget {
           image: DecorationImage(
             image: AssetImage("assets/herb_garden.webp"),
             fit: BoxFit.cover,
-            opacity: 0.5,
+            opacity: 0.15,
           ),
         ),
         child: SingleChildScrollView(
@@ -79,8 +79,8 @@ class PlantDetail extends StatelessWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Color(0xFF344E41),
-                        Color(0xFF78B496),
+                        Color(0xFFFED16A),
+                        Color(0xFF987D3F),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(25.0),
@@ -128,8 +128,8 @@ class PlantDetail extends StatelessWidget {
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                       colors: [
-                                        Color(0xFF8E505F),
-                                        Color(0xFF2A203D),
+                                        Color(0xFF344E41),
+                                        Color(0xFFFED16A),
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(25.0),
@@ -148,7 +148,7 @@ class PlantDetail extends StatelessWidget {
                                         );
                                       },
                                       leading: Icon(Icons.library_books_rounded,
-                                          color: Color(0XFF2A203D)),
+                                          color: Color(0XFF987D3F)),
                                       title: Text(
                                         snapshot.data![index].title,
                                         style: TextStyle(
@@ -176,8 +176,8 @@ class PlantDetail extends StatelessWidget {
                           effect: WormEffect(
                             dotWidth: 10.0,
                             dotHeight: 10.0,
-                            activeDotColor: Color(0xFF2A203D),
-                            dotColor: Color(0xFF8E505F),
+                            activeDotColor: Color(0xFF344E41),
+                            dotColor: Color(0xFFFED16A),
                           ),
                         ),
                       ],
@@ -216,8 +216,8 @@ class PlantDetail extends StatelessWidget {
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  Color(0xFF4E7AC7),
-                                  Color(0xFF263B61),
+                                  Color(0xFF344E41),
+                                  Color(0xFFFED16A),
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(25.0),
@@ -234,7 +234,7 @@ class PlantDetail extends StatelessWidget {
                                 );
                               },
                               leading: Icon(Icons.water_drop_rounded,
-                                  color: Color(0XFF263B61)),
+                                  color: Color(0XFF987D3F)),
                               title: Text(
                                 snapshot.data![index].notes,
                                 style: TextStyle(
@@ -297,8 +297,8 @@ class PlantDetail extends StatelessWidget {
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
+                                    Color(0xFF344E41),
                                     Color(0xFFFED16A),
-                                    Color(0xFF987D3F),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(25.0),

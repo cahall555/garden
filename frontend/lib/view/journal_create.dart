@@ -47,15 +47,6 @@ class _JournalCreateState extends State<JournalCreate> {
             fit: BoxFit.cover,
             opacity: 0.15,
           ),
-
-//          gradient: LinearGradient(
-//            begin: Alignment.topLeft,
-//            end: Alignment.bottomRight,
-//            colors: [
-//              Color(0xFF344E41),
-//              Color(0xFF78B496),
-//            ],
-//          ),
         ),
         child: ListView(
           padding: const EdgeInsets.all(20),
