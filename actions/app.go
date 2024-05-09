@@ -72,6 +72,10 @@ func App() *buffalo.App {
 
 		app.GET("/", GardensIndex) //replacing HomeHandler
 
+		//AuthMiddleware
+		app.Use(SetCurrentUser)
+		app.Use(Authorize)
+
 		app.GET("/csrf", CsrfToken)
 		app.GET("/gardens/create", GardensCreate)
 		app.GET("/gardens/update/{id}", GardensUpdate)
@@ -113,6 +117,12 @@ func App() *buffalo.App {
 		app.GET("/plantstag", PlantTagIndex)
 		app.POST("/plantstag", PlantTagCreate)
 		app.DELETE("/plantstag/{tagid}/{plantid}", PlantTagDelete)
+		app.GET("/users/new", UsersNew)
+		app.POST("/users", UsersCreate)
+		app.GET("/auth", AuthLanding)
+		app.GET("/auth/login", AuthNew)
+		app.POST("/auth", AuthCreate)
+		app.DELETE("/auth", AuthDestroy)
 		app.ServeFiles("/", http.FS(public.FS())) // serve files from the public directory
 	})
 
