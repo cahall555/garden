@@ -11,6 +11,8 @@ import 'provider/tag_provider.dart';
 import 'provider/plants_tag_provider.dart';
 import 'provider/ws_provider.dart';
 import 'provider/journal_provider.dart';
+import 'provider/user_provider.dart';
+import 'provider/auth_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
@@ -29,6 +31,8 @@ void main() async {
         ChangeNotifierProvider(create: (context) => JournalProvider()),
         ChangeNotifierProvider(create: (context) => TagProvider()),
         ChangeNotifierProvider(create: (context) => PlantsTagProvider()),
+	ChangeNotifierProvider(create: (context) => UserProvider()),
+	ChangeNotifierProvider(create: (context) => AuthProvider()),
       ],
       child: MyApp(),
     ),

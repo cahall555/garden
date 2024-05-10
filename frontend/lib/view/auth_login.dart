@@ -2,30 +2,27 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'garden_list.dart';
 import '../model/user.dart';
-import '../model/apis/user_api.dart';
-import '../provider/user_provider.dart';
+import '../model/apis/auth_api.dart';
+import '../provider/auth_provider.dart';
 import 'package:provider/provider.dart';
 
-class UserCreate extends StatefulWidget {
-  const UserCreate({Key? key}) : super(key: key);
+class AuthCreate extends StatefulWidget {
+  const AuthCreate({Key? key}) : super(key: key);
 
   @override
-  State<UserCreate> createState() => _UserCreateState();
+  State<AuthCreate> createState() => _AuthCreateState();
 }
 
-class _UserCreateState extends State<UserCreate> {
-  final _firstnameController = TextEditingController();
-  final _lastnameController = TextEditingController();
+class _AuthCreateState extends State<AuthCreate> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _passwordConfirmController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    UserProvider UserProvider = Provider.of<UserProvider>(context);
+    AuthProvider AuthProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create User', style: TextStyle(fontFamily: 'Taviraj')),
+        title: Text('User Login', style: TextStyle(fontFamily: 'Taviraj')),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -38,44 +35,6 @@ class _UserCreateState extends State<UserCreate> {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: <Widget>[
-            TextField(
-              style: TextStyle(
-                  color: Color(0XFF987D3F),
-                  fontFamily: 'Taviraj',
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
-                labelText: 'First Name',
-                labelStyle:
-                    TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0XFF987D3F))),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0XFF987D3F)),
-                ),
-              ),
-              controller: _firstnameController,
-            ),
-            const SizedBox(height: 20.0),
-            TextField(
-              style: TextStyle(
-                  color: Color(0XFF987D3F),
-                  fontFamily: 'Taviraj',
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
-                labelText: 'Last Name',
-                labelStyle:
-                    TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0XFF987D3F))),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0XFF987D3F)),
-                ),
-              ),
-              controller: _lastnameController,
-            ),
-            const SizedBox(height: 20.0),
             TextField(
               style: TextStyle(
                   color: Color(0XFF987D3F),
@@ -114,25 +73,6 @@ class _UserCreateState extends State<UserCreate> {
               controller: _passwordController,
             ),
             const SizedBox(height: 20.0),
-            TextField(
-              style: TextStyle(
-                  color: Color(0XFF987D3F),
-                  fontFamily: 'Taviraj',
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
-                labelText: 'Confirm Password',
-                labelStyle:
-                    TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0XFF987D3F))),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0XFF987D3F)),
-                ),
-              ),
-              controller: _passwordconfirmController,
-            ),
-            const SizedBox(height: 20.0),
             ElevatedButton(
               style: ButtonStyle(
                 elevation: MaterialStateProperty.all<double>(12.0),
@@ -146,11 +86,8 @@ class _UserCreateState extends State<UserCreate> {
               ),
               onPressed: () {
                 if (_emailController.text.isNotEmpty &&
-                    _passwordController.text.isNotEmpty &&
-		    _passwordConfirmController.text.isNotEmpty &&
-		    _firstnameController.text.isNotEmpty &&
-		    _lastnameController.text.isNotEmpty) {
-                  submitUser();
+                    _passwordController.text.isNotEmpty) {
+                  userLogin();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Please fill in all fields')),
@@ -172,7 +109,7 @@ class _UserCreateState extends State<UserCreate> {
                 child: Container(
                   constraints: BoxConstraints(minWidth: 108.0, minHeight: 45.0),
                   alignment: Alignment.center,
-                  child: const Text('Submit',
+                  child: const Text('Login',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 15.0,
@@ -186,18 +123,15 @@ class _UserCreateState extends State<UserCreate> {
     );
   }
 
-  void submitUser() async {
+  void userLogin() async {
     try {
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      await userProvider.createUser({
-        'first_name': _firstnameController.text.trim(),
-        'last_name': _lastnameController.text.trim(),
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.createAuth({
         'email': _emailController.text.trim(),
         'password': _passwordController.text.trim(),
-        'password_confirmation': _passwordConfirmController.text.trim(),
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('User successfully created!')),
+        SnackBar(content: Text('Login successful!')),
       );
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -207,16 +141,13 @@ class _UserCreateState extends State<UserCreate> {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to create user: $e')),
+        SnackBar(content: Text('Failed to login: $e')),
       );
     }
     @override
     void dispose() {
-      _firstnameController.dispose();
-      _lastnameController.dispose();
       _emailController.dispose();
       _passwordController.dispose();
-      _passwordConfirmController.dispose();
       super.dispose();
     }
   }

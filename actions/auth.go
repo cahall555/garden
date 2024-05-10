@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// AuthLanding shows a landing page to login
+// AuthLanding shows a landing page to login or sign up
 func AuthLanding(c buffalo.Context) error {
 	return c.Render(200, r.HTML("auth/landing.html"))
 }
@@ -25,7 +25,7 @@ func AuthNew(c buffalo.Context) error {
 
 //AuthCreate attempts to log the user in with an existing account
 func AuthCreate(c buffalo.Context) error {
-	u : &models.User{}
+	u := &models.User{}
 	if err := c.Bind(u); err != nil {
 		return errors.WithStack(err)
 	}
@@ -70,7 +70,7 @@ func AuthCreate(c buffalo.Context) error {
 }
 
 // AuthDestroy clears the session and logs a user out
-func AuthDestroy(c buffalo.Context) error {
+func AuthDelete(c buffalo.Context) error {
 	c.Session().Clear()
 	c.Flash().Add("success", "You have been logged out!")
 	return c.Redirect(302, "/")
