@@ -15,7 +15,7 @@ class GardenCreate extends StatefulWidget {
 
 class _GardenCreateState extends State<GardenCreate> {
   final _nameController = TextEditingController();
-  final _zoneController = TextEditingController();
+  final _descriptionController = TextEditingController();
   //final GardenApi gardenApi = GardenApi(); *** Leaving in for potential csrf see line 14 in app.go.
 
   @override
@@ -62,7 +62,7 @@ class _GardenCreateState extends State<GardenCreate> {
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold),
               decoration: InputDecoration(
-                labelText: 'Zone',
+                labelText: 'Description',
                 labelStyle:
                     TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
                 enabledBorder: OutlineInputBorder(
@@ -71,7 +71,7 @@ class _GardenCreateState extends State<GardenCreate> {
                   borderSide: BorderSide(color: Color(0XFF987D3F)),
                 ),
               ),
-              controller: _zoneController,
+              controller: _descriptionController,
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
@@ -88,7 +88,7 @@ class _GardenCreateState extends State<GardenCreate> {
               onPressed: () {
                 //	await gardenApi.initCsrfToken(); //see comment in app.go line 14
                 if (_nameController.text.isNotEmpty &&
-                    _zoneController.text.isNotEmpty) {
+                    _descriptionController.text.isNotEmpty) {
                   submitGarden();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -132,7 +132,7 @@ class _GardenCreateState extends State<GardenCreate> {
       await gardenProvider.createGarden({
         // await gardenApi.createGarden(gardenData); see comment in app.go line 14
         'name': _nameController.text.trim(),
-        'zone': _zoneController.text.trim(),
+        'description': _descriptionController.text.trim(),
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Garden updated successfully!')),
@@ -150,7 +150,7 @@ class _GardenCreateState extends State<GardenCreate> {
     @override
     void dispose() {
       _nameController.dispose();
-      _zoneController.dispose();
+      _descriptionController.dispose();
       super.dispose();
     }
   }

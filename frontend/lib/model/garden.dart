@@ -4,18 +4,22 @@ import 'apis/plant_api.dart';
 class Garden {
 	final String id;
 	final String name;
-  	final String zone;
+  	final String description;
+	final String account_id;
+	final String? farm_id;
 	final DateTime createdAt;
 	final DateTime updatedAt;
 	final List<Plant>?plants;
 
-  	Garden({required this.id, required this.name, required this.zone, required this.createdAt, required this.updatedAt, this.plants});
+  	Garden({required this.id, required this.name, required this.description, required this.account_id, this.farm_id, required this.createdAt, required this.updatedAt, this.plants});
 
   	factory Garden.fromJson(Map<String, dynamic> json) {
     		return Garden(
       			id: json['id'],
       			name: json['name'],
-      			zone: json['zone'],
+      			description: json['description'],
+			account_id: json['account_id'],
+			farm_id: json['farm_id'],
 			createdAt: DateTime.parse(json['created_at']),
 			updatedAt: DateTime.parse(json['updated_at']),
 			plants: json['plants'] !=null ? (json['plants'] as List).map((i) => Plant.fromJson(i)).toList() : null,
@@ -26,7 +30,9 @@ class Garden {
     		return {
       			'id': id,
       			'name': name,
-      			'zone': zone,
+      			'description': description,
+			'account_id': account_id,
+			'farm_id': farm_id,
 			'created_at': createdAt.toIso8601String(),
 			'updated_at': updatedAt.toIso8601String(),
 			'plants': plants?.map((plant) => plant.toJson()).toList(),
@@ -37,7 +43,7 @@ class Garden {
 		this.name = newName;
 	}
 
-	set zone(String newZone) {
-		this.zone = newZone;
+	set description(String newDescription) {
+		this.description = newDescription;
 	}
 }

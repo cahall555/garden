@@ -8,17 +8,17 @@ import '../model/apis/auth_api.dart';
 import '../provider/auth_provider.dart';
 import 'package:provider/provider.dart';
 
-class AuthLanding extends StatefulWidget {
-  const AuthLanding({Key? key}) : super(key: key);
+class LandingPage extends StatefulWidget {
+  const LandingPage({Key? key}) : super(key: key);
 
   @override
-  State<AuthLanding> createState() => _AuthLandingState();
+  State<LandingPage> createState() => _LandingPageState();
 }
 
-class _AuthLandingState extends State<AuthLanding> {
+class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
-    AuthProvider AuthProvider = Provider.of<AuthProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Welcome', style: TextStyle(fontFamily: 'Taviraj')),
@@ -36,7 +36,7 @@ class _AuthLandingState extends State<AuthLanding> {
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('So nice to see you ${authProvider.firstName}',
+                  Text('So nice to see you ${authProvider.FirstName}',
                       style: TextStyle(fontFamily: 'Taviraj', fontSize: 20.0)),
                   //Add Farm List when available
                   const SizedBox(height: 20.0),
@@ -52,7 +52,7 @@ class _AuthLandingState extends State<AuthLanding> {
                       ),
                     ),
                     onPressed: () {
-                      authProvider.logOut();
+                     // authProvider.logOut();
                     },
                     child: Ink(
                       decoration: BoxDecoration(
@@ -97,7 +97,7 @@ class _AuthLandingState extends State<AuthLanding> {
                     ),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const userCreate()));
+                          builder: (context) => const UserCreate()));
                     },
                     child: Ink(
                       decoration: BoxDecoration(
@@ -137,7 +137,8 @@ class _AuthLandingState extends State<AuthLanding> {
                     ),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const authCreate()));
+                          builder: (context) => const AuthCreate()));
+		      print('Login button pressed');
                     },
                     child: Ink(
                       decoration: BoxDecoration(

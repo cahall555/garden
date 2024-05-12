@@ -72,7 +72,7 @@ class GardenDetail extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25.0),
                     ),
                     child: ListTile(
-                      title: Text('Zone: ' + garden.zone,
+                      title: Text('Description: ' + garden.description,
                           style: TextStyle(fontFamily: 'Taviraj', fontWeight: FontWeight.bold, color: Colors.white)),
                     ),
                   ),

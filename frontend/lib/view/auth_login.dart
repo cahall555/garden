@@ -19,7 +19,7 @@ class _AuthCreateState extends State<AuthCreate> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider AuthProvider = Provider.of<AuthProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('User Login', style: TextStyle(fontFamily: 'Taviraj')),
@@ -125,7 +125,8 @@ class _AuthCreateState extends State<AuthCreate> {
 
   void userLogin() async {
     try {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+ 	print('sending createAuthApi: ${_emailController.text.trim()}');
+     final authProvider = Provider.of<AuthProvider>(context, listen: false);
       await authProvider.createAuth({
         'email': _emailController.text.trim(),
         'password': _passwordController.text.trim(),
@@ -144,11 +145,12 @@ class _AuthCreateState extends State<AuthCreate> {
         SnackBar(content: Text('Failed to login: $e')),
       );
     }
-    @override
-    void dispose() {
-      _emailController.dispose();
-      _passwordController.dispose();
-      super.dispose();
-    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

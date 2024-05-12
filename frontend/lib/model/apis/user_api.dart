@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 final String apiUrl = dotenv.env['API_URL']!;
 
-future<void> createUserApi(Map<String, dynamic> userData) async {
+Future<void> createUserApi(Map<String, dynamic> userData) async {
   final url = Uri.parse(apiUrl + 'users');
   final headers = {"Content-Type": "application/json"};
 

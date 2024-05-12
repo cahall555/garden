@@ -8,4 +8,4 @@ class UserProvider with ChangeNotifier {
     createUserApi(user);
     notifyListeners();
   }
-
+}

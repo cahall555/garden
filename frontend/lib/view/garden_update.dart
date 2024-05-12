@@ -16,14 +16,14 @@ class GardenUpdate extends StatefulWidget {
 
 class _GardenUpdateState extends State<GardenUpdate> {
   late TextEditingController _nameController;
-  late TextEditingController _zoneController;
+  late TextEditingController _descriptionController;
   //Future<Garden>? _futureGarden;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.garden.name);
-    _zoneController = TextEditingController(text: widget.garden.zone);
+    _descriptionController = TextEditingController(text: widget.garden.description);
   }
 
   @override
@@ -69,7 +69,7 @@ class _GardenUpdateState extends State<GardenUpdate> {
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold),
               decoration: InputDecoration(
-                labelText: 'Zone',
+                labelText: 'Description',
                 labelStyle:
                     TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
                 enabledBorder: OutlineInputBorder(
@@ -78,7 +78,7 @@ class _GardenUpdateState extends State<GardenUpdate> {
                   borderSide: BorderSide(color: Color(0XFF987D3F)),
                 ),
               ),
-              controller: _zoneController,
+              controller: _descriptionController,
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
@@ -129,7 +129,7 @@ class _GardenUpdateState extends State<GardenUpdate> {
       Map<String, dynamic> gardenData = {
         'id': widget.garden.id,
         'name': _nameController.text.trim(),
-        'zone': _zoneController.text.trim(),
+        'description': _descriptionController.text.trim(),
       };
       final gardenProvider =
           Provider.of<GardenProvider>(context, listen: false);
@@ -149,3 +149,4 @@ class _GardenUpdateState extends State<GardenUpdate> {
     }
   }
 }
+

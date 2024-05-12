@@ -3,7 +3,6 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-	"github.com/gofrs/uuid"
 	"github.com/pkg/errors"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"

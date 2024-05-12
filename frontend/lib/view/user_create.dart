@@ -22,7 +22,7 @@ class _UserCreateState extends State<UserCreate> {
 
   @override
   Widget build(BuildContext context) {
-    UserProvider UserProvider = Provider.of<UserProvider>(context);
+    UserProvider userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Create User', style: TextStyle(fontFamily: 'Taviraj')),
@@ -130,7 +130,7 @@ class _UserCreateState extends State<UserCreate> {
                   borderSide: BorderSide(color: Color(0XFF987D3F)),
                 ),
               ),
-              controller: _passwordconfirmController,
+              controller: _passwordConfirmController,
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
@@ -147,9 +147,9 @@ class _UserCreateState extends State<UserCreate> {
               onPressed: () {
                 if (_emailController.text.isNotEmpty &&
                     _passwordController.text.isNotEmpty &&
-		    _passwordConfirmController.text.isNotEmpty &&
-		    _firstnameController.text.isNotEmpty &&
-		    _lastnameController.text.isNotEmpty) {
+                    _passwordConfirmController.text.isNotEmpty &&
+                    _firstnameController.text.isNotEmpty &&
+                    _lastnameController.text.isNotEmpty) {
                   submitUser();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -172,7 +172,7 @@ class _UserCreateState extends State<UserCreate> {
                 child: Container(
                   constraints: BoxConstraints(minWidth: 108.0, minHeight: 45.0),
                   alignment: Alignment.center,
-                  child: const Text('Submit',
+                  child: const Text('Create Account',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 15.0,
@@ -210,14 +210,15 @@ class _UserCreateState extends State<UserCreate> {
         SnackBar(content: Text('Failed to create user: $e')),
       );
     }
-    @override
-    void dispose() {
-      _firstnameController.dispose();
-      _lastnameController.dispose();
-      _emailController.dispose();
-      _passwordController.dispose();
-      _passwordConfirmController.dispose();
-      super.dispose();
-    }
+  }
+
+  @override
+  void dispose() {
+    _firstnameController.dispose();
+    _lastnameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _passwordConfirmController.dispose();
+    super.dispose();
   }
 }

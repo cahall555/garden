@@ -3,13 +3,12 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-	"github.com/gofrs/uuid"
 	"github.com/pkg/errors"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"
 )
 
-func FarmShow(c buffalo.Context) error {
+func FarmsShow(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	farm := models.Farm{}
 	farmID := c.Param("id")

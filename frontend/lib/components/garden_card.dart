@@ -4,14 +4,12 @@ import '../view/garden_detail.dart';
 
 class GardenCard extends StatelessWidget {
   final String title;
-  final String zone;
   final String description;
   final Garden garden;
 //  final String imageUrl;
 
   GardenCard({
     required this.title,
-    required this.zone,
     required this.description,
     required this.garden,
 //    required this.imageUrl,
@@ -60,7 +58,7 @@ class GardenCard extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            subtitle: Text('Garden Zone: ' + zone + '\n' + description,
+            subtitle: Text('Garden Description: ' + description,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Taviraj',

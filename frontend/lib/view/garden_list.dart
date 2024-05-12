@@ -28,12 +28,12 @@ class _GardenListState extends State<GardenList> {
 
   final GardenCard gardenCard = GardenCard(
     title: 'Herb Garden',
-    zone: '7',
     description: 'This is a description of the garden',
     garden: Garden(
       id: '1',
       name: 'Herb Garden',
-      zone: '7',
+      description: 'This is a description of the garden',
+      account_id: '1',
       plants: [],
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
@@ -71,12 +71,13 @@ class _GardenListState extends State<GardenList> {
                         String plantCount =
                             'Put Plant count here'; //snapshot.data![index].plants.length.toString() ?? '0';
                         String gardenName = snapshot.data![index].name;
-                        String gardenZone = snapshot.data![index].zone;
+                        String gardenDescription =
+                            snapshot.data![index].description;
                         return GardenCard(
                             title: gardenName,
-                            zone: gardenZone,
-                            description: plantCount,
-                            garden: garden); 
+                            description: gardenDescription,
+                            //description: plantCount,
+                            garden: garden);
                       },
                     );
                   } else {
@@ -86,6 +87,7 @@ class _GardenListState extends State<GardenList> {
               ),
             ],
           ),
+          bottomNavigationBar: BottomNavigation(),
         );
       },
     );

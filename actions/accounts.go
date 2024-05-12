@@ -3,7 +3,6 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-	"github.com/gofrs/uuid"
 	"github.com/pkg/errors"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"
@@ -51,6 +50,12 @@ func AccountsCreate(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.JSON(account))
 }
 
+func AccountsNew(c buffalo.Context) error {
+	account := models.Account{}
+	c.Set("account", account)
+	return c.Render(http.StatusOK, r.JSON(account))
+}
+
 func AccountsUpdate(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	account := models.Account{}
@@ -76,6 +81,36 @@ func AccountsUpdate(c buffalo.Context) error {
 	}
 
 	return c.Render(http.StatusOK, r.JSON(account))
+}
+
+func AccountsEdit(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	account := models.Account{}
+	if err := tx.Find(&account, c.Param("id")); err != nil {
+		return c.Render(500, r.JSON(account))
+	}
+	
+	err := c.Bind(account)
+	if err != nil {
+		return c.Render(500, r.JSON(account))
+	}
+
+	err = c.Request().ParseForm()
+	if err != nil {
+		return c.Render(500, r.JSON(account))
+	}
+
+	verrs, err := tx.ValidateAndUpdate(account)
+	if err != nil {
+		return c.Render(500, r.JSON(account))
+	}
+
+	if verrs.HasAny() {
+		c.Set("account", account)
+		c.Set("errors", verrs)
+		return c.Render(422, r.JSON(verrs))
+	}
+	return c.Render(200, r.JSON(account))
 }
 
 func AccountsDelete(c buffalo.Context) error {

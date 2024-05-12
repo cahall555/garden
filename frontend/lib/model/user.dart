@@ -4,11 +4,11 @@ class User {
 	final String? lastName;
 	final String email;
 	final String password;
-	final String? passwordConfirmation
+	final String? passwordConfirmation;
 	final DateTime createdAt;
 	final DateTime updatedAt;
 
-  	Garden({required this.id, this.firstName, this.lastName, required this.email, required this.password, this.passwordConfirmation, required this.createdAt, required this.updatedAt});
+  	User({required this.id, this.firstName, this.lastName, required this.email, required this.password, this.passwordConfirmation, required this.createdAt, required this.updatedAt});
 
   	factory User.fromJson(Map<String, dynamic> json) {
     		return User(
