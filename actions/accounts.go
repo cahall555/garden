@@ -37,23 +37,33 @@ func AccountsIndex(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.JSON(account))//r.HTML("accounts/index.html"))
 }
 
-func AccountsCreate(c buffalo.Context) error {
-	account := models.Account{}
-	c.Set("account", account)
-	
-	tx := c.Value("tx").(*pop.Connection)
-	accounts := &models.Accounts{}
-	err := tx.All(accounts)
-	if err != nil {
-		return err//c.Redirect(302, "/")
-	}
-	return c.Render(http.StatusOK, r.JSON(account))
+func AccountsNew(c buffalo.Context) error {
+	a := &models.Account{}
+	c.Set("account", a)
+	return c.Render(200, r.JSON(a))
 }
 
-func AccountsNew(c buffalo.Context) error {
-	account := models.Account{}
-	c.Set("account", account)
-	return c.Render(http.StatusOK, r.JSON(account))
+func AccountsCreate(c buffalo.Context) error {
+	tx :=c.Value("tx").(*pop.Connection)
+	account := &models.Account{}
+	err := c.Bind(account)
+	if err != nil {
+		
+		return c.Render(301, r.JSON(account))
+	}
+
+	verrs, err := tx.ValidateAndCreate(account)
+	if err != nil {
+		return c.Render(301, r.JSON(account))
+	}
+
+	if verrs.HasAny() {
+	
+		c.Set("account", account)
+		c.Set("errors", verrs)
+		return c.Render(422, r.JSON(verrs))
+	}
+	return c.Render(201, r.JSON(account))
 }
 
 func AccountsUpdate(c buffalo.Context) error {

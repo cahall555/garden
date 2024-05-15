@@ -35,7 +35,7 @@ func UsersCreate(c buffalo.Context) error {
 
 	c.Session().Set("current_user_id", u.ID)
 
-	return c.Redirect(302, "/")
+	return c.Render(201, r.JSON(u))
 }
 
 //SetCurrentUser attempts to find a user based on the current_user_id

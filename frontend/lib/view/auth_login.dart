@@ -125,21 +125,22 @@ class _AuthCreateState extends State<AuthCreate> {
 
   void userLogin() async {
     try {
- 	print('sending createAuthApi: ${_emailController.text.trim()}');
+ 	print('1) sending createAuthApi: ${_emailController.text.trim()}');
      final authProvider = Provider.of<AuthProvider>(context, listen: false);
       await authProvider.createAuth({
         'email': _emailController.text.trim(),
         'password': _passwordController.text.trim(),
       });
+      print('createAuthApi sent: ${_emailController.text.trim()}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login successful!')),
       );
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) =>
-              GardenList(), //update to farm list when farm is available
-        ),
-      );
+//      iNavigator.of(context).push(
+//        MaterialPageRoute(
+//          builder: (context) =>
+//              GardenList(), //update to farm list when farm is available
+//        ),
+//      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to login: $e')),

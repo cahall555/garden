@@ -33,22 +33,24 @@ Future<List<Account>> fetchAccountApi(String id) async {
   }
 }
 
-Future<void> createAccountApi(Map<String, dynamic> accountData) async {
+Future<Account> createAccountApi(Map<String, dynamic> accountData) async {
   final url = Uri.parse(apiUrl + 'accounts');
   final headers = {"Content-Type": "application/json"};
-
+  print('Account Data: $accountData');
   try {
     final response =
         await http.post(url, headers: headers, body: json.encode(accountData));
 
     if (response.statusCode == 201) {
       print('Account created successfully');
+      return Account.fromJson(json.decode(response.body));
     } else {
       print('Failed to create account: ${response.body}');
       throw Exception('Failed to create account');
     }
   } catch (e) {
     print(e.toString());
+    throw Exception('Error creating account: ${e.toString()}');
   }
 }
 

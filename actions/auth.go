@@ -14,27 +14,37 @@ import (
 )
 
 // AuthLanding shows a landing page to login or sign up
-func AuthLanding(c buffalo.Context) error {
-	return c.Render(200, r.JSON("auth landing successful"))//r.HTML("auth/landing.html"))
-}
+//func AuthLanding(c buffalo.Context) error {
+//	return c.Render(200, r.JSON("auth landing successful"))//r.HTML("auth/landing.html"))
+//}
 
 //AuthNew loads the sign in page
-func AuthNew(c buffalo.Context) error {
-	c.Set("user", &models.User{})
-	return c.Render(200, r.JSON("auth new successful"))//r.HTML("auth/new.html"))
-}
+//func AuthNew(c buffalo.Context) error {
+//	c.Set("user", &models.User{})
+//	return c.Render(200, r.JSON("auth new successful"))//r.HTML("auth/new.html"))
+//}
 
 //AuthCreate attempts to log the user in with an existing account
 func AuthCreate(c buffalo.Context) error {
-	log.Println("***************AuthCreate start *************** ")
+	c.Logger().Info("***************AuthCreate start *************** ")
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return c.Error(500, errors.New("no transaction found"))
+	}
+
 	u := &models.User{}
 	if err := c.Bind(u); err != nil {
 		return err
 	}
-	tx := c.Value("tx").(*pop.Connection)
+
+	err := c.Request().ParseForm()
+	if err != nil {
+		return err//c.Redirect(301, "/")
+	}
+
 	log.Println("***************AuthCreate: ", u.Email, u.Password)
 	// find a user with the email
-	err := tx.Where("email = ?", strings.ToLower(strings.TrimSpace(u.Email))).First(u)
+	err = tx.Where("email = ?", strings.ToLower(strings.TrimSpace(u.Email))).First(u)
 
 	// helper function to handle bad attempts
 	bad := func() error {
@@ -43,7 +53,7 @@ func AuthCreate(c buffalo.Context) error {
 
 		c.Set("errors", verrs)
 		c.Set("user", u)
-
+		c.Logger().Info("***************AuthCreate: bad attempt", verrs.Errors)
 		return c.Render(http.StatusUnauthorized, r.JSON(u))//HTML("auth/new.plush.html"))
 	}
 
@@ -61,7 +71,6 @@ func AuthCreate(c buffalo.Context) error {
 		return bad()
 	}
 	c.Session().Set("current_user_id", u.ID)
-	c.Flash().Add("success", "Welcome Back to Buffalo!")
 
 	return c.Render(200, r.JSON(u))//c.Redirect(302, redirectURL)
 }

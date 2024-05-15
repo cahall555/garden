@@ -23,16 +23,26 @@ func UsersAccountIndex(c buffalo.Context) error {
 }
 
 func UsersAccountCreate(c buffalo.Context) error {
-	account := models.Account{}
-	c.Set("account", account)
-	
 	tx := c.Value("tx").(*pop.Connection)
-	accounts := &models.Accounts{}
-	err := tx.All(accounts)
+	ua := &models.UsersAccount{}
+	err := c.Bind(ua)
 	if err != nil {
-		return err//c.Redirect(302, "/")
+		c.Logger().Errorf("Error binding Users Account form: %v", err)
+		return c.Redirect(301, "/")
 	}
-	return c.Render(http.StatusOK, r.JSON(account))
+
+	verrs, err := tx.ValidateAndCreate(ua)
+	if err != nil {
+		c.Logger().Errorf("Error validating User Account: %v", err)
+		return c.Redirect(301, "/")
+	}
+
+	if verrs.HasAny() {
+		c.Set("errors", verrs)
+		return c.Render(http.StatusUnprocessableEntity, r.JSON(ua))
+	}
+
+	return c.Render(201, r.JSON(ua))
 }
 
 func UsersAccountDelete(c buffalo.Context) error {

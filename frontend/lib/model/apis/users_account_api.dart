@@ -37,7 +37,8 @@ Future<List<UserAccounts>> fetchUserAccountsApi(var userId) async {
 }
 
 Future<void> createUserAccountsApi(Map<String, dynamic> userAccountData) async {
-  final uri = Uri.parse(apiUrl + 'useraccounts');
+  final uri = Uri.parse(apiUrl + 'usersaccount');
+  print('User Account Data: $userAccountData');
   final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
   final body = json.encode(userAccountData);
 

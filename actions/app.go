@@ -7,7 +7,7 @@ import (
 	"garden/locales"
 	"garden/models"
 	"garden/public"
-
+	"log"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo-pop/v3/pop/popmw"
 	"github.com/gobuffalo/envy"
@@ -48,6 +48,13 @@ func App() *buffalo.App {
 			SessionName: "_garden_session",
 		})
 
+		app.Use(func(next buffalo.Handler) buffalo.Handler {
+		    return func(c buffalo.Context) error {
+        		log.Println("Request received for:", c.Request().URL.Path)
+  		      return next(c)
+    			}
+		})
+
 		// Automatically redirect to SSL
 		app.Use(forceSSL())
 
@@ -70,11 +77,25 @@ func App() *buffalo.App {
 //        		return c.Render(200, r.JSON(map[string]string{"csrf_token": csrfToken}))
 //    		})
 
-		app.GET("/", GardensIndex) //replacing HomeHandler
+	//	app.GET("/", GardensIndex) //replacing HomeHandler
 
 		//AuthMiddleware
-		app.Use(SetCurrentUser)
-		app.Use(Authorize)
+	//	app.Use(SetCurrentUser)
+	//	app.Use(Authorize)
+		app.POST("/auth", AuthCreate)
+		app.DELETE("/auth/delete", AuthDelete)
+		app.GET("/users/new", UsersNew)
+		app.POST("/users", UsersCreate)
+		app.GET("/accounts", AccountsIndex)
+		app.POST("/accounts", AccountsCreate)
+		app.GET("/accounts/update/{id}", AccountsUpdate)
+		app.GET("/accounts/{id}", AccountsShow)
+		app.GET("/accounts/new", AccountsNew)
+		app.PUT("/accounts/", AccountsEdit)
+		app.DELETE("/accounts/{id}", AccountsDelete)
+		app.GET("/usersaccount", UsersAccountIndex)
+		app.POST("/usersaccount", UsersAccountCreate)
+		app.DELETE("/usersaccount/{id}", UsersAccountDelete)
 
 		app.GET("/csrf", CsrfToken)
 		app.GET("/gardens/create", GardensCreate)
@@ -117,16 +138,6 @@ func App() *buffalo.App {
 		app.GET("/plantstag", PlantTagIndex)
 		app.POST("/plantstag", PlantTagCreate)
 		app.DELETE("/plantstag/{tagid}/{plantid}", PlantTagDelete)
-		app.GET("/accounts", AccountsIndex)
-		app.GET("/accounts/create", AccountsCreate)
-		app.GET("/accounts/update/{id}", AccountsUpdate)
-		app.GET("/accounts/{id}", AccountsShow)
-		app.POST("/accounts", AccountsNew)
-		app.PUT("/accounts/", AccountsEdit)
-		app.DELETE("/accounts/{id}", AccountsDelete)
-		app.GET("/usersaccount", UsersAccountIndex)
-		app.POST("/usersaccount", UsersAccountCreate)
-		app.DELETE("/usersaccount/{id}", UsersAccountDelete)
 		app.GET("/farms", FarmsIndex)
 		app.GET("/farms/create", FarmsCreate)
 		app.GET("/farms/update/{id}", FarmsUpdate)
@@ -134,12 +145,6 @@ func App() *buffalo.App {
 		app.POST("/farms", FarmsNew)
 		app.PUT("/farms/", FarmsEdit)
 		app.DELETE("/farms/{id}", FarmsDelete)
-		app.GET("/users/new", UsersNew)
-		app.POST("/users", UsersCreate)
-		app.GET("/auth", AuthLanding)
-		app.GET("/auth/login", AuthNew)
-		app.POST("/auth", AuthCreate)
-		app.DELETE("/auth", AuthDelete)
 		app.ServeFiles("/", http.FS(public.FS())) // serve files from the public directory
 	})
 

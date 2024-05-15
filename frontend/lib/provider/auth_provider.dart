@@ -14,6 +14,7 @@ class AuthProvider with ChangeNotifier {
 
 
   Future<void> createAuth(Map<String, dynamic> user) async {
+    print('2) createAuth (provider): $user');
     createAuthApi(user);
     notifyListeners();
   }

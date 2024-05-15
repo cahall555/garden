@@ -4,8 +4,9 @@ import '../model/apis/user_api.dart';
 
 class UserProvider with ChangeNotifier {
 
-  Future<void> createUser(Map<String, dynamic> user) async {
+  Future<User> createUser(Map<String, dynamic> user) async {
     createUserApi(user);
     notifyListeners();
+    return User.fromJson(user);
   }
 }

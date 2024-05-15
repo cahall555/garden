@@ -11,15 +11,18 @@ class User {
   	User({required this.id, this.firstName, this.lastName, required this.email, required this.password, this.passwordConfirmation, required this.createdAt, required this.updatedAt});
 
   	factory User.fromJson(Map<String, dynamic> json) {
+		if (json == null) {
+     		   throw ArgumentError("JSON data must not be null");
+    		}
     		return User(
-      			id: json['id'],
+      			id: json['id'] ?? '',
       			firstName: json['first_name'],
 			lastName: json['last_name'],
-			email: json['email'],
-			password: json['password'],
+			email: json['email'] ?? '',
+			password: json['password'] ?? '',
 			passwordConfirmation: json['password_confirmation'],
-			createdAt: DateTime.parse(json['created_at']),
-			updatedAt: DateTime.parse(json['updated_at']),
+			createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
+			updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : DateTime.now(),
     		);
   	}
 

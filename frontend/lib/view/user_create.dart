@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'garden_list.dart';
+import 'account_create.dart';
 import '../model/user.dart';
 import '../model/apis/user_api.dart';
 import '../provider/user_provider.dart';
@@ -189,7 +190,7 @@ class _UserCreateState extends State<UserCreate> {
   void submitUser() async {
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      await userProvider.createUser({
+      User newUser = await userProvider.createUser({
         'first_name': _firstnameController.text.trim(),
         'last_name': _lastnameController.text.trim(),
         'email': _emailController.text.trim(),
@@ -199,13 +200,15 @@ class _UserCreateState extends State<UserCreate> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('User successfully created!')),
       );
+      print('Successfully created user: ${newUser.email} new user id ${newUser.id}, moving to account creation.');
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) =>
-              GardenList(), //update to farm list when farm is available
+              AccountCreate(user: newUser),
         ),
       );
     } catch (e) {
+	    print('Failed to create user: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to create user: $e')),
       );
