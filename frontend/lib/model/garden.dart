@@ -6,12 +6,11 @@ class Garden {
 	final String name;
   	final String description;
 	final String account_id;
-	final String? farm_id;
 	final DateTime createdAt;
 	final DateTime updatedAt;
 	final List<Plant>?plants;
 
-  	Garden({required this.id, required this.name, required this.description, required this.account_id, this.farm_id, required this.createdAt, required this.updatedAt, this.plants});
+  	Garden({required this.id, required this.name, required this.description, required this.account_id, required this.createdAt, required this.updatedAt, this.plants});
 
   	factory Garden.fromJson(Map<String, dynamic> json) {
     		return Garden(
@@ -19,7 +18,6 @@ class Garden {
       			name: json['name'],
       			description: json['description'],
 			account_id: json['account_id'],
-			farm_id: json['farm_id'],
 			createdAt: DateTime.parse(json['created_at']),
 			updatedAt: DateTime.parse(json['updated_at']),
 			plants: json['plants'] !=null ? (json['plants'] as List).map((i) => Plant.fromJson(i)).toList() : null,
@@ -32,7 +30,6 @@ class Garden {
       			'name': name,
       			'description': description,
 			'account_id': account_id,
-			'farm_id': farm_id,
 			'created_at': createdAt.toIso8601String(),
 			'updated_at': updatedAt.toIso8601String(),
 			'plants': plants?.map((plant) => plant.toJson()).toList(),

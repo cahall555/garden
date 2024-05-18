@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../model/garden.dart';
 import '../model/apis/garden_api.dart';
 import '../model/plant.dart';
+import '../model/users_account.dart';
 import '../model/apis/plant_api.dart';
 //import '../components/garden_detail_nav.dart';
 import '../components/plant_card.dart';
@@ -14,8 +15,10 @@ import 'package:provider/provider.dart';
 
 class GardenDetail extends StatelessWidget {
   final Garden garden;
+  final UserAccounts userAccounts;
 
-  GardenDetail({Key? key, required this.garden}) : super(key: key);
+  GardenDetail({Key? key, required this.garden, required this.userAccounts})
+      : super(key: key);
 
   final PlantCard plantCard = PlantCard(
     title: 'Tomato',
@@ -73,7 +76,10 @@ class GardenDetail extends StatelessWidget {
                     ),
                     child: ListTile(
                       title: Text('Description: ' + garden.description,
-                          style: TextStyle(fontFamily: 'Taviraj', fontWeight: FontWeight.bold, color: Colors.white)),
+                          style: TextStyle(
+                              fontFamily: 'Taviraj',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
                     ),
                   ),
                 ),
@@ -114,8 +120,9 @@ class GardenDetail extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              GardenUpdate(garden: this.garden)),
+                          builder: (context) => GardenUpdate(
+                              garden: this.garden,
+                              userAccounts: this.userAccounts)),
                     );
                   },
                   child: Text('Update Garden'),

@@ -8,18 +8,34 @@ import (
 	"github.com/gobuffalo/pop/v6"
 )
 
-func UsersAccountIndex(c buffalo.Context) error {
+func UserAccountsIndex(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
-	account := models.Accounts{}
+	ua := models.UsersAccounts{}
 
-	err := tx.All(&account)
+	err := tx.All(&ua)
 	if err != nil {
-		c.Flash().Add("warning", "Accounts not found")
+		c.Flash().Add("warning", "User Accounts not found")
 		c.Redirect(301, "/")
 	}
 
-	c.Set("account", account)
-	return c.Render(http.StatusOK, r.JSON(account))//r.HTML("accounts/index.html"))
+	c.Set("ua", ua)
+	return c.Render(http.StatusOK, r.JSON(ua))//r.HTML("accounts/index.html"))
+}
+
+func UsersAccountShow(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	ua := models.UsersAccount{}
+	userID := c.Param("user_id")
+	c.Logger().Info("***************UsersAccountShow: ", userID)
+
+	err := tx.Where("user_id = ?", userID).First(&ua)
+	if err != nil {
+		c.Logger().Info("***************UsersAccountShow: User Account not found")
+		c.Render(http.StatusNotFound, r.JSON("User Account not found"))
+	}
+
+	c.Set("ua", ua)
+	return c.Render(http.StatusOK, r.JSON(ua))
 }
 
 func UsersAccountCreate(c buffalo.Context) error {

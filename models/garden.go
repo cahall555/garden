@@ -18,8 +18,6 @@ type Garden struct {
 	Plants      []Plant   `json:"plants,omitempty" has_many:"plants"`
 	AccountID   uuid.UUID `json:"account_id" db:"account_id"`
 	Account     *Account  `json:"Account,omitempty" belongs_to:"account"`
-	FarmID     *uuid.UUID `json:"farm_id,omitempty" db:"farm_id"`//pointer to uuid to allow for null values. Not all accounts have farms.
-	Farm       *Farm      `json:"Farm,omitempty" belongs_to:"farm"`
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at" db:"updated_at"`
 }

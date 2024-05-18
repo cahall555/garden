@@ -10,13 +10,6 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-type Stratification string
-
-const (
-	smGarden   Stratification = "Small Garden"
-	lgFarm     Stratification = "Large Farm"
-)
-
 type Plan string
 
 const (
@@ -28,7 +21,6 @@ const (
 // Account is used by pop to map your Account database table to your go code.
 type Account struct {
 	ID             uuid.UUID       `json:"id" db:"id"`
-	Stratification Stratification  `json:"stratification" db:"stratification"`
 	Plan           Plan            `json:"plan" db:"plan"`
 	CreatedAt      time.Time       `json:"created_at" db:"created_at"`
 	UpdatedAt      time.Time       `json:"updated_at" db:"updated_at"`
@@ -40,22 +32,6 @@ func (a Account) String() string {
 	ja, _ := json.Marshal(a)
 	return string(ja)
 }
-func (c Stratification) StratificationStr() string {
-	return string(c)
-}
-
-// watch this ticket https://github.com/gobuffalo/fizz/issues/65, fizz does not support enums yet
-func IsValidStratification(stratification string) bool {
-	validStratification := []Stratification{smGarden, lgFarm}
-
-	for _, v := range validStratification {
-		if string(v) == stratification {
-			return true
-		}
-	}
-	return false
-}
-
 func (c Plan) PlanStr() string {
 	return string(c)
 }

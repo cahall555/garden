@@ -4,6 +4,7 @@ import '../model/apis/users_account_api.dart';
 
 class UsersAccountsProvider with ChangeNotifier {
   List<UserAccounts> ua = [];
+  UserAccounts? userAccount; 
  
   Future<List<UserAccounts>> fetchUserAccounts(var accountId) async {
     try {
@@ -16,12 +17,26 @@ class UsersAccountsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> createUserAccounts(Map<String, dynamic> userAccount) async {
+  Future<UserAccounts> fetchUserAccount(var userId) async {
     try {
-      await createUserAccountsApi(userAccount);
+      userAccount = await fetchUserAccountApi(userId);
       notifyListeners();
+      return userAccount!;
     } catch (e) {
       print(e);
+      throw Exception('Error locating user account: ${e.toString()}');
+
+    }
+  }
+
+  Future<UserAccounts> createUserAccounts(Map<String, dynamic> userAccountData) async {
+    try {
+      userAccount = await createUserAccountsApi(userAccountData);
+      notifyListeners();
+      return userAccount!;
+    } catch (e) {
+      print(e);
+      throw Exception('Error creating user account: ${e.toString()}');
     }
   }
 }

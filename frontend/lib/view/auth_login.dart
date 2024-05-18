@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'garden_list.dart';
+import '../model/users_account.dart';
 import '../model/user.dart';
 import '../model/apis/auth_api.dart';
+import '../model/apis/users_account_api.dart';
+import '../provider/users_account_provider.dart';
 import '../provider/auth_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +19,7 @@ class AuthCreate extends StatefulWidget {
 class _AuthCreateState extends State<AuthCreate> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  UserAccounts? userAccounts;
 
   @override
   Widget build(BuildContext context) {
@@ -125,9 +129,9 @@ class _AuthCreateState extends State<AuthCreate> {
 
   void userLogin() async {
     try {
- 	print('1) sending createAuthApi: ${_emailController.text.trim()}');
-     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      await authProvider.createAuth({
+      print('1) sending createAuthApi: ${_emailController.text.trim()}');
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      User login = await authProvider.createAuth({
         'email': _emailController.text.trim(),
         'password': _passwordController.text.trim(),
       });
@@ -135,12 +139,33 @@ class _AuthCreateState extends State<AuthCreate> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login successful!')),
       );
-//      iNavigator.of(context).push(
-//        MaterialPageRoute(
-//          builder: (context) =>
-//              GardenList(), //update to farm list when farm is available
-//        ),
-//      );
+      if (login.id != null) {
+        var userId = login.id;
+        UsersAccountsProvider usersAccountsProvider =
+            Provider.of<UsersAccountsProvider>(context, listen: false);
+
+        print('User ID: $userId');
+        userAccounts = await usersAccountsProvider.fetchUserAccount(userId);
+        print('User Accounts: $userAccounts');
+
+        if (userAccounts != null) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => GardenList(
+                userAccounts: userAccounts!,
+              ), // Update to farm list when farm is available
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to find user account')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to find user account')),
+        );
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to login: $e')),
@@ -155,3 +180,4 @@ class _AuthCreateState extends State<AuthCreate> {
     super.dispose();
   }
 }
+

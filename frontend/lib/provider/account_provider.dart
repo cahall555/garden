@@ -3,13 +3,16 @@ import '../model/account.dart';
 import '../model/apis/account_api.dart';
 
 class AccountProvider with ChangeNotifier {
-  
-   Future<Account> createAccount(
+  Account? newAccount;
+
+
+  Future<Account> createAccount(
     Map<String, dynamic> account,
   ) async {
-    createAccountApi(account);
+    newAccount = await createAccountApi(account);
     notifyListeners();
-    return Account.fromJson(account);
+    print('provider account: $newAccount');
+    return newAccount!;
   }
 
   Future<void> deleteAccount(var id) async {

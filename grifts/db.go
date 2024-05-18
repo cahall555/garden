@@ -11,12 +11,12 @@ var _ = grift.Namespace("db", func() {
 	grift.Desc("seed", "Seeds a database")
 	grift.Add("seed", func(c *grift.Context) error {
 		//Seed accounts
-		free := models.Account{Stratification: "smGarden", Plan: "Free"}
+		free := models.Account{Plan: "Free"}
 		err := models.DB.Create(&free)
 		if err != nil {
 			panic(err)
 		}
-		premium := models.Account{Stratification: "lgFarm", Plan: "Premium"}
+		premium := models.Account{Plan: "Premium"}
 		err = models.DB.Create(&premium)
 		if err != nil {
 			panic(err)
@@ -47,26 +47,18 @@ var _ = grift.Namespace("db", func() {
 		}
 
 
-		//Seed farms
-		farm1 := models.Farm{Name: "Farm 1", Description: "This is a farm", AccountID: premium.ID}
-		err = models.DB.Create(&farm1)
-		if err != nil {
-			panic(err)
-		}
-
-
 		//Seed gardens
-		salsaGarden := models.Garden{Name: "Salsa Garden", Description: "This garden is for growing salsa ingredients", AccountID: premium.ID, FarmID: &farm1.ID}
+		salsaGarden := models.Garden{Name: "Salsa Garden", Description: "This garden is for growing salsa ingredients", AccountID: premium.ID}
 		err = models.DB.Create(&salsaGarden)
 		if err != nil {
 			panic(err)
 		}
-		herbGarden := models.Garden{Name: "Herb Garden", Description: "This garden is for growing herbs", AccountID: free.ID, FarmID: nil}
+		herbGarden := models.Garden{Name: "Herb Garden", Description: "This garden is for growing herbs", AccountID: free.ID}
 		err = models.DB.Create(&herbGarden)
 		if err != nil {
 			panic(err)
 		}
-		veggieGarden := models.Garden{Name: "Veggie Garden", Description: "This garden is for growing vegetables", AccountID: premium.ID, FarmID: &farm1.ID}
+		veggieGarden := models.Garden{Name: "Veggie Garden", Description: "This garden is for growing vegetables", AccountID: premium.ID}
 		err = models.DB.Create(&veggieGarden)
 		if err != nil {
 			panic(err)

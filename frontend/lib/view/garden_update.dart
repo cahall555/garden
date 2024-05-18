@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../model/garden.dart';
+import '../model/users_account.dart';
 import '../model/apis/garden_api.dart';
 import '../provider/garden_provider.dart';
 import 'package:provider/provider.dart';
 
 class GardenUpdate extends StatefulWidget {
   final Garden garden;
+  final UserAccounts userAccounts;
   //final Function(Garden) onUpdateSuccess;
-  const GardenUpdate({Key? key, required this.garden}) : super(key: key);
+  const GardenUpdate(
+      {Key? key, required this.garden, required this.userAccounts})
+      : super(key: key);
 
   @override
   State<GardenUpdate> createState() => _GardenUpdateState();
@@ -23,7 +27,8 @@ class _GardenUpdateState extends State<GardenUpdate> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.garden.name);
-    _descriptionController = TextEditingController(text: widget.garden.description);
+    _descriptionController =
+        TextEditingController(text: widget.garden.description);
   }
 
   @override
@@ -130,6 +135,7 @@ class _GardenUpdateState extends State<GardenUpdate> {
         'id': widget.garden.id,
         'name': _nameController.text.trim(),
         'description': _descriptionController.text.trim(),
+        'account_id': widget.userAccounts.account_id,
       };
       final gardenProvider =
           Provider.of<GardenProvider>(context, listen: false);
@@ -149,4 +155,3 @@ class _GardenUpdateState extends State<GardenUpdate> {
     }
   }
 }
-

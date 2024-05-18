@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../model/garden.dart';
+import '../model/account.dart';
+import '../model/users_account.dart';
 import 'garden_list.dart';
 import '../model/apis/garden_api.dart';
 import '../provider/garden_provider.dart';
 import 'package:provider/provider.dart';
 
 class GardenCreate extends StatefulWidget {
-  const GardenCreate({Key? key}) : super(key: key);
+  //final Account account;
+  final UserAccounts userAccounts;
+  const GardenCreate({Key? key, required this.userAccounts}) : super(key: key);
 
   @override
   State<GardenCreate> createState() => _GardenCreateState();
@@ -133,13 +137,14 @@ class _GardenCreateState extends State<GardenCreate> {
         // await gardenApi.createGarden(gardenData); see comment in app.go line 14
         'name': _nameController.text.trim(),
         'description': _descriptionController.text.trim(),
+        'account_id': widget.userAccounts!.account_id,
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Garden updated successfully!')),
       );
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => GardenList(),
+          builder: (context) => GardenList(userAccounts: widget.userAccounts),
         ),
       );
     } catch (e) {

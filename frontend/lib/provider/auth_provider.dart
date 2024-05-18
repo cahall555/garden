@@ -3,29 +3,37 @@ import '../model/user.dart';
 import '../model/apis/auth_api.dart';
 
 class AuthProvider with ChangeNotifier {
+  User? authUser;
 
-  User? _user;
+  AuthProvider([this.authUser]);
 
-  AuthProvider([this._user]);
+  String get email => authUser?.email ?? '';
 
-  String get email => _user?.email ?? '';
+  String get FirstName => authUser?.firstName ?? '';
 
-  String get FirstName => _user?.firstName ?? '';
-
-
-  Future<void> createAuth(Map<String, dynamic> user) async {
-    print('2) createAuth (provider): $user');
-    createAuthApi(user);
-    notifyListeners();
+  Future<User> createAuth(Map<String, dynamic> user) async {
+    try {
+      print('2) createAuth (provider): $user');
+      authUser = await createAuthApi(user);
+      notifyListeners();
+      return authUser!;
+    } catch (e) {
+      print(e);
+      throw Exception('Error authenticating user: ${e.toString()}');
+    }
   }
 
-
   Future<void> login(Map<String, dynamic> credentials) async {
-    _user = User.fromJson(credentials);
+    authUser = User.fromJson(credentials);
     await createAuthApi(credentials);
     notifyListeners();
   }
 
+  Future<void> logout() async {
+    await logoutApi();
+    notifyListeners();
+  }
+  
 
-  bool get isLoggedIn => _user != null;
+  bool get isLoggedIn => authUser != null;
 }

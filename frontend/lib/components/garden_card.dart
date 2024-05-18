@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import '../model/garden.dart';
+import '../model/users_account.dart';
 import '../view/garden_detail.dart';
 
 class GardenCard extends StatelessWidget {
   final String title;
   final String description;
   final Garden garden;
+  final UserAccounts userAccounts;
 //  final String imageUrl;
 
-  GardenCard({
-    required this.title,
-    required this.description,
-    required this.garden,
+  GardenCard(
+      {required this.title,
+      required this.description,
+      required this.garden,
+      required this.userAccounts
 //    required this.imageUrl,
-  });
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,8 @@ class GardenCard extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => GardenDetail(garden: garden),
+                  builder: (context) =>
+                      GardenDetail(garden: garden, userAccounts: userAccounts),
                 ),
               );
               print('changing to garden detail');

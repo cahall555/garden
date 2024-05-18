@@ -16,7 +16,6 @@ import 'provider/journal_provider.dart';
 import 'provider/user_provider.dart';
 import 'provider/auth_provider.dart';
 import 'provider/account_provider.dart';
-import 'provider/farm_provider.dart';
 import 'provider/users_account_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -39,7 +38,6 @@ void main() async {
 	ChangeNotifierProvider(create: (context) => UserProvider()),
 	ChangeNotifierProvider(create: (context) => AuthProvider()),
 	ChangeNotifierProvider(create: (context) => AccountProvider()),
-	ChangeNotifierProvider(create: (context) => FarmProvider()),
 	ChangeNotifierProvider(create: (context) => UsersAccountsProvider()),
       ],
       child: MyApp(),

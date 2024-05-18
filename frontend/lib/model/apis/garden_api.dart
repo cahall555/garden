@@ -6,8 +6,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 final String apiUrl = dotenv.env['API_URL']!;
 
-Future<List<Garden>> fetchGardenApi() async {
-  final response = await http.get(Uri.parse(apiUrl + 'gardens/'));
+Future<List<Garden>> fetchGardenApi(var accountId) async {
+  final response = await http.get(Uri.parse(apiUrl + 'gardens/?account_id=$accountId'));
 
   if (response.statusCode == 200) {
     try {

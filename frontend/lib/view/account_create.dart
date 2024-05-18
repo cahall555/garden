@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'garden_list.dart';
 import '../model/account.dart';
 import '../model/user.dart';
 import '../model/users_account.dart';
@@ -18,12 +19,7 @@ class AccountCreate extends StatefulWidget {
 }
 
 class _AccountCreateState extends State<AccountCreate> {
-  String? _currentStratificationValue;
-  final List<String> _stratificationValues = [
-    "Small Garden",
-    "Large Farm",
-  ];
-  String? _currentPlanValue;
+   String? _currentPlanValue;
   final List<String> _planValues = [
     "Free",
     "Basic",
@@ -48,39 +44,6 @@ class _AccountCreateState extends State<AccountCreate> {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: <Widget>[
-            DropdownButtonFormField<String>(
-              style: TextStyle(color: Color(0xFF263B61), fontFamily: 'Taviraj'),
-              decoration: InputDecoration(
-                labelText: "Stratification",
-                labelStyle:
-                    TextStyle(color: Color(0xFF263B61), fontFamily: 'Taviraj'),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF263B61))),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF263B61)),
-                ),
-              ),
-              value: _currentStratificationValue,
-              onChanged: (String? newStratificationValue) {
-                setState(() {
-                  _currentStratificationValue = newStratificationValue;
-                });
-              },
-              items: _stratificationValues
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value,
-                      style: TextStyle(
-                          color: _currentStratificationValue == value
-                              ? Color(0xFF4E7AC7)
-                              : Color(0xFF263B61),
-                          fontFamily: 'Taviraj',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15.0)),
-                );
-              }).toList(),
-            ),
             const SizedBox(height: 20.0),
             DropdownButtonFormField<String>(
               style: TextStyle(color: Color(0xFF263B61), fontFamily: 'Taviraj'),
@@ -168,28 +131,39 @@ class _AccountCreateState extends State<AccountCreate> {
     try {
       final accountProvider =
           Provider.of<AccountProvider>(context, listen: false);
-      Account newAccount = await accountProvider.createAccount({
-        'stratification': _currentStratificationValue,
-        'plan': _currentPlanValue,
-      });
-
-      if (newAccount.id != null) {
-        var accountId = newAccount.id;
-        print('New Account: $newAccount');
-        print('User ID: ${widget.user!.id} Account ID: ${accountId}');
-        final usersAccountProvider =
-            Provider.of<UsersAccountsProvider>(context, listen: false);
-        await usersAccountProvider.createUserAccounts({
-          'user_id': widget.user!.id,
-          'account_id': accountId,
+      if (widget.user != null) {
+        print('User ID: ${widget.user!.id}');
+        Account newAccount = await accountProvider.createAccount({
+          'plan': _currentPlanValue,
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Account created successfully!')),
-        );
-        Navigator.pop(context);
+        if (newAccount.id != null) {
+          var accountId = newAccount.id;
+          print('New Account: $newAccount');
+          print('User ID: ${widget.user!.id} Account ID: ${accountId}');
+          UsersAccountsProvider usersAccountsProvider =
+              Provider.of<UsersAccountsProvider>(context, listen: false);
+          UserAccounts newUserAccounts =
+              await usersAccountsProvider.createUserAccounts({
+            'user_id': widget.user!.id,
+            'account_id': accountId,
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Account created successfully!')),
+          );
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => GardenList(
+                  userAccounts:
+                      newUserAccounts),
+            ),
+          );
+        } else {
+          throw Exception('Account ID is null');
+        }
       } else {
-        throw Exception('Account ID is null');
+        throw Exception('User is null');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

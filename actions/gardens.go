@@ -30,8 +30,9 @@ func GardensShow(c buffalo.Context) error {
 func GardensIndex(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	garden := models.Gardens{}
+	accountID := c.Param("account_id")
 	log.Println("************GardensIndex************")
-	err := tx.All(&garden)
+	err := tx.Where("account_id = ?", accountID).All(&garden)
 	if err != nil {
 		//c.Flash().Add("warning", "Gardens not found")
 		log.Println("Gardens not found: ", err)
