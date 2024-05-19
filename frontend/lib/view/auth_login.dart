@@ -129,46 +129,44 @@ class _AuthCreateState extends State<AuthCreate> {
 
   void userLogin() async {
     try {
-      print('1) sending createAuthApi: ${_emailController.text.trim()}');
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      User login = await authProvider.createAuth({
-        'email': _emailController.text.trim(),
-        'password': _passwordController.text.trim(),
-      });
-      print('createAuthApi sent: ${_emailController.text.trim()}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login successful!')),
-      );
-      if (login.id != null) {
-        var userId = login.id;
-        UsersAccountsProvider usersAccountsProvider =
-            Provider.of<UsersAccountsProvider>(context, listen: false);
+      if (_emailController.text.trim().isNotEmpty ||
+          _passwordController.text.trim().isNotEmpty) {
+        print('sending createAuthApi: ${_emailController.text.trim()}');
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        User login = await authProvider.createAuth({
+          'email': _emailController.text.trim(),
+          'password': _passwordController.text.trim(),
+        });
+        print('createAuthApi sent: ${_emailController.text.trim()}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login successful!')),
+        );
+        if (login.id != null) {
+          var userId = login.id;
+          UsersAccountsProvider usersAccountsProvider =
+              Provider.of<UsersAccountsProvider>(context, listen: false);
 
-        print('User ID: $userId');
-        userAccounts = await usersAccountsProvider.fetchUserAccount(userId);
-        print('User Accounts: $userAccounts');
+          print('User ID: $userId');
+          userAccounts = await usersAccountsProvider.fetchUserAccount(userId);
+          print('User Accounts: $userAccounts');
 
-        if (userAccounts != null) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => GardenList(
-                userAccounts: userAccounts!,
-              ), // Update to farm list when farm is available
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to find user account')),
-          );
+          if (userAccounts != null) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => GardenList(
+                  userAccounts: userAccounts!,
+                ),
+              ),
+            );
+          }
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to find user account')),
-        );
+        throw Exception('Email and password cannot be empty');
       }
     } catch (e) {
+      print('Error logging in: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to login: $e')),
+        SnackBar(content: Text('Failed to login.')),
       );
     }
   }
@@ -180,4 +178,3 @@ class _AuthCreateState extends State<AuthCreate> {
     super.dispose();
   }
 }
-

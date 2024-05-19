@@ -13,17 +13,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// AuthLanding shows a landing page to login or sign up
-//func AuthLanding(c buffalo.Context) error {
-//	return c.Render(200, r.JSON("auth landing successful"))//r.HTML("auth/landing.html"))
-//}
-
-//AuthNew loads the sign in page
-//func AuthNew(c buffalo.Context) error {
-//	c.Set("user", &models.User{})
-//	return c.Render(200, r.JSON("auth new successful"))//r.HTML("auth/new.html"))
-//}
-
 //AuthCreate attempts to log the user in with an existing account
 func AuthCreate(c buffalo.Context) error {
 	c.Logger().Info("***************AuthCreate start *************** ")
@@ -39,14 +28,13 @@ func AuthCreate(c buffalo.Context) error {
 
 	err := c.Request().ParseForm()
 	if err != nil {
-		return err//c.Redirect(301, "/")
+		return err
 	}
 
 	log.Println("***************AuthCreate: ", u.Email, u.Password)
-	// find a user with the email
+	
 	err = tx.Where("email = ?", strings.ToLower(strings.TrimSpace(u.Email))).First(u)
 
-	// helper function to handle bad attempts
 	bad := func() error {
 		verrs := validate.NewErrors()
 		verrs.Add("email", "invalid email/password") //TODO: change this message when done testing.
@@ -54,25 +42,26 @@ func AuthCreate(c buffalo.Context) error {
 		c.Set("errors", verrs)
 		c.Set("user", u)
 		c.Logger().Info("***************AuthCreate: bad attempt", verrs.Errors)
-		return c.Render(http.StatusUnauthorized, r.JSON(u))//HTML("auth/new.plush.html"))
+		return c.Render(http.StatusUnauthorized, r.JSON(u))
 	}
 
 	if err != nil {
 		if errors.Cause(err) == sql.ErrNoRows {
-			// couldn't find an user with the supplied email address.
+			c.Logger().Info("***************AuthCreate: could not find email address: ", err)
 			return bad()
 		}
 		return err
 	}
 
-	// confirm that the given password matches the hashed password from the db
+
 	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(u.Password))
 	if err != nil {
+		c.Logger().Info("***************AuthCreate: bad password", err)
 		return bad()
 	}
 	c.Session().Set("current_user_id", u.ID)
 
-	return c.Render(200, r.JSON(u))//c.Redirect(302, redirectURL)
+	return c.Render(200, r.JSON(u))
 }
 
 // AuthDestroy clears the session and logs a user out
