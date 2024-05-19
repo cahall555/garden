@@ -7,7 +7,7 @@ import (
 	"garden/locales"
 	"garden/models"
 	"garden/public"
-
+	"log"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo-pop/v3/pop/popmw"
 	"github.com/gobuffalo/envy"
@@ -48,6 +48,13 @@ func App() *buffalo.App {
 			SessionName: "_garden_session",
 		})
 
+		app.Use(func(next buffalo.Handler) buffalo.Handler {
+		    return func(c buffalo.Context) error {
+        		log.Println("Request received for:", c.Request().URL.Path)
+  		      return next(c)
+    			}
+		})
+
 		// Automatically redirect to SSL
 		app.Use(forceSSL())
 
@@ -70,7 +77,26 @@ func App() *buffalo.App {
 //        		return c.Render(200, r.JSON(map[string]string{"csrf_token": csrfToken}))
 //    		})
 
-		app.GET("/", GardensIndex) //replacing HomeHandler
+	//	app.GET("/", GardensIndex) //replacing HomeHandler
+
+		//AuthMiddleware
+	//	app.Use(SetCurrentUser)
+	//	app.Use(Authorize)
+		app.POST("/auth", AuthCreate)
+		app.DELETE("/auth/delete", AuthDelete)
+		app.GET("/users/new", UsersNew)
+		app.POST("/users", UsersCreate)
+		app.GET("/accounts", AccountsIndex)
+		app.POST("/accounts", AccountsCreate)
+		app.GET("/accounts/update/{id}", AccountsUpdate)
+		app.GET("/accounts/{id}", AccountsShow)
+		app.GET("/accounts/new", AccountsNew)
+		app.PUT("/accounts/", AccountsEdit)
+		app.DELETE("/accounts/{id}", AccountsDelete)
+		app.GET("/usersaccount", UsersAccountShow)
+		app.GET("/useraccounts", UserAccountsIndex)
+		app.POST("/usersaccount", UsersAccountCreate)
+		app.DELETE("/usersaccount/{id}", UsersAccountDelete)
 
 		app.GET("/csrf", CsrfToken)
 		app.GET("/gardens/create", GardensCreate)

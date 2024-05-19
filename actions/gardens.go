@@ -4,6 +4,7 @@ import (
 	"garden/models"
 	"net/http"
 //	"fmt"
+	"log"
 	"github.com/pkg/errors"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"
@@ -29,14 +30,17 @@ func GardensShow(c buffalo.Context) error {
 func GardensIndex(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	garden := models.Gardens{}
-
-	err := tx.All(&garden)
+	accountID := c.Param("account_id")
+	log.Println("************GardensIndex************")
+	err := tx.Where("account_id = ?", accountID).All(&garden)
 	if err != nil {
-		c.Flash().Add("warning", "Gardens not found")
-		c.Redirect(301, "/")
+		//c.Flash().Add("warning", "Gardens not found")
+		log.Println("Gardens not found: ", err)
+		//c.Redirect(301, "/")
 	}
 
 	c.Set("garden", garden)
+	log.Println("Gardens return")
 	return c.Render(http.StatusOK, r.JSON(garden))//r.HTML("gardens/index.html"))
 }
 

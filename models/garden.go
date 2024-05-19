@@ -12,16 +12,18 @@ import (
 
 // Garden is used by pop to map your gardens database table to your go code.
 type Garden struct {
-	ID        uuid.UUID `json:"id" db:"id"`
-	Name      string    `json:"name" db:"name"`
-	Zone      string    `json:"zone" db:"zone"`
-	Plants    []Plant   `json:"plants,omitempty" has_many:"plants"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	ID          uuid.UUID `json:"id" db:"id"`
+	Name        string    `json:"name" db:"name"`
+	Description string    `json:"description" db:"description"`
+	Plants      []Plant   `json:"plants,omitempty" has_many:"plants"`
+	AccountID   uuid.UUID `json:"account_id" db:"account_id"`
+	Account     *Account  `json:"Account,omitempty" belongs_to:"account"`
+	CreatedAt   time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at" db:"updated_at"`
 }
 
-func (g Garden) GardenZone() string {
-	return g.Name + " is in zone " + g.Zone
+func (g Garden) GardenDescription() string {
+	return g.Name + " description " + g.Description
 }
 
 func (g Garden) GetPlants(tx *pop.Connection) error {
@@ -63,7 +65,7 @@ func (g Gardens) String() string {
 func (g *Garden) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
 		&validators.StringIsPresent{Field: g.Name, Name: "Name"},
-		&validators.StringIsPresent{Field: g.Zone, Name: "Zone"},
+		&validators.StringIsPresent{Field: g.Description, Name: "Description"},
 	), nil
 }
 

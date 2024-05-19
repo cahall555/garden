@@ -3,10 +3,10 @@ package models
 func (ms *ModelSuite) Test_Garden() {
 	g := &Garden{
 		Name: "Salsa Garden",
-		Zone: "13",
+		Description: "This garden was planted in mid-May and is expected to produce a variety of salsa ingredients.",
 	}
 
-	ms.Equal(g.GardenZone(), "Salsa Garden is in zone 13")
+	ms.Equal(g.GardenZone(), "Salsa Garden description This garden was planted in mid-May and is expected to produce a variety of salsa ingredients.")
 
 	db := ms.DB
 	verrs, err := db.ValidateAndCreate(g)
@@ -21,7 +21,7 @@ func (ms *ModelSuite) Test_Garden() {
 func (ms *ModelSuite) Test_GardenPlant() {
 	g := &Garden{
 		Name: "Salsa Garden",
-		Zone: "13",
+		Description: "This garden was planted in mid-May and is expected to produce a variety of salsa ingredients.",
 		Plants: []Plant{
 			{
 				Name:          "Tomato",

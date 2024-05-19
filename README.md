@@ -46,3 +46,6 @@ create database `buffalo pop create -a`
 create tables `buffalo pop migrate` 
 seed database `buffalo task db:seed`
 
+
+docker container: docker exec -it [ID] bash
+database: psql -h localhost -U postgres

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../model/garden.dart';
+import '../model/users_account.dart';
 import '../model/apis/garden_api.dart';
 import '../provider/garden_provider.dart';
 import 'package:provider/provider.dart';
 
 class GardenUpdate extends StatefulWidget {
   final Garden garden;
+  final UserAccounts userAccounts;
   //final Function(Garden) onUpdateSuccess;
-  const GardenUpdate({Key? key, required this.garden}) : super(key: key);
+  const GardenUpdate(
+      {Key? key, required this.garden, required this.userAccounts})
+      : super(key: key);
 
   @override
   State<GardenUpdate> createState() => _GardenUpdateState();
@@ -16,14 +20,15 @@ class GardenUpdate extends StatefulWidget {
 
 class _GardenUpdateState extends State<GardenUpdate> {
   late TextEditingController _nameController;
-  late TextEditingController _zoneController;
+  late TextEditingController _descriptionController;
   //Future<Garden>? _futureGarden;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.garden.name);
-    _zoneController = TextEditingController(text: widget.garden.zone);
+    _descriptionController =
+        TextEditingController(text: widget.garden.description);
   }
 
   @override
@@ -69,7 +74,7 @@ class _GardenUpdateState extends State<GardenUpdate> {
                   fontSize: 15.0,
                   fontWeight: FontWeight.bold),
               decoration: InputDecoration(
-                labelText: 'Zone',
+                labelText: 'Description',
                 labelStyle:
                     TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
                 enabledBorder: OutlineInputBorder(
@@ -78,7 +83,7 @@ class _GardenUpdateState extends State<GardenUpdate> {
                   borderSide: BorderSide(color: Color(0XFF987D3F)),
                 ),
               ),
-              controller: _zoneController,
+              controller: _descriptionController,
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
@@ -129,7 +134,8 @@ class _GardenUpdateState extends State<GardenUpdate> {
       Map<String, dynamic> gardenData = {
         'id': widget.garden.id,
         'name': _nameController.text.trim(),
-        'zone': _zoneController.text.trim(),
+        'description': _descriptionController.text.trim(),
+        'account_id': widget.userAccounts.account_id,
       };
       final gardenProvider =
           Provider.of<GardenProvider>(context, listen: false);

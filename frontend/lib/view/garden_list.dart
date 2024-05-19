@@ -1,53 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../components/garden_bottom_nav.dart';
+//import '../components/garden_bottom_nav.dart';
+import 'auth_landing.dart';
 import '../components/garden_card.dart';
 import '../model/garden.dart';
+import '../model/account.dart';
+import '../model/users_account.dart';
+import '../model/apis/users_account_api.dart';
+import '../provider/users_account_provider.dart';
 import '../model/apis/garden_api.dart';
+import '../provider/auth_provider.dart';
 import '../provider/garden_provider.dart';
 import 'garden_detail.dart';
 import 'garden_create.dart';
 
 class GardenList extends StatefulWidget {
+  final UserAccounts userAccounts;
+  const GardenList({Key? key, required this.userAccounts}) : super(key: key);
   @override
   _GardenListState createState() => _GardenListState();
 }
 
 class _GardenListState extends State<GardenList> {
   Future<List<Garden>>? futureGardens;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (futureGardens == null) {
       final gardenProvider =
           Provider.of<GardenProvider>(context, listen: false);
-      futureGardens = gardenProvider.fetchGarden();
+      futureGardens =
+          gardenProvider.fetchGarden(widget.userAccounts.account_id);
     }
   }
-
-  final GardenCard gardenCard = GardenCard(
-    title: 'Herb Garden',
-    zone: '7',
-    description: 'This is a description of the garden',
-    garden: Garden(
-      id: '1',
-      name: 'Herb Garden',
-      zone: '7',
-      plants: [],
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
     return Consumer<GardenProvider>(
       builder: (context, gardenProvider, child) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text('Gardens', style: TextStyle(fontFamily: 'Taviraj')),
-          ),
+          //appBar: AppBar(
+            //title: Text('Gardens', style: TextStyle(fontFamily: 'Taviraj')),
+          //),
           body: Stack(
             children: <Widget>[
               Image.asset(
@@ -71,12 +65,14 @@ class _GardenListState extends State<GardenList> {
                         String plantCount =
                             'Put Plant count here'; //snapshot.data![index].plants.length.toString() ?? '0';
                         String gardenName = snapshot.data![index].name;
-                        String gardenZone = snapshot.data![index].zone;
+                        String gardenDescription =
+                            snapshot.data![index].description;
                         return GardenCard(
                             title: gardenName,
-                            zone: gardenZone,
-                            description: plantCount,
-                            garden: garden); 
+                            description: gardenDescription,
+                            //description: plantCount,
+                            garden: garden,
+                            userAccounts: widget.userAccounts);
                       },
                     );
                   } else {
@@ -86,6 +82,45 @@ class _GardenListState extends State<GardenList> {
               ),
             ],
           ),
+floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => GardenCreate(userAccounts: widget.userAccounts)),
+
+                );
+              },
+              child: Icon(Icons.add, color: Color(0XFFFED16A)),
+              backgroundColor: Color(0XFF987D3F),
+	      tooltip: 'Add Garden',
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                Provider.of<AuthProvider>(context, listen: false)
+                    .logout();
+                Navigator.of(context).push(
+		  MaterialPageRoute(
+		    builder: (context) => LandingPage(),
+		  ),
+		);
+              },
+              child: Icon(Icons.logout, color: Color(0XFF987D3F)),
+              backgroundColor: Color(0XFFFED16A),
+	      tooltip: 'Logout',
+            ),
+          ),
+        ],
+      ),
+
+          //bottomNavigationBar: BottomNavigation(),
         );
       },
     );

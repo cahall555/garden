@@ -6,9 +6,9 @@ class GardenProvider with ChangeNotifier {
   List<Garden> gardens = [];
   Garden? prevGarden;
 
-  Future<List<Garden>> fetchGarden() async {
+  Future<List<Garden>> fetchGarden(var accountId) async {
     try {
-      gardens = await fetchGardenApi();
+      gardens = await fetchGardenApi(accountId);
       notifyListeners();
       return gardens;
     } catch (e) {

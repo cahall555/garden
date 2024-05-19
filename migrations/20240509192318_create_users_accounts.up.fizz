@@ -1,0 +1,8 @@
+create_table("users_accounts") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("user_id", "uuid", {})
+	t.Column("account_id", "uuid", {})
+	t.ForeignKey("user_id", {"users": ["id"] })
+	t.ForeignKey("account_id", {"accounts": ["id"] })
+	t.Timestamps()
+}
