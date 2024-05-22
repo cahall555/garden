@@ -16,6 +16,9 @@ type Plant struct {
 	Name          string    `json:"name" db:"name"`
 	Germinated    bool      `json:"germinated" db:"germinated"`
 	DaysToHarvest int       `json:"days_to_harvest" db:"days_to_harvest"`
+	PlantCount    int       `json:"plant_count" db:"plant_count"`
+	DatePlanted   time.Time `json:"date_planted" db:"date_planted"`
+	DateGerminated time.Time `json:"date_germinated" db:"date_germinated"`
 	GardenID      uuid.UUID `json:"garden_id" db:"garden_id"`
 	Garden        *Garden   `json:"Garden,omitempty" belongs_to:"garden"`
 	PlantTags     Tags      `json:"plant_tags,omitempty" many_to_many:"plants_tags"`

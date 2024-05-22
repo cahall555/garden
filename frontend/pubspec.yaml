@@ -42,6 +42,7 @@ dependencies:
   image_picker: ^1.0.7
   smooth_page_indicator: ^1.1.0
   flutter_dotenv: ^5.1.0
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:

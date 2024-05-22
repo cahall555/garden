@@ -95,6 +95,13 @@ class PlantDetail extends StatelessWidget {
                           fontFamily: 'Taviraj',
                           color: Colors.white,
                         )),
+		    subtitle: Text(
+			"Days to Harvest: ${plant.date_planted}",
+			style: TextStyle(
+			  fontWeight: FontWeight.bold,
+			  fontFamily: 'Taviraj',
+			  color: Colors.white,
+			)),
                   ),
                 ),
               ),

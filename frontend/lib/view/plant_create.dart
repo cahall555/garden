@@ -18,6 +18,9 @@ class _PlantCreateState extends State<PlantCreate> {
   final _nameController = TextEditingController();
   bool _germinatedController = false;
   final _days_to_harvestController = TextEditingController();
+  final _plant_countController = TextEditingController();
+  final _date_plantedController = TextEditingController();
+  final _date_germinatedController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +64,57 @@ class _PlantCreateState extends State<PlantCreate> {
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 20.0),
+            TextField(
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Plant Count',
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white),
+              ),
+              controller: _plant_countController,
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 20.0),
+            TextField(
+              readOnly: true,
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Date Planted',
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white),
+              ),
+              controller: _date_plantedController,
+              onTap: () async {
+                DateTime? pickedDate = await _selectDate(context);
+                if (pickedDate != null) {
+                  setState(() {
+                    _date_plantedController.text =
+                        "${pickedDate.toLocal()}".split(' ')[0];
+                  });
+                }
+              },
+            ),
+            const SizedBox(height: 20.0),
+            TextField(
+              readOnly: true,
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Date Germinated',
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(color: Colors.white),
+              ),
+              controller: _date_germinatedController,
+              onTap: () async {
+                DateTime? pickedDate = await _selectDate(context);
+                if (pickedDate != null) {
+                  setState(() {
+                    _date_germinatedController.text =
+                        "${pickedDate.toLocal()}".split(' ')[0];
+                  });
+                }
+              },
+            ),
+            const SizedBox(height: 20.0),
             ListTile(
               leading: const Text('Germinated'),
               trailing: Switch(
@@ -92,6 +146,18 @@ class _PlantCreateState extends State<PlantCreate> {
     );
   }
 
+  Future<DateTime?> _selectDate(BuildContext context) async {
+    DateTime initialDate = DateTime.now();
+    DateTime firstDate = DateTime(2000);
+    DateTime lastDate = DateTime(2101);
+    return showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
+    );
+  }
+
   void submitPlant() async {
     try {
       final int daysToHarvest =
@@ -100,11 +166,19 @@ class _PlantCreateState extends State<PlantCreate> {
         print('number must be greater than zero');
         return;
       }
+      final plantCount = int.tryParse(_plant_countController.text) ?? 0;
+      if (plantCount <= 0) {
+        print('number must be greater than zero');
+        return;
+      }
       final plantProvider = Provider.of<PlantProvider>(context, listen: false);
       await plantProvider.createPlant({
         'name': _nameController.text.trim(),
         'days_to_harvest': daysToHarvest,
         'germinated': _germinatedController,
+        'plant_count': plantCount,
+        'date_planted': _date_plantedController.text.trim(),
+        'date_germinated': _date_germinatedController.text.trim(),
         'garden_id': widget.garden.id,
       }, widget.garden.id);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -120,6 +194,9 @@ class _PlantCreateState extends State<PlantCreate> {
     void dispose() {
       _nameController.dispose();
       _days_to_harvestController.dispose();
+      _plant_countController.dispose();
+      _date_plantedController.dispose();
+      _date_germinatedController.dispose();
       super.dispose();
     }
   }

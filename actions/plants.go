@@ -6,6 +6,7 @@ import (
 //	"fmt"
 //	"strings"
 	"log"
+	"time"
 //	"database/sql"
 	"github.com/gofrs/uuid"
 	"github.com/pkg/errors"
@@ -84,7 +85,7 @@ func PlantsNew(c buffalo.Context) error {
 		return err//c.Redirect(301, "/")
 	}
 
-
+	c.Logger().Info("*****date planted*****: ", plant.DatePlanted)
 
 	gp := c.Param("gardenId")//c.Request().FormValue("Gardens")
 	garden := &models.Garden{}
@@ -97,8 +98,27 @@ func PlantsNew(c buffalo.Context) error {
 	plant.GardenID = garden.ID
 
 	garden.Plants = append(garden.Plants, *plant)
-
-	
+  dateStr := c.Request().FormValue("date_planted") 
+  c.Logger().Info("Date planted: ", dateStr)
+    if dateStr != "" {
+        parsedDate, err := time.Parse(time.DateOnly, dateStr)
+	c.Logger().Info("Parsed date: ", parsedDate)
+        if err != nil {
+            log.Println("Error parsing date:", err)
+            return c.Error(400, errors.New("invalid date format"))
+        }
+        plant.DatePlanted = parsedDate
+    }
+	dateStr = c.Request().FormValue("date_germinated") 
+    if dateStr != "" {
+        
+       parsedDate, err := time.Parse(time.DateOnly, dateStr)
+        if err != nil {
+            log.Println("Error parsing date:", err)
+            return c.Error(400, errors.New("invalid date format"))
+        }
+        plant.DateGerminated = parsedDate
+    }
 	waterSchedules := models.WaterSchedule{
 		Monday: false, // default
 		Tuesday: false, // default
