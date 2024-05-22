@@ -202,6 +202,27 @@ func PlantsEdit(c buffalo.Context) error {
 		return c.Render(500, r.JSON(plant))
 	}
 
+  dateStr := c.Request().FormValue("date_planted") 
+  c.Logger().Info("Date planted: ", dateStr)
+    if dateStr != "" {
+        parsedDate, err := time.Parse(time.DateOnly, dateStr)
+	c.Logger().Info("Parsed date: ", parsedDate)
+        if err != nil {
+            log.Println("Error parsing date:", err)
+            return c.Error(400, errors.New("invalid date format"))
+        }
+        plant.DatePlanted = parsedDate
+    }
+	dateStr = c.Request().FormValue("date_germinated") 
+    if dateStr != "" {
+        
+       parsedDate, err := time.Parse(time.DateOnly, dateStr)
+        if err != nil {
+            log.Println("Error parsing date:", err)
+            return c.Error(400, errors.New("invalid date format"))
+        }
+        plant.DateGerminated = parsedDate
+    }
 
 
 	verrs, err := tx.Eager().ValidateAndUpdate(plant)

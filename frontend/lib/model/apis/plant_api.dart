@@ -88,6 +88,14 @@ Future<void> updatePlantApi(Map<String, dynamic> plantData) async {
   final url = Uri.parse(apiUrl + 'plants?id=${plantData['id']}');
   final headers = {"Content-Type": "application/json"};
 
+  if (plantData['date_planted'] != null && plantData['date_planted'] != "") {
+    plantData['date_planted'] = formatDate(plantData['date_planted']);
+  }
+  if (plantData['date_germinated'] != null && plantData['date_germinated'] != "") {
+    plantData['date_germinated'] = formatDate(plantData['date_germinated']);
+  }
+
+
   try {
     final response =
         await http.put(url, headers: headers, body: json.encode(plantData));
