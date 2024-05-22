@@ -23,6 +23,7 @@ import '../provider/ws_provider.dart';
 import '../provider/tag_provider.dart';
 import '../provider/plants_tag_provider.dart';
 import '../provider/journal_provider.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -46,10 +47,20 @@ class PlantDetail extends StatelessWidget {
     return tags;
   }
 
+  String formatDate(DateTime? date) {
+    if (date == null) {
+      return 'date not set';
+    }
+    if (DateFormat('y').format(date.toLocal()) == '0') {
+      return 'date not set';
+    }
+    final formatter = DateFormat('yMMMMd');
+    return formatter.format(date.toLocal());
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-
     final journalProvider =
         Provider.of<JournalProvider>(context, listen: false);
     return Scaffold(
@@ -95,6 +106,13 @@ class PlantDetail extends StatelessWidget {
                           fontFamily: 'Taviraj',
                           color: Colors.white,
                         )),
+                    subtitle:
+                        Text("Date Planted: ${formatDate(plant.date_planted)}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Taviraj',
+                              color: Colors.white,
+                            )),
                   ),
                 ),
               ),
@@ -279,7 +297,7 @@ class PlantDetail extends StatelessWidget {
                           text:
                               TextSpan(text: tag.name, style: textWidget.style),
                           maxLines: 1,
-                          textDirection: TextDirection.ltr,
+                          //textDirection: TextDirection.ltr,
                         );
                         textPainter.layout();
 

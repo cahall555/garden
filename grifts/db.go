@@ -2,7 +2,7 @@ package grifts
 
 import (
 	"garden/models"
-
+	"time"
 	"github.com/gobuffalo/grift/grift"
 )
 
@@ -46,6 +46,10 @@ var _ = grift.Namespace("db", func() {
 			panic(err)
 		}
 
+		// Parse date strings
+		basilDatePlanted, _ := time.Parse("2006-01-02", "2024-05-20")
+		tomatoDatePlanted, _ := time.Parse("2006-01-02", "2024-04-20")
+		tomatoDateGerminated, _ := time.Parse("2006-01-02", "2024-05-01")
 
 		//Seed gardens
 		salsaGarden := models.Garden{Name: "Salsa Garden", Description: "This garden is for growing salsa ingredients", AccountID: premium.ID}
@@ -65,7 +69,7 @@ var _ = grift.Namespace("db", func() {
 		}
 
 		//Seed plants
-		basil := models.Plant{Name: "Basil", Germinated: true, DaysToHarvest: 30, GardenID: herbGarden.ID}
+		basil := models.Plant{Name: "Basil", Germinated: true, DaysToHarvest: 30, PlantCount: 3, DatePlanted: basilDatePlanted, GardenID: herbGarden.ID}
 		err = models.DB.Create(&basil)
 		if err != nil {
 			panic(err)
@@ -75,12 +79,12 @@ var _ = grift.Namespace("db", func() {
 		if err != nil {
 			panic(err)
 		}
-		tomato := models.Plant{Name: "Tomato", Germinated: true, DaysToHarvest: 90, GardenID: salsaGarden.ID}
+		tomato := models.Plant{Name: "Tomato", Germinated: true, DaysToHarvest: 90, PlantCount: 20, DatePlanted: tomatoDatePlanted, DateGerminated: tomatoDateGerminated, GardenID: salsaGarden.ID}
 		err = models.DB.Create(&tomato)
 		if err != nil {
 			panic(err)
 		}
-		jalapeno := models.Plant{Name: "Jalapeno", Germinated: true, DaysToHarvest: 90, GardenID: salsaGarden.ID}
+		jalapeno := models.Plant{Name: "Jalapeno", Germinated: true, DaysToHarvest: 90, PlantCount: 16, GardenID: salsaGarden.ID}
 		err = models.DB.Create(&jalapeno)
 		if err != nil {
 			panic(err)

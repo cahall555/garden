@@ -10,6 +10,9 @@ class Plant {
 	final String name;
   	final bool germinated;
 	final int days_to_harvest;
+	final int plant_count;
+	final DateTime? date_planted;
+	final DateTime? date_germinated;	
 	final String garden_id;
 	final List<Tag>? plantTags;
   	final List<Journal>? journals;
@@ -17,7 +20,7 @@ class Plant {
 	final DateTime createdAt;
 	final DateTime updatedAt;
 
-  	Plant({required this.id, required this.name, required this.germinated, required this.days_to_harvest, required this.garden_id, this.plantTags, this.journals, this.waterSchedules, required this.createdAt, required this.updatedAt});
+  	Plant({required this.id, required this.name, required this.germinated, required this.days_to_harvest, required this.plant_count, this.date_planted, this.date_germinated, required this.garden_id, this.plantTags, this.journals, this.waterSchedules, required this.createdAt, required this.updatedAt});
 
   	factory Plant.fromJson(Map<String, dynamic> json) {
     		return Plant(
@@ -25,6 +28,9 @@ class Plant {
       			name: json['name'],
       			germinated: json['germinated'],
 			days_to_harvest: json['days_to_harvest'],
+			plant_count: json['plant_count'],
+			date_planted: json['date_planted'] != '' ? DateTime.parse(json['date_planted']) : null,
+			date_germinated: json['date_germinated'] != '' ? DateTime.parse(json['date_germinated']) : null,
 			garden_id: json['garden_id'],
 			plantTags: json['plantTags'] != null ? List<Tag>.from(json['plantTags'].map((x) => Tag.fromJson(x))) : null,
      			journals: json['journals'] != null ? List<Journal>.from(json['journals'].map((x) => Journal.fromJson(x))) : null,
@@ -40,6 +46,9 @@ class Plant {
       			'name': name,
       			'germinated': germinated,
 			'days_to_harvest': days_to_harvest,
+			'plant_count': plant_count,
+			'date_planted': date_planted?.toIso8601String(),
+			'date_germinated': date_germinated?.toIso8601String(),
 			'garden_id': garden_id,
 			'PlantTags': plantTags?.map((x) => x.toJson()).toList(),
 	      		'journals': journals?.map((x) => x.toJson()).toList(),

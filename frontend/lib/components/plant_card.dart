@@ -66,7 +66,7 @@ class PlantCard extends StatelessWidget {
                     '\n' +
                     (germinated
                         ? 'Plant has germinated'
-                        : 'Plant has not germinated'),
+                        : 'Plant has not germinated') + '\n' + 'Plant Count: ' + plant.plant_count.toString() + '\n' + 'Date Planted: ' + plant.date_planted.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Taviraj',
