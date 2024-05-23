@@ -108,10 +108,11 @@ class _TagCreateState extends State<TagCreate> {
 
   void submitTag() async {
     try {
+
       final tagProvider = Provider.of<TagProvider>(context, listen: false);
       if (widget.plant != null) {
         Tag? existingTag =
-            await tagProvider.fetchTagByName(_nameController.text.trim());
+            await tagProvider.fetchTagByName(_nameController.text.trim(), widget.plant!.account_id);
         if (existingTag != null) {
           PlantsTagProvider plantsTagProvider =
               Provider.of<PlantsTagProvider>(context, listen: false);
@@ -122,6 +123,7 @@ class _TagCreateState extends State<TagCreate> {
         } else {
           Tag newTag = await tagProvider.createTag({
             'name': _nameController.text.trim(),
+	    'account_id': widget.plant!.account_id,
           });
           var tagid = newTag.id;
           PlantsTagProvider plantsTagProvider =

@@ -24,6 +24,8 @@ type Plant struct {
 	PlantTags     Tags      `json:"plant_tags,omitempty" many_to_many:"plants_tags"`
 	Journals      []Journal `json:"journals,omitempty" has_many:"journals"`
 	WaterSchedules WaterSchedule `has_one:"water_schedules"`
+	AccountID     uuid.UUID `json:"account_id" db:"account_id"`
+	Account       *Account  `json:"Account,omitempty" belongs_to:"accounts"`
 	CreatedAt     time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at" db:"updated_at"`
 }

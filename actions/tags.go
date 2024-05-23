@@ -28,8 +28,9 @@ func TagNameShow(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	tag := models.Tag{}
 	tagName := c.Param("name")
+	accountID := c.Param("account_id")
 
-	err := tx.Eager().Where("name = ?", tagName).First(&tag)
+	err := tx.Eager().Where("name = ?", tagName).Where("account_id = ?", accountID).First(&tag)
 	if err != nil {
 		c.Logger().Error("Tag not found: ", err)
 	}
@@ -43,8 +44,8 @@ func TagNameShow(c buffalo.Context) error {
 func TagsIndex(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	tag := models.Tags{}
-
-	err := tx.All(&tag)
+	accountID := c.Param("account_id")
+	err := tx.Eager().Where("account_id = ?", accountID).All(&tag)
 	if err != nil {
 //		c.Flash().Add("warning", "Tags not found")
 		c.Redirect(301, "/")

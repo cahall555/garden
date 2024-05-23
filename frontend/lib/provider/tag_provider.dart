@@ -10,9 +10,9 @@ class TagProvider with ChangeNotifier {
   List<Tag> tags = [];
   Tag? newTag;
 
-  Future<List<Tag>> fetchTags() async {
+  Future<List<Tag>> fetchTags(var accountId) async {
     try {
-      tags = await fetchTagsApi();
+      tags = await fetchTagsApi(accountId);
       notifyListeners();
       return tags;
     } catch (e) {
@@ -32,9 +32,9 @@ class TagProvider with ChangeNotifier {
     }
   }
 
-  Future<Tag?> fetchTagByName(String name) async {
+  Future<Tag?> fetchTagByName(String name, var accountId) async {
     try {
-      List<Tag> tags = await fetchTagByNameApi(name);
+      List<Tag> tags = await fetchTagByNameApi(name, accountId);
       if (tags.isNotEmpty) {
         return tags[0];
       } else {

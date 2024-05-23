@@ -432,11 +432,11 @@ class PlantDetail extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => GardenDetail(gardenId: plant.garden_id)),
-                    );
+                    //Navigator.push(
+                      //context,
+                     // MaterialPageRoute(
+                          //builder: (context) => GardenDetail(gardenId: plant.garden_id)),
+                    //);
                     // Navigator.of(context).pop();
                   },
                   child: Text('Garden Detail'),

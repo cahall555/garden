@@ -15,6 +15,8 @@ type Tag struct {
 	ID            uuid.UUID `json:"id" db:"id"`
 	Name          string    `json:"name" db:"name"`
 	RelatedPlants Plants    `json:"related_plants" many_to_many:"plants_tags"`
+	AccountID     uuid.UUID `json:"account_id" db:"account_id"`
+	Account       *Account  `json:"Account,omitempty" belongs_to:"accounts"`
 	CreatedAt     time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at" db:"updated_at"`
 }

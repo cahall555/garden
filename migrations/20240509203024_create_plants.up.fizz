@@ -8,5 +8,7 @@ create_table("plants") {
 	t.Column("date_germinated", "time", {"null": true})
 	t.Column("garden_id", "uuid", {})
 	t.ForeignKey("garden_id", {"gardens": ["id"]})
+	t.Column("account_id", "uuid", {})
+	t.ForeignKey("account_id", {"accounts": ["id"]})
 	t.Timestamps()
 }

@@ -106,6 +106,7 @@ class _TagUpdateState extends State<TagUpdate> {
       Map<String, dynamic> tagData = {
         'id': widget.tag.id,
         'name': _nameController.text.trim(),
+	'account_id': widget.tag.account_id,
       };
       final tagProvider = Provider.of<TagProvider>(context, listen: false);
 

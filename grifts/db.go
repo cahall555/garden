@@ -69,50 +69,55 @@ var _ = grift.Namespace("db", func() {
 		}
 
 		//Seed plants
-		basil := models.Plant{Name: "Basil", Germinated: true, DaysToHarvest: 30, PlantCount: 3, DatePlanted: basilDatePlanted, GardenID: herbGarden.ID}
+		basil := models.Plant{Name: "Basil", Germinated: true, DaysToHarvest: 30, PlantCount: 3, DatePlanted: basilDatePlanted, GardenID: herbGarden.ID, AccountID: free.ID}
 		err = models.DB.Create(&basil)
 		if err != nil {
 			panic(err)
 		}
-		oregano := models.Plant{Name: "Oregano", Germinated: false, DaysToHarvest: 30, GardenID: herbGarden.ID}
+		oregano := models.Plant{Name: "Oregano", Germinated: false, DaysToHarvest: 30, GardenID: herbGarden.ID, AccountID: free.ID}
 		err = models.DB.Create(&oregano)
 		if err != nil {
 			panic(err)
 		}
-		tomato := models.Plant{Name: "Tomato", Germinated: true, DaysToHarvest: 90, PlantCount: 20, DatePlanted: tomatoDatePlanted, DateGerminated: tomatoDateGerminated, GardenID: salsaGarden.ID}
+		tomato := models.Plant{Name: "Tomato", Germinated: true, DaysToHarvest: 90, PlantCount: 20, DatePlanted: tomatoDatePlanted, DateGerminated: tomatoDateGerminated, GardenID: salsaGarden.ID, AccountID: premium.ID}
 		err = models.DB.Create(&tomato)
 		if err != nil {
 			panic(err)
 		}
-		jalapeno := models.Plant{Name: "Jalapeno", Germinated: true, DaysToHarvest: 90, PlantCount: 16, GardenID: salsaGarden.ID}
+		jalapeno := models.Plant{Name: "Jalapeno", Germinated: true, DaysToHarvest: 90, PlantCount: 16, GardenID: salsaGarden.ID, AccountID: premium.ID}
 		err = models.DB.Create(&jalapeno)
 		if err != nil {
 			panic(err)
 		}
-		cucumber := models.Plant{Name: "Cucumber", Germinated: true, DaysToHarvest: 60, GardenID: veggieGarden.ID}
+		cucumber := models.Plant{Name: "Cucumber", Germinated: true, DaysToHarvest: 60, GardenID: veggieGarden.ID, AccountID: premium.ID}
 		err = models.DB.Create(&cucumber)
 		if err != nil {
 			panic(err)
 		}
-		carrot := models.Plant{Name: "Carrot", Germinated: false, DaysToHarvest: 60, GardenID: veggieGarden.ID}
+		carrot := models.Plant{Name: "Carrot", Germinated: false, DaysToHarvest: 60, GardenID: veggieGarden.ID, AccountID: premium.ID}
 		err = models.DB.Create(&carrot)
 		if err != nil {
 			panic(err)
 		}
 
 		//Seed tags
-		herbTag := models.Tag{Name: "Herb"}
+		herbTag := models.Tag{Name: "Herb", AccountID: free.ID}
 		err = models.DB.Create(&herbTag)
 		if err != nil {
 			panic(err)
 		}
-		perinnialTag := models.Tag{Name: "Perinnial"}
+		perinnialTag := models.Tag{Name: "Perinnial", AccountID: free.ID}
 		err = models.DB.Create(&perinnialTag)
 		if err != nil {
 			panic(err)
 		}
-		annualTag := models.Tag{Name: "Annual"}
+		annualTag := models.Tag{Name: "Annual", AccountID: premium.ID}
 		err = models.DB.Create(&annualTag)
+		if err != nil {
+			panic(err)
+		}
+		herbTag2 := models.Tag{Name: "Herb", AccountID: premium.ID}
+		err = models.DB.Create(&herbTag2)
 		if err != nil {
 			panic(err)
 		}
