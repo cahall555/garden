@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 //import '../components/garden_bottom_nav.dart';
 import 'auth_landing.dart';
+import 'tags_list.dart';
 import '../components/garden_card.dart';
 import '../model/garden.dart';
 import '../model/account.dart';
@@ -40,7 +41,7 @@ class _GardenListState extends State<GardenList> {
       builder: (context, gardenProvider, child) {
         return Scaffold(
           //appBar: AppBar(
-            //title: Text('Gardens', style: TextStyle(fontFamily: 'Taviraj')),
+          //title: Text('Gardens', style: TextStyle(fontFamily: 'Taviraj')),
           //),
           body: Stack(
             children: <Widget>[
@@ -82,43 +83,59 @@ class _GardenListState extends State<GardenList> {
               ),
             ],
           ),
-floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => GardenCreate(userAccounts: widget.userAccounts)),
-
-                );
-              },
-              child: Icon(Icons.add, color: Color(0XFFFED16A)),
-              backgroundColor: Color(0XFF987D3F),
-	      tooltip: 'Add Garden',
-            ),
+          floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              GardenCreate(userAccounts: widget.userAccounts)),
+                    );
+                  },
+                  child: Icon(Icons.add, color: Color(0XFFFED16A)),
+                  backgroundColor: Color(0XFF987D3F),
+                  tooltip: 'Add Garden',
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Provider.of<AuthProvider>(context, listen: false).logout();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            TagList(userAccounts: widget.userAccounts),
+                      ),
+                    );
+                  },
+                  child: Icon(Icons.label, color: Color(0XFF987D3F)),
+                  backgroundColor: Color(0XFFFED16A),
+                  tooltip: 'Tags',
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Provider.of<AuthProvider>(context, listen: false).logout();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => LandingPage(),
+                      ),
+                    );
+                  },
+                  child: Icon(Icons.logout, color: Color(0XFF987D3F)),
+                  backgroundColor: Color(0XFFFED16A),
+                  tooltip: 'Logout',
+                ),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                Provider.of<AuthProvider>(context, listen: false)
-                    .logout();
-                Navigator.of(context).push(
-		  MaterialPageRoute(
-		    builder: (context) => LandingPage(),
-		  ),
-		);
-              },
-              child: Icon(Icons.logout, color: Color(0XFF987D3F)),
-              backgroundColor: Color(0XFFFED16A),
-	      tooltip: 'Logout',
-            ),
-          ),
-        ],
-      ),
 
           //bottomNavigationBar: BottomNavigation(),
         );

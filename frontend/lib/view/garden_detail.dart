@@ -33,6 +33,7 @@ class GardenDetail extends StatelessWidget {
       date_planted: DateTime.parse('2022-01-01'),
       date_germinated: DateTime.parse('2022-01-15'),
       garden_id: '1',
+      account_id: '1',
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     ),

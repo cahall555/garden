@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 import '../model/plant.dart';
 import '../model/apis/plant_api.dart';
 import '../model/journal.dart';
@@ -18,12 +19,12 @@ import 'journal_detail.dart';
 import 'journal_create.dart';
 import 'tag_create.dart';
 import 'tag_detail.dart';
+import 'garden_detail.dart';
 import '../provider/plant_provider.dart';
 import '../provider/ws_provider.dart';
 import '../provider/tag_provider.dart';
 import '../provider/plants_tag_provider.dart';
 import '../provider/journal_provider.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -51,10 +52,10 @@ class PlantDetail extends StatelessWidget {
     if (date == null) {
       return 'date not set';
     }
-    if (DateFormat('y').format(date.toLocal()) == '0') {
+    if (intl.DateFormat('y').format(date.toLocal()) == '0') {
       return 'date not set';
     }
-    final formatter = DateFormat('yMMMMd');
+    final formatter = intl.DateFormat('yMMMMd');
     return formatter.format(date.toLocal());
   }
 
@@ -297,7 +298,7 @@ class PlantDetail extends StatelessWidget {
                           text:
                               TextSpan(text: tag.name, style: textWidget.style),
                           maxLines: 1,
-                          //textDirection: TextDirection.ltr,
+                          textDirection: TextDirection.ltr,
                         );
                         textPainter.layout();
 
@@ -427,6 +428,21 @@ class PlantDetail extends StatelessWidget {
                   child: Text('Add Tag'),
                 ),
               ),
+		Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    //Navigator.push(
+                      //context,
+                     // MaterialPageRoute(
+                          //builder: (context) => GardenDetail(gardenId: plant.garden_id)),
+                    //);
+                    // Navigator.of(context).pop();
+                  },
+                  child: Text('Garden Detail'),
+                ),
+              ),
+
             ],
           ),
         ),

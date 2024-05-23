@@ -25,8 +25,8 @@ Future<List<Tag>> fetchTagApi(var tagId) async {
   }
 }
 
-Future<List<Tag>> fetchTagByNameApi(String name) async {
-  final response = await http.get(Uri.parse(apiUrl + 'tag/$name?name=$name'));
+Future<List<Tag>> fetchTagByNameApi(String name, var accountId) async {
+  final response = await http.get(Uri.parse(apiUrl + 'tag/$name?name=$name&account_id=$accountId'));
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
@@ -45,8 +45,8 @@ Future<List<Tag>> fetchTagByNameApi(String name) async {
   }
 }
 
-Future<List<Tag>> fetchTagsApi() async {
-  final response = await http.get(Uri.parse(apiUrl + 'tags'));
+Future<List<Tag>> fetchTagsApi(var accountId) async {
+  final response = await http.get(Uri.parse(apiUrl + 'tags?account_id=$accountId'));
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);

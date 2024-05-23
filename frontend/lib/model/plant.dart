@@ -17,10 +17,11 @@ class Plant {
 	final List<Tag>? plantTags;
   	final List<Journal>? journals;
   	final WaterSchedule? waterSchedules;
+	final String account_id;
 	final DateTime createdAt;
 	final DateTime updatedAt;
 
-  	Plant({required this.id, required this.name, required this.germinated, required this.days_to_harvest, required this.plant_count, this.date_planted, this.date_germinated, required this.garden_id, this.plantTags, this.journals, this.waterSchedules, required this.createdAt, required this.updatedAt});
+  	Plant({required this.id, required this.name, required this.germinated, required this.days_to_harvest, required this.plant_count, this.date_planted, this.date_germinated, required this.garden_id, this.plantTags, this.journals, this.waterSchedules, required this.account_id, required this.createdAt, required this.updatedAt});
 
   	factory Plant.fromJson(Map<String, dynamic> json) {
     		return Plant(
@@ -35,6 +36,7 @@ class Plant {
 			plantTags: json['plantTags'] != null ? List<Tag>.from(json['plantTags'].map((x) => Tag.fromJson(x))) : null,
      			journals: json['journals'] != null ? List<Journal>.from(json['journals'].map((x) => Journal.fromJson(x))) : null,
      			waterSchedules: json['waterSchedules'] != null ? WaterSchedule.fromJson(json['waterSchedules']) : null,
+			account_id: json['account_id'],
 			createdAt: DateTime.parse(json['created_at']),
 			updatedAt: DateTime.parse(json['updated_at']),
     		);
@@ -53,6 +55,7 @@ class Plant {
 			'PlantTags': plantTags?.map((x) => x.toJson()).toList(),
 	      		'journals': journals?.map((x) => x.toJson()).toList(),
 			'waterSchedules': waterSchedules?.toJson(),
+			'account_id': account_id,
 			'created_at': createdAt.toIso8601String(),
 			'updated_at': updatedAt.toIso8601String(),
     		};

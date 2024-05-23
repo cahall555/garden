@@ -209,6 +209,7 @@ class _PlantUpdateState extends State<PlantUpdate> {
         'name': _nameController.text.trim(),
         'germinated': _germinatedController,
         'garden_id': widget.plant.garden_id,
+	'account_id': widget.plant.account_id,
         'days_to_harvest': int.parse(_days_to_harvestController.text.trim()),
         'plant_count': int.parse(_plant_countController.text.trim()),
         'date_planted': _date_plantedController.text.trim(),
