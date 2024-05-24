@@ -38,13 +38,14 @@ class JournalProvider with ChangeNotifier {
       Map<String, dynamic> journal, var journalId, var plantId, String? filePath) async {
     updateJournalApi(journal, journalId, plantId, filePath);
     notifyListeners();
-    if (prevJournal != null) {
-      int index = journals.indexWhere((j) => j.id == prevJournal!.id);
+    //if (prevJournal != null) {
+      //int index = journals.indexWhere((j) => j.id == prevJournal!.id);
 
-      if (index != -1) {
-        journals[index] = Journal.fromJson(journal);
-      }
-    }
+      //if (index != -1) {
+        //journals[index] = Journal.fromJson(journal);
+      //}
+    //}
+    print('provider journal ');
   }
 
   Future<void> deleteJournal(var journalId) async {
