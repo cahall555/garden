@@ -27,8 +27,8 @@ Future<List<Journal>> fetchJournalApi() async {
 }
 
 Future<List<Journal>> fetchPlantJournalApi(var plantId) async {
-  final response = await http
-      .get(Uri.parse(apiUrl + 'plant_journals?plant_id=$plantId'));
+  final response =
+      await http.get(Uri.parse(apiUrl + 'plant_journals?plant_id=$plantId'));
 
   if (response.statusCode == 200) {
     try {
@@ -55,7 +55,8 @@ Future<void> createJournalApi(
   request.fields['entry'] = journalData['entry'];
   request.fields['category'] = journalData['category'];
   request.fields['plant_id'] = journalData['plant_id'];
-  request.fields['display_in_garden'] = journalData['display_in_garden'].toString();
+  request.fields['display_in_garden'] =
+      journalData['display_in_garden'].toString();
 
   if (filePath != null && filePath.isNotEmpty) {
     request.files
@@ -64,7 +65,7 @@ Future<void> createJournalApi(
   try {
     var streamedResponse = await request.send();
 
-    if (streamedResponse.statusCode == 201) {
+    if (streamedResponse.statusCode == 200) {
       print('Journal created successfully');
     } else {
       print(
@@ -79,37 +80,61 @@ Future<void> createJournalApi(
   }
 }
 
-Future<void> updateJournalApi(
-    Map<String, dynamic> journalData, var journalId, var plantId, String? filePath) async {
+Future<void> updateJournalApi(Map<String, dynamic> journalData, var journalId,
+    var plantId, String? filePath) async {
   final url = Uri.parse(apiUrl + 'journals?id=$journalId&plantId=$plantId');
   var request = http.MultipartRequest('PUT', url);
+  request.headers['user-agent'] = 'Dart/3.4 (dart:io)';
+  request.headers['accept-encoding'] = 'gzip';
+  request.headers['content-type'] =
+      'multipart/form-data; boundary=dart-http-boundary-0mQ9TnOjRDhESqXu9gbeagMUphbJ+xU5vQZIEG7OrM-+OHq2x95';
+
   request.fields['id'] = journalData['id'];
   request.fields['title'] = journalData['title'];
   request.fields['entry'] = journalData['entry'];
   request.fields['category'] = journalData['category'];
   request.fields['plant_id'] = journalData['plant_id'];
-  request.fields['display_in_garden'] = journalData['display_in_garden'].toString();
+  request.fields['display_in_garden'] =
+      journalData['display_in_garden'].toString();
 
+print('***filePath in journal api***');
+  print(filePath);
   if (filePath != null && filePath.isNotEmpty) {
-    request.files
-	.add(await http.MultipartFile.fromPath('_imagePath', filePath));
+    try {
+      final file = File(filePath);
+      if (await file.exists()) {
+        request.files.add(await http.MultipartFile.fromPath('_imagePath', filePath));
+      } else {
+        print('File does not exist at the specified path: $filePath');
+      }
+    } catch (e) {
+      print('Error checking file existence: $e');
+    }
   }
+
+  print('***request in journal api***');
+  print(request);
   try {
     var streamedResponse = await request.send();
-
+    final responseBody = await streamedResponse.stream.bytesToString();
+    print('Response Body: $responseBody');
     if (streamedResponse.statusCode == 200) {
       print('Journal updated successfully');
     } else {
       print(
-	  'Failed to update journal: Status code ${streamedResponse.statusCode}');
+          'Failed to update journal: Status code ${streamedResponse.statusCode}');
       streamedResponse.stream.transform(utf8.decoder).listen((value) {
-	print(value);
+        print(value);
       });
+      final responseBody = await streamedResponse.stream.bytesToString();
+      print('Response Body: $responseBody');
+
       throw Exception('Failed to update journal');
     }
   } catch (e) {
     print('Exception caught: $e');
   }
+  print('End of updateJournalApi');
 }
 
 Future<void> deleteJournalApi(var journalId) async {
