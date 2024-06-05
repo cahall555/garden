@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'view/garden_list.dart';
 import 'view/auth_landing.dart';
 import 'view/user_create.dart';
 import 'components/garden_bottom_nav.dart';
 import 'view/journal_list.dart';
 import 'view/tags_list.dart';
+import 'view/plant_detail.dart';
+import 'view/tag_detail.dart';
+import 'model/plant.dart';
+import 'model/tag.dart';
+import 'model/apis/garden_api.dart';
 import 'package:provider/provider.dart';
 import 'provider/garden_provider.dart';
 import 'provider/plant_provider.dart';
@@ -26,19 +32,23 @@ void main() async {
   } catch (e) {
     print('Failed to load .env file: $e');
   }
+
+    final client = http.Client();
+    final gardenApiService = GardenApiService(client);
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => GardenProvider()),
+        ChangeNotifierProvider(create: (context) => GardenProvider(gardenApiService)),
         ChangeNotifierProvider(create: (context) => PlantProvider()),
         ChangeNotifierProvider(create: (context) => WsProvider()),
         ChangeNotifierProvider(create: (context) => JournalProvider()),
         ChangeNotifierProvider(create: (context) => TagProvider()),
         ChangeNotifierProvider(create: (context) => PlantsTagProvider()),
-	ChangeNotifierProvider(create: (context) => UserProvider()),
-	ChangeNotifierProvider(create: (context) => AuthProvider()),
-	ChangeNotifierProvider(create: (context) => AccountProvider()),
-	ChangeNotifierProvider(create: (context) => UsersAccountsProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => AccountProvider()),
+        ChangeNotifierProvider(create: (context) => UsersAccountsProvider()),
       ],
       child: MyApp(),
     ),
@@ -49,12 +59,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ],
-        child: HomeScreen(),
-      ),
+      title: 'Garden Journal',
+      home: HomeScreen(),
+      routes: {
+        '/plantDetail': (context) {
+          final Plant plant =
+              ModalRoute.of(context)!.settings.arguments as Plant;
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (_) => TagProvider()),
+              // Add any other providers specific to this route if needed
+            ],
+            child: PlantDetail(plant: plant),
+          );
+        },
+        '/tagDetail': (context) => TagDetail(
+              tag: ModalRoute.of(context)!.settings.arguments as Tag,
+            ),
+      },
+      //home: MultiProvider(
+      // providers: [
+      //  ChangeNotifierProvider(create: (context) => AuthProvider()),
+      // ],
+      //child: HomeScreen(),
+      //),
     );
   }
 }
@@ -67,68 +95,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-//    final authProvider = Provider.of<AuthProvider>(context);
+    // final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
-      body: LandingPage()//authProvider.isLoggedIn ? AuthLanding() : UserCreate(),
+      body:
+          LandingPage(), //authProvider.isLoggedIn ? LandingPage() : UserCreate(),
     );
   }
 }
-
-
-
-//class MyApp extends StatelessWidget {
-//  const MyApp({super.key});
-
-//  @override
-//  Widget build(BuildContext context) {
-//    return MaterialApp(
-//      title: 'Garden Journal',
-//      theme: ThemeData(
-//        textTheme: GoogleFonts.tavirajTextTheme(),
-//        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-//        useMaterial3: true,
-//      ),
-//      home: AuthLanding()//const MyHomePage(title: 'Garden Journal'),
-//    );
-//    Image.asset('assets/herb_garden.webp');
-//  }
-//}
-
-//class MyHomePage extends StatefulWidget {
-//  const MyHomePage({super.key, required this.title});
-//  final String title;
-
-//  @override
-//  State<MyHomePage> createState() => _MyHomePageState();
-//}
-
-//class _MyHomePageState extends State<MyHomePage> {
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//      appBar: AppBar(
-//        backgroundColor: Colors.transparent,
-//        title: Text(
-//          widget.title,
-//          style: GoogleFonts.homemadeApple(
-//            textStyle: TextStyle(
-//              fontWeight: FontWeight.bold,
-//              color: Colors.green[800],
-//            ),
-//          ),
-//        ),
-//      ),
-//      body: Container(
-//        decoration: const BoxDecoration(
-//          image: DecorationImage(
-//            image: AssetImage(
-//                'assets/herb_garden.webp'), //Image.asset('assets/' + ('herb_garden.webp')),
-//            fit: BoxFit.cover,
-//          ),
-//        ),
-//      ),
-//      bottomNavigationBar: BottomNavigation(),
-//    );
-//  }
-//}

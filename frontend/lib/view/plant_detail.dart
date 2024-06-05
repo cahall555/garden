@@ -195,7 +195,7 @@ class PlantDetail extends StatelessWidget {
                           effect: WormEffect(
                             dotWidth: 10.0,
                             dotHeight: 10.0,
-                            activeDotColor: Color(0xFF344E41),
+                           activeDotColor: Color(0xFF344E41),
                             dotColor: Color(0xFFFED16A),
                           ),
                         ),
@@ -399,21 +399,21 @@ class PlantDetail extends StatelessWidget {
                   child: Text('Delete Plant'),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              JournalCreate(plant: this.plant)),
-                    );
+//              Padding(
+//                padding: const EdgeInsets.symmetric(vertical: 8.0),
+//                child: ElevatedButton(
+//                  onPressed: () {
+//                    Navigator.push(
+//                      context,
+//                      MaterialPageRoute(
+//                          builder: (context) =>
+//                              JournalCreate(plant: this.plant)),
+//                    );
                     // Navigator.of(context).pop();
-                  },
-                  child: Text('Add Journal'),
-                ),
-              ),
+//                  },
+//                  child: Text('Add Journal'),
+//                ),
+//              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(

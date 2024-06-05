@@ -13,7 +13,6 @@ Future<List<Account>> fetchAccountApi(String id) async {
 
   if (response.statusCode == 404) {
     return [];
-    // If account id does not have a water schedule, 404 will be thrown
     throw CustomHttpException('404 Not Found', uri: response.request!.url);
   } else if (response.statusCode != 200) {
     throw HttpException('Failed to load account', uri: uri);
