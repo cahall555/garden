@@ -4,10 +4,12 @@ import '../model/apis/user_api.dart';
 
 class UserProvider with ChangeNotifier {
   User? newUser;
+  final userApiService;
+  UserProvider(this.userApiService);
 
   Future<User> createUser(Map<String, dynamic> user) async {
     try {
-      newUser = await createUserApi(user);
+      newUser = await userApiService.createUserApi(user);
       notifyListeners();
       print('provider user: $newUser');
       return newUser!;
