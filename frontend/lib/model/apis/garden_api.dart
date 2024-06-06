@@ -45,7 +45,7 @@ class GardenApiService {
     //print('Using CSRF Token: ${csrfTokenProvider.csrfToken}');
     try {
       final response =
-          await http.post(url, headers: headers, body: json.encode(gardenData));
+          await client.post(url, headers: headers, body: json.encode(gardenData));
 
       if (response.statusCode == 201) {
         print('Garden created successfully');
@@ -65,12 +65,13 @@ class GardenApiService {
     final headers = {"Content-Type": "application/json"};
 
     final response =
-        await http.put(url, headers: headers, body: jsonEncode(gardenData));
+        await client.put(url, headers: headers, body: jsonEncode(gardenData));
 
     if (response.statusCode == 200) {
       try {
-        final Map<String, dynamic> data = json.decode(response.body);
-        return [Garden.fromJson(data)];
+       final List<dynamic> data = json.decode(response.body);
+
+        return data.map<Garden>((json) => Garden.fromJson(json)).toList();
       } on FormatException catch (e) {
         print('The response was not JSON. $e');
 
@@ -87,7 +88,7 @@ class GardenApiService {
     final url = Uri.parse(apiUrl + 'gardens/$gardenId?id=$gardenId');
     final headers = {"Content-Type": "application/json"};
 
-    final response = await http.delete(url, headers: headers);
+    final response = await client.delete(url, headers: headers);
 
     if (response.statusCode == 200) {
       print('Garden deleted successfully');

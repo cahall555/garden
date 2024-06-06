@@ -12,6 +12,7 @@ import 'view/tag_detail.dart';
 import 'model/plant.dart';
 import 'model/tag.dart';
 import 'model/apis/garden_api.dart';
+import 'model/apis/account_api.dart';
 import 'package:provider/provider.dart';
 import 'provider/garden_provider.dart';
 import 'provider/plant_provider.dart';
@@ -35,6 +36,7 @@ void main() async {
 
     final client = http.Client();
     final gardenApiService = GardenApiService(client);
+    final accountApiService = AccountApiService(client);
 
   runApp(
     MultiProvider(
@@ -47,7 +49,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => PlantsTagProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ChangeNotifierProvider(create: (context) => AccountProvider()),
+        ChangeNotifierProvider(create: (context) => AccountProvider(accountApiService)),
         ChangeNotifierProvider(create: (context) => UsersAccountsProvider()),
       ],
       child: MyApp(),
