@@ -5,10 +5,12 @@ import '../model/apis/plant_api.dart';
 class PlantProvider with ChangeNotifier {
   List<Plant> plants = [];
   Plant? prevPlant;
+  final plantApiService;
+  PlantProvider(this.plantApiService);
 
   Future<List<Plant>> fetchPlants(var gardenId) async {
     try {
-      plants = await fetchPlantsApi(gardenId);
+      plants = await plantApiService.fetchPlantsApi(gardenId);
       notifyListeners();
       return plants;
     } catch (e) {
@@ -18,18 +20,18 @@ class PlantProvider with ChangeNotifier {
   }
 
   Future<void> createPlant(Map<String, dynamic> plant, var gardenId) async {
-    createPlantApi(plant, gardenId);
+    plantApiService.createPlantApi(plant, gardenId);
     notifyListeners();
   }
 
 
   Future<void> updatePlant(Map<String, dynamic> plant) async {
-    updatePlantApi(plant);
+    plantApiService.updatePlantApi(plant);
     notifyListeners();
   }
 
   Future<void> deletePlant(var plantId) async {
-    deletePlantApi(plantId);
+    plantApiService.deletePlantApi(plantId);
     notifyListeners();
   }
 }
