@@ -400,21 +400,21 @@ class PlantDetail extends StatelessWidget {
                   child: Text('Delete Plant'),
                 ),
               ),
-//              Padding(
-//                padding: const EdgeInsets.symmetric(vertical: 8.0),
-//                child: ElevatedButton(
-//                  onPressed: () {
-//                    Navigator.push(
-//                      context,
-//                      MaterialPageRoute(
-//                          builder: (context) =>
-//                              JournalCreate(plant: this.plant)),
-//                    );
-                    // Navigator.of(context).pop();
-//                  },
-//                  child: Text('Add Journal'),
-//                ),
-//              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              JournalCreate(plant: this.plant)),
+                    );
+                  // Navigator.of(context).pop();
+                  },
+                  child: Text('Add Journal'),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(
