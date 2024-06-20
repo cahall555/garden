@@ -21,6 +21,7 @@ import 'model/apis/plant_api.dart';
 import 'model/apis/ws_api.dart';
 import 'model/apis/journal_api.dart';
 import 'model/apis/tag_api.dart';
+import 'model/apis/plants_tag_api.dart';
 import 'package:provider/provider.dart';
 import 'provider/garden_provider.dart';
 import 'provider/plant_provider.dart';
@@ -52,6 +53,7 @@ void main() async {
   final wsApiService = WsApiService(client);
   final journalApiService = JournalApiService(client);
   final tagApiService = TagApiService(client);
+  final plantsTagApiService = PlantsTagApiService(client);
 
   runApp(
     MultiProvider(
@@ -64,7 +66,7 @@ void main() async {
         ChangeNotifierProvider(
             create: (context) => JournalProvider(journalApiService)),
         ChangeNotifierProvider(create: (context) => TagProvider(tagApiService)),
-        ChangeNotifierProvider(create: (context) => PlantsTagProvider()),
+        ChangeNotifierProvider(create: (context) => PlantsTagProvider(plantsTagApiService)),
         ChangeNotifierProvider(
             create: (context) => UserProvider(userApiService)),
         ChangeNotifierProvider(

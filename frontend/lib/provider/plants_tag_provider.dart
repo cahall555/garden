@@ -5,10 +5,12 @@ import '../model/apis/plants_tag_api.dart';
 class PlantsTagProvider with ChangeNotifier {
   List<PlantTags> pt = [];
   //Tag? prevTag;
+  final plantsTagApiService;
+  PlantsTagProvider(this.plantsTagApiService);
 
   Future<List<PlantTags>> fetchPlantsTag(var plantId) async {
     try {
-      pt = await fetchPlantsTagApi(plantId);
+      pt = await plantsTagApiService.fetchPlantsTagApi(plantId);
       notifyListeners();
       return pt;
     } catch (e) {
@@ -18,7 +20,7 @@ class PlantsTagProvider with ChangeNotifier {
   }
   Future<void> createPlantsTag(Map<String, dynamic> plantTag) async {
     try {
-      await createPlantsTagApi(plantTag);
+      await plantsTagApiService.createPlantsTagApi(plantTag);
       notifyListeners();
     } catch (e) {
       print(e);
