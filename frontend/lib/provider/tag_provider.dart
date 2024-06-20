@@ -9,10 +9,12 @@ import 'plants_tag_provider.dart';
 class TagProvider with ChangeNotifier {
   List<Tag> tags = [];
   Tag? newTag;
+  final tagApiService;
+  TagProvider(this.tagApiService);
 
   Future<List<Tag>> fetchTags(var accountId) async {
     try {
-      tags = await fetchTagsApi(accountId);
+      tags = await tagApiService.fetchTagsApi(accountId);
       notifyListeners();
       return tags;
     } catch (e) {
@@ -23,7 +25,7 @@ class TagProvider with ChangeNotifier {
 
   Future<List<Tag>> fetchTag(var tagId) async {
     try {
-      tags = await fetchTagApi(tagId);
+      tags = await tagApiService.fetchTagApi(tagId);
       notifyListeners();
       return tags;
     } catch (e) {
@@ -34,7 +36,7 @@ class TagProvider with ChangeNotifier {
 
   Future<Tag?> fetchTagByName(String name, var accountId) async {
     try {
-      List<Tag> tags = await fetchTagByNameApi(name, accountId);
+      List<Tag> tags = await tagApiService.fetchTagByNameApi(name, accountId);
       if (tags.isNotEmpty) {
         return tags[0];
       } else {
@@ -48,7 +50,7 @@ class TagProvider with ChangeNotifier {
 
   Future<Tag> createTag(Map<String, dynamic> tag) async {
     try {
-      newTag = await createTagApi(tag);
+      newTag = await tagApiService.createTagApi(tag);
       notifyListeners();
       return newTag!;
     } catch (e) {
@@ -59,7 +61,7 @@ class TagProvider with ChangeNotifier {
 
   Future<void> updateTag(Map<String, dynamic> tagData, var tagId) async {
     try {
-      await updateTagApi(tagData, tagId);
+      await tagApiService.updateTagApi(tagData, tagId);
       notifyListeners();
     } catch (e) {
       print(e);
@@ -69,7 +71,7 @@ class TagProvider with ChangeNotifier {
 
   Future<void> deleteTag(var tagId) async {
     try {
-      await deleteTagApi(tagId);
+      await tagApiService.deleteTagApi(tagId);
       notifyListeners();
     } catch (e) {
       print(e);

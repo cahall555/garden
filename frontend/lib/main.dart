@@ -20,6 +20,7 @@ import 'model/apis/auth_api.dart';
 import 'model/apis/plant_api.dart';
 import 'model/apis/ws_api.dart';
 import 'model/apis/journal_api.dart';
+import 'model/apis/tag_api.dart';
 import 'package:provider/provider.dart';
 import 'provider/garden_provider.dart';
 import 'provider/plant_provider.dart';
@@ -41,36 +42,47 @@ void main() async {
     print('Failed to load .env file: $e');
   }
 
-    final client = http.Client();
-    final gardenApiService = GardenApiService(client);
-    final accountApiService = AccountApiService(client);
-    final userApiService = UserApiService(client);
-    final usersAccountApiService = UsersAccountApiService(client);
-    final authApiService = AuthApiService(client);
-    final plantApiService = PlantApiService(client);
-    final wsApiService = WsApiService(client);
-    final journalApiService = JournalApiService(client);
+  final client = http.Client();
+  final gardenApiService = GardenApiService(client);
+  final accountApiService = AccountApiService(client);
+  final userApiService = UserApiService(client);
+  final usersAccountApiService = UsersAccountApiService(client);
+  final authApiService = AuthApiService(client);
+  final plantApiService = PlantApiService(client);
+  final wsApiService = WsApiService(client);
+  final journalApiService = JournalApiService(client);
+  final tagApiService = TagApiService(client);
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => GardenProvider(gardenApiService)),
-        ChangeNotifierProvider(create: (context) => PlantProvider(plantApiService)),
+        ChangeNotifierProvider(
+            create: (context) => GardenProvider(gardenApiService)),
+        ChangeNotifierProvider(
+            create: (context) => PlantProvider(plantApiService)),
         ChangeNotifierProvider(create: (context) => WsProvider(wsApiService)),
-        ChangeNotifierProvider(create: (context) => JournalProvider(journalApiService)),
-        ChangeNotifierProvider(create: (context) => TagProvider()),
+        ChangeNotifierProvider(
+            create: (context) => JournalProvider(journalApiService)),
+        ChangeNotifierProvider(create: (context) => TagProvider(tagApiService)),
         ChangeNotifierProvider(create: (context) => PlantsTagProvider()),
-        ChangeNotifierProvider(create: (context) => UserProvider(userApiService)),
-        ChangeNotifierProvider(create: (context) => AuthProvider(authApiService: authApiService)),
-        ChangeNotifierProvider(create: (context) => AccountProvider(accountApiService)),
-        ChangeNotifierProvider(create: (context) => UsersAccountsProvider(usersAccountApiService)),
+        ChangeNotifierProvider(
+            create: (context) => UserProvider(userApiService)),
+        ChangeNotifierProvider(
+            create: (context) => AuthProvider(authApiService: authApiService)),
+        ChangeNotifierProvider(
+            create: (context) => AccountProvider(accountApiService)),
+        ChangeNotifierProvider(
+            create: (context) => UsersAccountsProvider(usersAccountApiService)),
       ],
-      child: MyApp(),
+      child: MyApp(tagApiService: tagApiService),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  final TagApiService tagApiService;
+
+  MyApp({required this.tagApiService});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -82,7 +94,7 @@ class MyApp extends StatelessWidget {
               ModalRoute.of(context)!.settings.arguments as Plant;
           return MultiProvider(
             providers: [
-              ChangeNotifierProvider(create: (_) => TagProvider()),
+              ChangeNotifierProvider(create: (_) => TagProvider(tagApiService)),
               // Add any other providers specific to this route if needed
             ],
             child: PlantDetail(plant: plant),
