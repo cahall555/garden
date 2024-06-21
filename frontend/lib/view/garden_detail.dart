@@ -4,7 +4,6 @@ import '../model/apis/garden_api.dart';
 import '../model/plant.dart';
 import '../model/users_account.dart';
 import '../model/apis/plant_api.dart';
-//import '../components/garden_detail_nav.dart';
 import '../components/plant_card.dart';
 import 'plant_detail.dart';
 import 'plant_create.dart';

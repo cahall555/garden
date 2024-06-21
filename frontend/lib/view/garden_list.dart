@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-//import '../components/garden_bottom_nav.dart';
 import 'auth_landing.dart';
 import 'tags_list.dart';
 import '../components/garden_card.dart';
