@@ -118,6 +118,7 @@ class GardenDetail extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(
+                  key: Key('updateGardenButton'),
                   onPressed: () {
                     // Navigate to update garden page
                     Navigator.push(
@@ -134,6 +135,7 @@ class GardenDetail extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(
+                  key: Key('deleteGardenButton'),
                   onPressed: () {
                     Provider.of<GardenProvider>(context, listen: false)
                         .deleteGarden(garden.id);
@@ -145,6 +147,7 @@ class GardenDetail extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(
+                  key: Key('addPlantButton'),
                   onPressed: () {
                     Navigator.push(
                       context,

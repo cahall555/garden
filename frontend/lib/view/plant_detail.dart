@@ -125,7 +125,9 @@ class PlantDetail extends StatelessWidget {
                     return CircularProgressIndicator();
                   } else if (snapshot.hasError) {
                     return Text("Error: ${snapshot.error}");
-                  } else if (snapshot.hasData) {
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Text("No journals found");
+                  } else {
                     PageController pageController =
                         PageController(viewportFraction: 0.85);
 
@@ -196,14 +198,12 @@ class PlantDetail extends StatelessWidget {
                           effect: WormEffect(
                             dotWidth: 10.0,
                             dotHeight: 10.0,
-                           activeDotColor: Color(0xFF344E41),
+                            activeDotColor: Color(0xFF344E41),
                             dotColor: Color(0xFFFED16A),
                           ),
                         ),
                       ],
                     );
-                  } else {
-                    return Text("No journals found");
                   }
                 },
               ),
@@ -410,7 +410,7 @@ class PlantDetail extends StatelessWidget {
                           builder: (context) =>
                               JournalCreate(plant: this.plant)),
                     );
-                  // Navigator.of(context).pop();
+                    // Navigator.of(context).pop();
                   },
                   child: Text('Add Journal'),
                 ),
@@ -429,21 +429,20 @@ class PlantDetail extends StatelessWidget {
                   child: Text('Add Tag'),
                 ),
               ),
-		Padding(
+              Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(
                   onPressed: () {
                     //Navigator.push(
-                      //context,
-                     // MaterialPageRoute(
-                          //builder: (context) => GardenDetail(gardenId: plant.garden_id)),
+                    //context,
+                    // MaterialPageRoute(
+                    //builder: (context) => GardenDetail(gardenId: plant.garden_id)),
                     //);
                     // Navigator.of(context).pop();
                   },
                   child: Text('Garden Detail'),
                 ),
               ),
-
             ],
           ),
         ),

@@ -97,7 +97,6 @@ class MyApp extends StatelessWidget {
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => TagProvider(tagApiService)),
-              // Add any other providers specific to this route if needed
             ],
             child: PlantDetail(plant: plant),
           );
@@ -106,12 +105,6 @@ class MyApp extends StatelessWidget {
               tag: ModalRoute.of(context)!.settings.arguments as Tag,
             ),
       },
-      //home: MultiProvider(
-      // providers: [
-      //  ChangeNotifierProvider(create: (context) => AuthProvider()),
-      // ],
-      //child: HomeScreen(),
-      //),
     );
   }
 }
@@ -124,11 +117,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    // final authProvider = Provider.of<AuthProvider>(context);
-
     return Scaffold(
       body:
-          LandingPage(), //authProvider.isLoggedIn ? LandingPage() : UserCreate(),
+          LandingPage(), 
     );
   }
 }
