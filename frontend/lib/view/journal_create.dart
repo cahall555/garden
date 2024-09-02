@@ -106,6 +106,7 @@ class _JournalCreateState extends State<JournalCreate> {
             ),
             const SizedBox(height: 20.0),
             DropdownButtonFormField<String>(
+		    key: Key('categoryDropdown'),
               style: TextStyle(color: Color(0xFF8E505F), fontFamily: 'Taviraj'),
               decoration: InputDecoration(
                 labelText: "Category",
@@ -158,6 +159,7 @@ class _JournalCreateState extends State<JournalCreate> {
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
+              key: Key('submitJournalButton'),
               style: ButtonStyle(
                 elevation: MaterialStateProperty.all<double>(12.0),
                 backgroundColor:
