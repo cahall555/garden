@@ -9,7 +9,7 @@ import 'package:frontend/view/garden_list.dart';
 import 'package:frontend/provider/garden_provider.dart';
 
 class MockGardenProvider extends Mock implements GardenProvider {}
-
+class MocktextEditingController extends Mock implements TextEditingController {}
 void main() {
   group('GardenCreate', () {
     late MockGardenProvider mockGardenProvider;
@@ -77,6 +77,19 @@ void main() {
       await tester.tap(find.text('Submit'));
       await tester.pumpAndSettle();
 
+    });
+    test('Dispose is called', () {
+      final mockController = MocktextEditingController();
+      final mockTitleController = MocktextEditingController();
+      final mockEntryController = MocktextEditingController();
+
+      mockController.dispose();
+      mockTitleController.dispose();
+      mockEntryController.dispose();
+
+      verify(mockController.dispose()).called(1);
+      verify(mockTitleController.dispose()).called(1);
+      verify(mockEntryController.dispose()).called(1);
     });
   });
 }

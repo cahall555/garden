@@ -31,13 +31,13 @@
             <td class="headerValue">lcov.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">14</td>
             <td class="headerCovTableEntry">22</td>
-            <td class="headerCovTableEntryLo">63.6 %</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2024-08-31 19:53:29</td>
+            <td class="headerValue">2024-09-18 06:53:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -69,7 +69,7 @@
 <a name="7"><span class="lineNum">       7 </span>            : </a>
 <a name="8"><span class="lineNum">       8 </span>            : class AuthApiService {</a>
 <a name="9"><span class="lineNum">       9 </span>            :   final http.Client client;</a>
-<a name="10"><span class="lineNum">      10 </span><span class="lineCov">          1 :   AuthApiService(this.client);</span></a>
+<a name="10"><span class="lineNum">      10 </span><span class="lineCov">          2 :   AuthApiService(this.client);</span></a>
 <a name="11"><span class="lineNum">      11 </span>            : </a>
 <a name="12"><span class="lineNum">      12 </span><span class="lineCov">          1 :   Future&lt;User&gt; createAuthApi(Map&lt;String, dynamic&gt; userData) async {</span></a>
 <a name="13"><span class="lineNum">      13 </span><span class="lineCov">          3 :     final url = Uri.parse(apiUrl + 'auth');</span></a>
@@ -82,12 +82,12 @@
 <a name="20"><span class="lineNum">      20 </span><span class="lineCov">          3 :       if (response.statusCode == 200 &amp;&amp; response.body != null) {</span></a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineCov">          3 :         return User.fromJson(json.decode(response.body));</span></a>
 <a name="22"><span class="lineNum">      22 </span>            :       } else {</a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 :         print('Failed to login: ${response.body}');</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 :         throw Exception('Failed to create user');</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">          3 :         print('Failed to login: ${response.body}');</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">          1 :         throw Exception('Failed to create user');</span></a>
 <a name="25"><span class="lineNum">      25 </span>            :       }</a>
 <a name="26"><span class="lineNum">      26 </span>            :     } catch (e) {</a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :       print('Error creating user: $e');</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :       throw Exception('Error creating user: $e');</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">          2 :       print('Error creating user: $e');</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">          2 :       throw Exception('Error creating user: $e');</span></a>
 <a name="29"><span class="lineNum">      29 </span>            :     }</a>
 <a name="30"><span class="lineNum">      30 </span>            :   }</a>
 <a name="31"><span class="lineNum">      31 </span>            : </a>
@@ -100,12 +100,12 @@
 <a name="38"><span class="lineNum">      38 </span><span class="lineCov">          2 :       if (response.statusCode == 200) {</span></a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineCov">          1 :         print('Logout successful');</span></a>
 <a name="40"><span class="lineNum">      40 </span>            :       } else {</a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :         print('Failed to logout: ${response.body}');</span></a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :         throw Exception('Failed to logout');</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">          3 :         print('Failed to logout: ${response.body}');</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">          1 :         throw Exception('Failed to logout');</span></a>
 <a name="43"><span class="lineNum">      43 </span>            :       }</a>
 <a name="44"><span class="lineNum">      44 </span>            :     } catch (e) {</a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 :       print(e.toString());</span></a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineNoCov">          0 :       throw Exception('Error logging out: ${e.toString()}');</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          2 :       print(e.toString());</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">          3 :       throw Exception('Error logging out: ${e.toString()}');</span></a>
 <a name="47"><span class="lineNum">      47 </span>            :     }</a>
 <a name="48"><span class="lineNum">      48 </span>            :   }</a>
 <a name="49"><span class="lineNum">      49 </span>            : }</a>

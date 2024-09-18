@@ -207,6 +207,7 @@ class _JournalUpdateState extends State<JournalUpdate> {
                   constraints: BoxConstraints(minWidth: 108.0, minHeight: 45.0),
                   alignment: Alignment.center,
                   child: const Text('Submit',
+			  key: Key('updateJournalButton'),
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 15.0,

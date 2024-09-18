@@ -105,7 +105,6 @@ class _GardenListState extends State<GardenList> {
 			key: Key('tagsButton'),
 			heroTag: 'list_tags',
                   onPressed: () {
-                    Provider.of<AuthProvider>(context, listen: false).logout();
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) =>

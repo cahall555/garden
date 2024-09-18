@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2024-08-31 19:53:29</td>
+            <td class="headerValue">2024-09-18 06:53:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -67,12 +67,12 @@
 <a name="5"><span class="lineNum">       5 </span>            : class AccountProvider with ChangeNotifier {</a>
 <a name="6"><span class="lineNum">       6 </span>            :   Account? newAccount;</a>
 <a name="7"><span class="lineNum">       7 </span>            :   final accountApiService;</a>
-<a name="8"><span class="lineNum">       8 </span><span class="lineCov">          1 :   AccountProvider(this.accountApiService);</span></a>
+<a name="8"><span class="lineNum">       8 </span><span class="lineCov">          2 :   AccountProvider(this.accountApiService);</span></a>
 <a name="9"><span class="lineNum">       9 </span>            : </a>
-<a name="10"><span class="lineNum">      10 </span><span class="lineCov">          1 :   Future&lt;Account&gt; createAccount(</span></a>
+<a name="10"><span class="lineNum">      10 </span><span class="lineCov">          2 :   Future&lt;Account&gt; createAccount(</span></a>
 <a name="11"><span class="lineNum">      11 </span>            :     Map&lt;String, dynamic&gt; account,</a>
 <a name="12"><span class="lineNum">      12 </span>            :   ) async {</a>
-<a name="13"><span class="lineNum">      13 </span><span class="lineCov">          3 :     newAccount = await accountApiService.createAccountApi(account);</span></a>
+<a name="13"><span class="lineNum">      13 </span><span class="lineCov">          5 :     newAccount = await accountApiService.createAccountApi(account);</span></a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineCov">          1 :     notifyListeners();</span></a>
 <a name="15"><span class="lineNum">      15 </span><span class="lineCov">          3 :     print('provider account: $newAccount');</span></a>
 <a name="16"><span class="lineNum">      16 </span><span class="lineCov">          1 :     return newAccount!;</span></a>

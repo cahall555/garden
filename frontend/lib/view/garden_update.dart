@@ -151,5 +151,12 @@ class _GardenUpdateState extends State<GardenUpdate> {
         SnackBar(content: Text('Error updating garden: $e')),
       );
     }
+
+    @override
+    void dispose() {
+      _nameController.dispose();
+      _descriptionController.dispose();
+      super.dispose();
+    }
   }
 }
