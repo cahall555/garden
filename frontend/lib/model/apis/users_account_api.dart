@@ -17,9 +17,9 @@ class UsersAccountApiService {
 
     if (response.statusCode == 404) {
       // If tags not found for plant id, 404 will be thrown
-      throw CustomHttpException('404 Not Found', uri: response.request!.url);
+      throw Exception('404 account not found');
     } else if (response.statusCode != 200) {
-      throw HttpException('Failed to load user accounts', uri: uri);
+      throw Exception('Failed to load user accounts');
     }
 
     if (response.statusCode == 200) {
@@ -35,6 +35,7 @@ class UsersAccountApiService {
         throw Exception('Failed to decode JSON data: $e');
       }
     } else {
+      //Investigate if this code is reachable
       print('Request failed with status: ${response.statusCode}.');
 
       throw Exception('Request failed with status: ${response.statusCode}.');
@@ -46,9 +47,9 @@ class UsersAccountApiService {
     final response = await client.get(uri).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 404) {
-      throw CustomHttpException('404 Not Found', uri: response.request!.url);
+      throw Exception('404 user account not found');
     } else if (response.statusCode != 200) {
-      throw HttpException('Failed to load user account', uri: uri);
+      throw Exception('Failed to load user account');
     }
 
     if (response.statusCode == 200) {
@@ -62,6 +63,7 @@ class UsersAccountApiService {
         throw Exception('Failed to decode JSON data: $e');
       }
     } else {
+      //Investigate if this code is reachable
       print('Request failed with status: ${response.statusCode}.');
 
       throw Exception('Request failed with status: ${response.statusCode}.');

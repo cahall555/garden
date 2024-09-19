@@ -32,7 +32,7 @@ class PlantsTagApiService {
 
         throw Exception('Failed to decode JSON data: $e');
       }
-    } else {
+    } else { //explore if this code is reachable
       print('Request failed with status: ${response.statusCode}.');
 
       throw Exception('Request failed with status: ${response.statusCode}.');

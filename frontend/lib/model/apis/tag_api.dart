@@ -22,7 +22,7 @@ class TagApiService {
             .map<Tag>((json) => Tag.fromJson(Map<String, dynamic>.from(json)))
             .toList();
       } else {
-        throw Exception('Unexpected JSON format: ${response.body}');
+        throw FormatException('Unexpected JSON format: ${response.body}');
       }
     } else {
       throw Exception('Request failed with status: ${response.statusCode}.');

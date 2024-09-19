@@ -111,9 +111,11 @@ class JournalApiService {
               .add(await http.MultipartFile.fromPath('_imagePath', filePath));
         } else {
           print('File does not exist at the specified path: $filePath');
+	  throw Exception('File does not exist at the specified path: $filePath');
         }
       } catch (e) {
         print('Error checking file existence: $e');
+	throw Exception('Error checking file existence: $e');
       }
     }
 

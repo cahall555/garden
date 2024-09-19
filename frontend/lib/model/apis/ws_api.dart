@@ -16,11 +16,11 @@ class WsApiService {
     final response = await client.get(uri).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 404) {
-      return [];
+     // return [];
       // If plant id does not have a water schedule, 404 will be thrown
-      throw CustomHttpException('404 Not Found', uri: response.request!.url);
+	throw Exception('404 Not Found');
     } else if (response.statusCode != 200) {
-      throw HttpException('Failed to load water schedule', uri: uri);
+	throw Exception('Failed to load water schedule');
     }
 
     final data = jsonDecode(response.body);
@@ -32,7 +32,7 @@ class WsApiService {
           .map<WaterSchedule>(
               (json) => WaterSchedule.fromJson(Map<String, dynamic>.from(json)))
           .toList();
-    } else {
+    } else {//Investigate if this code is reachable
       throw Exception('Expected a list or a map but got ${data.runtimeType}');
     }
   }
@@ -53,6 +53,7 @@ class WsApiService {
       }
     } catch (e) {
       print(e.toString());
+      throw e;
     }
   }
 

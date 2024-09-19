@@ -47,13 +47,27 @@ void main() async {
       await plantsTagApiService.fetchPlantsTagApi(plantId);
       verify(mockClient.get(uri));
     });
-
-    test('should throw an exception when status code is not 200', () async {
-      when(mockClient.get(uri))
-          .thenAnswer((_) async => http.Response('404 Not Found', 404));
+    test('should throw an exception when json is not returned', () async {
+      when(mockClient.get(uri, headers: anyNamed('headers')))
+          .thenAnswer((_) async => http.Response('Not Json', 200));
       expect(() => plantsTagApiService.fetchPlantsTagApi(plantId),
           throwsException);
-      verify(mockClient.get(uri));
+      verify(mockClient.get(uri, headers: anyNamed('headers')));
+    });
+    test('should throw an exception when status code is 404', () async {
+      when(mockClient.get(uri, headers: anyNamed('headers'))).thenAnswer(
+          (_) async => http.Response('Failed to load plant tags', 404));
+      expect(() => plantsTagApiService.fetchPlantsTagApi(plantId),
+          throwsException);
+      verify(mockClient.get(uri, headers: anyNamed('headers')));
+    });
+    test('should throw an exception when status code is not 200 or 404',
+        () async {
+      when(mockClient.get(uri, headers: anyNamed('headers'))).thenAnswer(
+          (_) async => http.Response('Failed to load plant tags', 500));
+      expect(() => plantsTagApiService.fetchPlantsTagApi(plantId),
+          throwsException);
+      verify(mockClient.get(uri, headers: anyNamed('headers')));
     });
   });
   group('createPlantsTagApi', () {
