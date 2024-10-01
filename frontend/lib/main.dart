@@ -94,6 +94,7 @@ class MyApp extends StatelessWidget {
         '/plantDetail': (context) {
           final Plant plant =
               ModalRoute.of(context)!.settings.arguments as Plant;
+	  heroTag: 'plantDetailHero-${plant.id}';
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => TagProvider(tagApiService)),
