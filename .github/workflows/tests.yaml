@@ -5,8 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.4
-    - name: "change directory"
-      run: cd frontend
+    - name: setup
+      working-directory: frontend
+      run: ls -la
     - uses: subosito/flutter-action@v1
       with:
         channel: 'stable'
