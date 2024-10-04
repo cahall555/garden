@@ -8,8 +8,6 @@ jobs:
     - name: setup
       working-directory: ./frontend
       run: ls -la
-    - name: copy .env file
-      run: cp /frontend/.env /frontend/.env 
     - uses: subosito/flutter-action@v1
       with:
         channel: 'stable'
