@@ -13,4 +13,4 @@ jobs:
         channel: 'stable'
     - name: run flutter tests
       working-directory: ./frontend
-      run: flutter test
+      run: flutter pub get && flutter test
