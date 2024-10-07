@@ -23,4 +23,4 @@ go.work
 .yarn/*
 tmp/*
 public/uploads/*
-frontend/assets/*
+frontend/assets/*.jpg
