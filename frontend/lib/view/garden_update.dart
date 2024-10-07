@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 class GardenUpdate extends StatefulWidget {
   final Garden garden;
   final UserAccounts userAccounts;
-  //final Function(Garden) onUpdateSuccess;
   const GardenUpdate(
       {Key? key, required this.garden, required this.userAccounts})
       : super(key: key);
@@ -21,7 +20,6 @@ class GardenUpdate extends StatefulWidget {
 class _GardenUpdateState extends State<GardenUpdate> {
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
-  //Future<Garden>? _futureGarden;
 
   @override
   void initState() {
@@ -152,6 +150,13 @@ class _GardenUpdateState extends State<GardenUpdate> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error updating garden: $e')),
       );
+    }
+
+    @override
+    void dispose() {
+      _nameController.dispose();
+      _descriptionController.dispose();
+      super.dispose();
     }
   }
 }

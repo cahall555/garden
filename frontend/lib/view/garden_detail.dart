@@ -4,7 +4,6 @@ import '../model/apis/garden_api.dart';
 import '../model/plant.dart';
 import '../model/users_account.dart';
 import '../model/apis/plant_api.dart';
-//import '../components/garden_detail_nav.dart';
 import '../components/plant_card.dart';
 import 'plant_detail.dart';
 import 'plant_create.dart';
@@ -119,6 +118,7 @@ class GardenDetail extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(
+                  key: Key('updateGardenButton'),
                   onPressed: () {
                     // Navigate to update garden page
                     Navigator.push(
@@ -135,6 +135,7 @@ class GardenDetail extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(
+                  key: Key('deleteGardenButton'),
                   onPressed: () {
                     Provider.of<GardenProvider>(context, listen: false)
                         .deleteGarden(garden.id);
@@ -146,6 +147,7 @@ class GardenDetail extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(
+                  key: Key('addPlantButton'),
                   onPressed: () {
                     Navigator.push(
                       context,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-//import '../components/garden_bottom_nav.dart';
 import 'auth_landing.dart';
 import 'tags_list.dart';
 import '../components/garden_card.dart';
@@ -40,9 +39,6 @@ class _GardenListState extends State<GardenList> {
     return Consumer<GardenProvider>(
       builder: (context, gardenProvider, child) {
         return Scaffold(
-          //appBar: AppBar(
-          //title: Text('Gardens', style: TextStyle(fontFamily: 'Taviraj')),
-          //),
           body: Stack(
             children: <Widget>[
               Image.asset(
@@ -89,6 +85,8 @@ class _GardenListState extends State<GardenList> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: FloatingActionButton(
+			key: Key('addGardenButton'),
+			heroTag: 'add_garden',
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -104,8 +102,9 @@ class _GardenListState extends State<GardenList> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: FloatingActionButton(
+			key: Key('tagsButton'),
+			heroTag: 'list_tags',
                   onPressed: () {
-                    Provider.of<AuthProvider>(context, listen: false).logout();
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) =>
@@ -121,6 +120,8 @@ class _GardenListState extends State<GardenList> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: FloatingActionButton(
+			key: Key('logoutButton'),
+			heroTag: 'logout',
                   onPressed: () {
                     Provider.of<AuthProvider>(context, listen: false).logout();
                     Navigator.of(context).push(

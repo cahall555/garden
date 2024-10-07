@@ -23,4 +23,6 @@ go.work
 .yarn/*
 tmp/*
 public/uploads/*
-frontend/assets/*
+frontend/assets/*.jpg
+#allow tomato.jpg to be uploaded for testing purposes
+!frontend/assets/tomato.jpg

@@ -4,19 +4,20 @@ import '../model/apis/account_api.dart';
 
 class AccountProvider with ChangeNotifier {
   Account? newAccount;
-
+  final accountApiService;
+  AccountProvider(this.accountApiService);
 
   Future<Account> createAccount(
     Map<String, dynamic> account,
   ) async {
-    newAccount = await createAccountApi(account);
+    newAccount = await accountApiService.createAccountApi(account);
     notifyListeners();
     print('provider account: $newAccount');
     return newAccount!;
   }
 
   Future<void> deleteAccount(var id) async {
-    await deleteAccountApi(id);
+    await accountApiService.deleteAccountApi(id);
     notifyListeners();
   }
 }

@@ -4,8 +4,8 @@ import '../model/apis/auth_api.dart';
 
 class AuthProvider with ChangeNotifier {
   User? authUser;
-
-  AuthProvider([this.authUser]);
+  final authApiService;
+  AuthProvider({this.authUser, required this.authApiService});
 
   String get email => authUser?.email ?? '';
 
@@ -14,7 +14,7 @@ class AuthProvider with ChangeNotifier {
   Future<User> createAuth(Map<String, dynamic> user) async {
     try {
       print('2) createAuth (provider): $user');
-      authUser = await createAuthApi(user);
+      authUser = await authApiService.createAuthApi(user);
       notifyListeners();
       return authUser!;
     } catch (e) {
@@ -25,12 +25,12 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> login(Map<String, dynamic> credentials) async {
     authUser = User.fromJson(credentials);
-    await createAuthApi(credentials);
+    await authApiService.createAuthApi(credentials);
     notifyListeners();
   }
 
   Future<void> logout() async {
-    await logoutApi();
+    await authApiService.logoutApi();
     notifyListeners();
   }
   

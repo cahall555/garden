@@ -64,6 +64,7 @@ class PlantDetail extends StatelessWidget {
     final Size screenSize = MediaQuery.of(context).size;
     final journalProvider =
         Provider.of<JournalProvider>(context, listen: false);
+    final wsProvider = Provider.of<WsProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(plant.name, style: TextStyle(fontFamily: 'Taviraj')),
@@ -124,7 +125,9 @@ class PlantDetail extends StatelessWidget {
                     return CircularProgressIndicator();
                   } else if (snapshot.hasError) {
                     return Text("Error: ${snapshot.error}");
-                  } else if (snapshot.hasData) {
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Text("No journals found");
+                  } else {
                     PageController pageController =
                         PageController(viewportFraction: 0.85);
 
@@ -201,13 +204,11 @@ class PlantDetail extends StatelessWidget {
                         ),
                       ],
                     );
-                  } else {
-                    return Text("No journals found");
                   }
                 },
               ),
               FutureBuilder<List<WaterSchedule>>(
-                future: fetchWaterSchedule(plant.id),
+                future: wsProvider.fetchWs(plant.id),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
@@ -367,7 +368,7 @@ class PlantDetail extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () async {
                     List<WaterSchedule> schedules =
-                        await fetchWaterSchedule(plant.id);
+                        await wsProvider.fetchWs(plant.id);
 
                     if (schedules.isNotEmpty) {
                       WaterSchedule ws = schedules.first;
@@ -428,21 +429,20 @@ class PlantDetail extends StatelessWidget {
                   child: Text('Add Tag'),
                 ),
               ),
-		Padding(
+              Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(
                   onPressed: () {
                     //Navigator.push(
-                      //context,
-                     // MaterialPageRoute(
-                          //builder: (context) => GardenDetail(gardenId: plant.garden_id)),
+                    //context,
+                    // MaterialPageRoute(
+                    //builder: (context) => GardenDetail(gardenId: plant.garden_id)),
                     //);
                     // Navigator.of(context).pop();
                   },
                   child: Text('Garden Detail'),
                 ),
               ),
-
             ],
           ),
         ),

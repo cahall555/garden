@@ -5,10 +5,12 @@ import '../model/apis/garden_api.dart';
 class GardenProvider with ChangeNotifier {
   List<Garden> gardens = [];
   Garden? prevGarden;
+  final gardenApiService;
+  GardenProvider(this.gardenApiService);
 
   Future<List<Garden>> fetchGarden(var accountId) async {
     try {
-      gardens = await fetchGardenApi(accountId);
+      gardens = await gardenApiService.fetchGardenApi(accountId);
       notifyListeners();
       return gardens;
     } catch (e) {
@@ -18,12 +20,12 @@ class GardenProvider with ChangeNotifier {
   }
 
   Future<void> createGarden(Map<String, dynamic> garden) async {
-    createGardenApi(garden);
+    gardenApiService.createGardenApi(garden);
     notifyListeners();
   }
 
   Future<void> updateGarden(Map<String, dynamic> garden, var gardenId) async {
-    updateGardenApi(garden, gardenId);
+    gardenApiService.updateGardenApi(garden, gardenId);
 
     notifyListeners();
     if (prevGarden != null) {
@@ -36,7 +38,7 @@ class GardenProvider with ChangeNotifier {
   }
 
   Future<void> deleteGarden(var gardenId) async {
-    deleteGardenApi(gardenId);
+    gardenApiService.deleteGardenApi(gardenId);
     notifyListeners();
   }
 }

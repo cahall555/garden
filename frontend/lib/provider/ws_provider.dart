@@ -5,15 +5,29 @@ import '../model/apis/ws_api.dart';
 class WsProvider with ChangeNotifier {
   List<WaterSchedule> wsList = [];
   WaterSchedule? prevWs;
+  final wsApiService;
+  WsProvider(this.wsApiService);
+
+
+  Future<List<WaterSchedule>> fetchWs(var plantId) async {
+    try {
+      wsList = await wsApiService.fetchWsApi(plantId);
+      notifyListeners();
+      return wsList;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
 
   Future<void> createWs(Map<String, dynamic> ws, var plantId) async {
-    createWsApi(ws, plantId);
+    wsApiService.createWsApi(ws, plantId);
     notifyListeners();
   }
 
   Future<void> updateWs(
       Map<String, dynamic> wsData, var plantId, var wsId) async {
-    await updateWsApi(wsData, plantId, wsId);
+    await wsApiService.updateWsApi(wsData, plantId, wsId);
 
     if (prevWs != null) {
       int index = wsList.indexWhere((w) => w.id == prevWs!.id);
@@ -26,7 +40,7 @@ class WsProvider with ChangeNotifier {
   }
 
   Future<void> deleteWs(var wsId) async {
-    await deleteWsApi(wsId);
+    await wsApiService.deleteWsApi(wsId);
     notifyListeners();
   }
 }
