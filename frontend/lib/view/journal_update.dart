@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 import '../model/journal.dart';
+import '../model/plant.dart';
 import '../model/apis/journal_api.dart';
 import '../provider/journal_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:frontend/components/camera.dart';
+import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
 
 class JournalUpdate extends StatefulWidget {
   final Journal journal;
+  final Plant plant;
 
-  const JournalUpdate({Key? key, required this.journal}) : super(key: key);
+  const JournalUpdate({Key? key, required this.journal, required this.plant})
+      : super(key: key);
 
   @override
   State<JournalUpdate> createState() => _JournalUpdateState();
@@ -111,16 +116,41 @@ class _JournalUpdateState extends State<JournalUpdate> {
               controller: _entryController,
             ),
             const SizedBox(height: 20.0),
-            GestureDetector(
-              onTap: () => _pickImage(),
-              child: _imagePath == _imagePath
-                  ? Container(
-                      height: 150,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Color(0XFF2A203D)),
-                      ),
-                      child: Icon(Icons.add_a_photo, color: Color(0XFF8E505F)),
+            Container(
+              height: 150,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(color: Color(0xFF2A203D)),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: _imagePath == _imagePath 
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () => _pickImage(),
+                          child: Icon(Icons.camera_roll_rounded,
+                              color: Color(0xFF8E505F)),
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            List<CameraDescription> cameras =
+                                await availableCameras();
+                            final result = await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => CameraApp(
+                                        cameras: cameras,
+                                        plant: this.widget.plant!)));
+                            if (result != null) {
+                              setState(() {
+                                _imagePath = result;
+                              });
+                            }
+                          },
+                          child:
+                              Icon(Icons.add_a_photo, color: Color(0xFF8E505F)),
+                        ),
+                      ],
                     )
                   : Image.file(File(_imagePath!)),
             ),
@@ -207,7 +237,7 @@ class _JournalUpdateState extends State<JournalUpdate> {
                   constraints: BoxConstraints(minWidth: 108.0, minHeight: 45.0),
                   alignment: Alignment.center,
                   child: const Text('Submit',
-			  key: Key('updateJournalButton'),
+                      key: Key('updateJournalButton'),
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 15.0,

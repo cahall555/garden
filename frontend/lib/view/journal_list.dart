@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../model/journal.dart';
+import '../model/plant.dart';
 import '../model/apis/journal_api.dart';
 import '../provider/journal_provider.dart';
 import 'journal_create.dart';
 import 'journal_detail.dart';
 
 class JournalList extends StatefulWidget {
+  final Plant plant;
+  const JournalList({Key? key, required this.plant}) : super(key: key);
   @override
   _JournalListState createState() => _JournalListState();
 }
@@ -50,13 +53,13 @@ class _JournalListState extends State<JournalList> {
                           margin: EdgeInsets.all(8),
                           child: ListTile(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => JournalDetail(
-                                      journal: snapshot.data![index]),
-                                ),
-                              );
+                              //Navigator.push(
+                               // context,
+                               // MaterialPageRoute(
+                                 //   builder: (context) => JournalDetail(
+                                   //     journal: snapshot.data![index],
+                                     //   plant: snapshot.data![index].plant_id)),
+                             // );
                             },
                             leading: Icon(Icons.local_florist),
                             title: Text(

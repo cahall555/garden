@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/model/journal.dart';
+import 'package:frontend/model/plant.dart';
 import 'package:frontend/provider/journal_provider.dart';
 import 'package:frontend/view/journal_update.dart';
 
@@ -18,6 +19,7 @@ class MockUpdateJournalInfo extends Mock {
 void main() {
   group('JournalUpdate', () {
     late Journal journal;
+    late Plant plant;
     late MockJournalProvider mockJournalProvider;
 
     setUp(() {
@@ -32,6 +34,19 @@ void main() {
 	createdAt: DateTime.now(),
 	updatedAt: DateTime.now(),
       );
+      plant = Plant(
+	id: '456',
+	name: 'Test Plant',
+	germinated: true,
+	days_to_harvest: 60,
+	plant_count: 1,
+	date_planted: DateTime.now(),
+	date_germinated: DateTime.now(),
+	garden_id: '789',
+	account_id: '101',
+	createdAt: DateTime.now(),
+	updatedAt: DateTime.now(),
+      );
       mockJournalProvider = MockJournalProvider();
     });
 
@@ -40,7 +55,7 @@ void main() {
         ChangeNotifierProvider<JournalProvider>.value(
           value: mockJournalProvider,
           child: MaterialApp(
-            home: JournalUpdate(journal: journal),
+            home: JournalUpdate(journal: journal, plant: plant),
           ),
         ),
       );

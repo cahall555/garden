@@ -7,10 +7,16 @@ import '../model/apis/journal_api.dart';
 import '../provider/journal_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
+import 'package:frontend/components/camera.dart';
+import 'package:camera/camera.dart';
 
 class JournalCreate extends StatefulWidget {
   final Plant plant;
-  const JournalCreate({Key? key, required this.plant}) : super(key: key);
+  final String? imagePath;
+  const JournalCreate({Key? key, required this.plant, this.imagePath})
+      : super(key: key);
 
   @override
   State<JournalCreate> createState() => _JournalCreateState();
@@ -91,8 +97,67 @@ class _JournalCreateState extends State<JournalCreate> {
               controller: _entryController,
             ),
             const SizedBox(height: 20.0),
+            Container(
+              height: 150,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(color: Color(0xFF2A203D)),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: _imagePath == null
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () => _pickImage(),
+                          child: Icon(Icons.camera_roll_rounded,
+                              color: Color(0xFF8E505F)),
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            List<CameraDescription> cameras =
+                                await availableCameras();
+                            final result = await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => CameraApp(
+                                        cameras: cameras,
+                                        plant: widget.plant)));
+                            if (result != null) {
+                              setState(() {
+                                _imagePath = result;
+                              });
+                            }
+                          },
+                          child:
+                              Icon(Icons.add_a_photo, color: Color(0xFF8E505F)),
+                        ),
+                      ],
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        File(_imagePath!),
+                        width: double.infinity,
+                        height: 150,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+            ),
+
+            /* const SizedBox(height: 20.0),
             GestureDetector(
-              onTap: () => _pickImage(),
+              onTap: () async {
+                List<CameraDescription> cameras = await availableCameras();
+                final result = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            CameraApp(cameras: cameras, plant: widget.plant)));
+                if (result != null) {
+                  setState(() {
+                    _imagePath = result;
+                  });
+                }
+              },
               child: _imagePath == null
                   ? Container(
                       height: 150,
@@ -103,10 +168,10 @@ class _JournalCreateState extends State<JournalCreate> {
                       child: Icon(Icons.add_a_photo, color: Color(0XFF8E505F)),
                     )
                   : Image.file(File(_imagePath!)),
-            ),
+            ),*/
             const SizedBox(height: 20.0),
             DropdownButtonFormField<String>(
-		    key: Key('categoryDropdown'),
+              key: Key('categoryDropdown'),
               style: TextStyle(color: Color(0xFF8E505F), fontFamily: 'Taviraj'),
               decoration: InputDecoration(
                 labelText: "Category",
