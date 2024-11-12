@@ -28,16 +28,29 @@ import '../provider/journal_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class PlantDetail extends StatelessWidget {
+class PlantDetail extends StatefulWidget {
   final Plant plant;
 
   PlantDetail({Key? key, required this.plant}) : super(key: key);
+
+  @override
+  _PlantDetailState createState() => _PlantDetailState();
+}
+
+class _PlantDetailState extends State<PlantDetail> {
+  late var plantId;
+
+  @override
+  void initState() {
+    super.initState();
+    plantId = widget.plant.id;
+  }
 
   Future<List<Tag>> fetchDataTags(BuildContext context) async {
     final tagProvider = Provider.of<TagProvider>(context, listen: false);
     final plantsTagProvider =
         Provider.of<PlantsTagProvider>(context, listen: false);
-    final plantTags = await plantsTagProvider.fetchPlantsTag(plant.id);
+    final plantTags = await plantsTagProvider.fetchPlantsTag(plantId);
     List<Tag> tags = [];
     for (var pt in plantTags) {
       print(pt.tag_id);
@@ -67,7 +80,7 @@ class PlantDetail extends StatelessWidget {
     final wsProvider = Provider.of<WsProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: Text(plant.name, style: TextStyle(fontFamily: 'Taviraj')),
+        title: Text(widget.plant.name, style: TextStyle(fontFamily: 'Taviraj')),
       ),
       body: Container(
         width: screenSize.width,
@@ -100,7 +113,7 @@ class PlantDetail extends StatelessWidget {
                   ),
                   child: ListTile(
                     title: Text(
-                        plant.germinated
+                        widget.plant.germinated
                             ? "plant has germinated"
                             : "Plant is not germinated",
                         style: TextStyle(
@@ -108,18 +121,18 @@ class PlantDetail extends StatelessWidget {
                           fontFamily: 'Taviraj',
                           color: Colors.white,
                         )),
-                    subtitle:
-                        Text("Date Planted: ${formatDate(plant.date_planted)}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Taviraj',
-                              color: Colors.white,
-                            )),
+                    subtitle: Text(
+                        "Date Planted: ${formatDate(widget.plant.date_planted)}",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Taviraj',
+                          color: Colors.white,
+                        )),
                   ),
                 ),
               ),
               FutureBuilder<List<Journal>>(
-                future: journalProvider.fetchPlantJournal(plant.id),
+                future: journalProvider.fetchPlantJournal(widget.plant.id),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
@@ -164,8 +177,8 @@ class PlantDetail extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => JournalDetail(
-                                              journal: snapshot.data![index],
-                                            ),
+                                                journal: snapshot.data![index],
+                                                plant: widget.plant),
                                           ),
                                         );
                                       },
@@ -208,7 +221,7 @@ class PlantDetail extends StatelessWidget {
                 },
               ),
               FutureBuilder<List<WaterSchedule>>(
-                future: wsProvider.fetchWs(plant.id),
+                future: wsProvider.fetchWs(widget.plant.id),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
@@ -248,7 +261,7 @@ class PlantDetail extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => WsUpdate(
-                                        plant: this.plant,
+                                        plant: this.widget.plant,
                                         ws: snapshot.data![index]),
                                   ),
                                 );
@@ -356,7 +369,8 @@ class PlantDetail extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlantUpdate(plant: plant)),
+                          builder: (context) =>
+                              PlantUpdate(plant: widget.plant)),
                     );
                     // Navigator.of(context).pop();
                   },
@@ -368,7 +382,7 @@ class PlantDetail extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () async {
                     List<WaterSchedule> schedules =
-                        await wsProvider.fetchWs(plant.id);
+                        await wsProvider.fetchWs(widget.plant.id);
 
                     if (schedules.isNotEmpty) {
                       WaterSchedule ws = schedules.first;
@@ -376,13 +390,14 @@ class PlantDetail extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                WsUpdate(plant: this.plant, ws: ws)),
+                                WsUpdate(plant: this.widget.plant, ws: ws)),
                       );
                     } else {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => WsCreate(plant: this.plant)),
+                            builder: (context) =>
+                                WsCreate(plant: this.widget.plant)),
                       );
                     }
                   },
@@ -394,7 +409,7 @@ class PlantDetail extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     Provider.of<PlantProvider>(context, listen: false)
-                        .deletePlant(plant.id);
+                        .deletePlant(widget.plant.id);
                     Navigator.of(context).pop();
                   },
                   child: Text('Delete Plant'),
@@ -408,7 +423,7 @@ class PlantDetail extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              JournalCreate(plant: this.plant)),
+                              JournalCreate(plant: this.widget.plant)),
                     );
                     // Navigator.of(context).pop();
                   },
@@ -422,7 +437,8 @@ class PlantDetail extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => TagCreate(plant: this.plant)),
+                          builder: (context) =>
+                              TagCreate(plant: this.widget.plant)),
                     );
                     // Navigator.of(context).pop();
                   },

@@ -34,6 +34,8 @@ import 'provider/auth_provider.dart';
 import 'provider/account_provider.dart';
 import 'provider/users_account_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:camera/camera.dart';
 
 void main() async {
   try {
@@ -66,7 +68,8 @@ void main() async {
         ChangeNotifierProvider(
             create: (context) => JournalProvider(journalApiService)),
         ChangeNotifierProvider(create: (context) => TagProvider(tagApiService)),
-        ChangeNotifierProvider(create: (context) => PlantsTagProvider(plantsTagApiService)),
+        ChangeNotifierProvider(
+            create: (context) => PlantsTagProvider(plantsTagApiService)),
         ChangeNotifierProvider(
             create: (context) => UserProvider(userApiService)),
         ChangeNotifierProvider(
@@ -94,7 +97,8 @@ class MyApp extends StatelessWidget {
         '/plantDetail': (context) {
           final Plant plant =
               ModalRoute.of(context)!.settings.arguments as Plant;
-	  heroTag: 'plantDetailHero-${plant.id}';
+          heroTag:
+          'plantDetailHero-${plant.id}';
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => TagProvider(tagApiService)),
@@ -116,11 +120,47 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _permissionsGranted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      requestPermission();
+    });
+  }
+
+  void requestPermission() async {
+    final statuses = await [
+      Permission.microphone,
+      Permission.camera,
+    ].request();
+    print(statuses);
+    setState(() {
+      _permissionsGranted = statuses.values.every((status) => status.isGranted);
+    });
+
+    if (!_permissionsGranted) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Permissions Error'),
+          content: const Text('Please enable the required permissions.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          LandingPage(), 
+      body: LandingPage(),
     );
   }
 }
