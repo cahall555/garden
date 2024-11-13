@@ -20,6 +20,7 @@ class _AuthCreateState extends State<AuthCreate> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   UserAccounts? userAccounts;
+  bool obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +60,7 @@ class _AuthCreateState extends State<AuthCreate> {
             ),
             const SizedBox(height: 20.0),
             TextField(
+              obscureText: obscureText,
               style: TextStyle(
                   color: Color(0XFF987D3F),
                   fontFamily: 'Taviraj',
@@ -66,6 +68,17 @@ class _AuthCreateState extends State<AuthCreate> {
                   fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 labelText: 'Password',
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    obscureText ? Icons.visibility : Icons.visibility_off,
+                    color: Color(0XFF987D3F),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      obscureText = !obscureText;
+                    });
+                  },
+                ),
                 labelStyle:
                     TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
                 enabledBorder: OutlineInputBorder(

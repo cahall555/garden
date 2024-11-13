@@ -37,7 +37,7 @@ func AuthCreate(c buffalo.Context) error {
 
 	bad := func() error {
 		verrs := validate.NewErrors()
-		verrs.Add("email", "invalid email/password") //TODO: change this message when done testing.
+		verrs.Add("email", "invalid entry") 
 
 		c.Set("errors", verrs)
 		c.Set("user", u)
