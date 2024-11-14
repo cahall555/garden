@@ -1,7 +1,7 @@
 create_table("journals") {
 	t.Column("id", "uuid", {primary: true})
 	t.Column("title", "string", {})
-	t.Column("entry", "string", {})
+	t.Column("entry", "text", {})
 	t.Column("display_on_garden", "bool", {})
 	t.Column("image", "string", {"null": true})
 	t.Column("category", "string", {})

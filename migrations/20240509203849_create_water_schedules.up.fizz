@@ -8,7 +8,7 @@ create_table("water_schedules") {
 	t.Column("saturday", "bool", {})
 	t.Column("sunday", "bool", {})
 	t.Column("method", "string", {})
-	t.Column("notes", "string", {})
+	t.Column("notes", "text", {})
 	t.Column("plant_id", "uuid", {})
 	t.ForeignKey("plant_id", {"plants": ["id"]})
 	t.Timestamps()
