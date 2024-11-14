@@ -238,8 +238,8 @@ class _PlantDetailState extends State<PlantDetail> {
                                       ),
                                       subtitle: Text(
                                           snapshot.data![index].entry.length >
-                                                  230
-                                              ? '${snapshot.data![index].entry.substring(0, 230)}...'
+                                                  220
+                                              ? '${snapshot.data![index].entry.substring(0, 220)}...'
                                               : snapshot.data![index].entry,
                                           style: TextStyle(
                                             fontFamily: 'Taviraj',
