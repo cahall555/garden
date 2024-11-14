@@ -28,61 +28,79 @@ class _JournalDetailState extends State<JournalDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.journal.title, style: TextStyle(fontFamily: 'Taviraj')),
+        title:
+            Text(widget.journal.title, style: TextStyle(fontFamily: 'Taviraj')),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/journal.webp"),
-            fit: BoxFit.cover,
-            opacity: 0.15,
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Card(
-                elevation: 5,
-                margin: EdgeInsets.all(8),
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        title: Text(widget.journal.category),
-                        subtitle: Text(widget.journal.entry),
-                      ),
-                      if (widget.journal.image != "")
-                        Image.asset(
-                          'assets/' + widget.journal.image!,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context, Object exception,
-                              StackTrace? stackTrace) {
-                            return const Text('Image not available');
-                          },
-                        ),
-                    ],
-                  ),
-                ),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/journal.webp"),
+                fit: BoxFit.cover,
+                opacity: 0.15,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
+            ),
+          ),
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 120),
+              child: Column(
+                children: <Widget>[
+                  Card(
+                    elevation: 5,
+                    margin: EdgeInsets.all(8),
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        children: <Widget>[
+                          ListTile(
+                            title: Text(
+                                'Journal Category: ' + widget.journal.category,
+                                style: TextStyle(
+                                    fontFamily: 'Taviraj',
+                                    fontWeight: FontWeight.normal)),
+                            subtitle: Text(widget.journal.entry),
+                          ),
+                          if (widget.journal.image != "")
+                            Image.asset(
+                              'assets/' + widget.journal.image!,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              errorBuilder: (BuildContext context,
+                                  Object exception, StackTrace? stackTrace) {
+                                return const Text('Image not available');
+                              },
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            left: 20,
+            right: 20,
+            child: Column(
+              children: [
+                _buildButton(
+                  text: 'Update Journal',
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              JournalUpdate(journal: widget.journal, plant: widget.plant)),
+                        builder: (context) => JournalUpdate(
+                            journal: widget.journal, plant: widget.plant),
+                      ),
                     );
                   },
-                  child: Text('Update Journal'),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
+                SizedBox(height: 10),
+                _buildButton(
+                  text: 'Delete Journal',
                   onPressed: () {
                     try {
                       Provider.of<JournalProvider>(context, listen: false)
@@ -97,10 +115,49 @@ class _JournalDetailState extends State<JournalDetail> {
                       ));
                     }
                   },
-                  child: Text('Delete Journal'),
                 ),
-              ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButton({required String text, required VoidCallback onPressed}) {
+    return ElevatedButton(
+      style: ButtonStyle(
+        elevation: MaterialStateProperty.all<double>(12.0),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25.0),
+          ),
+        ),
+      ),
+      onPressed: onPressed,
+      child: Ink(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF8E505F),
+              Color(0xFF2A203D),
             ],
+          ),
+          borderRadius: BorderRadius.circular(25.0),
+        ),
+        child: Container(
+          constraints: BoxConstraints(minWidth: 108.0, minHeight: 45.0),
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15.0,
+              fontFamily: 'Taviraj',
+            ),
           ),
         ),
       ),

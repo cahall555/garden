@@ -143,32 +143,6 @@ class _JournalCreateState extends State<JournalCreate> {
                       ),
                     ),
             ),
-
-            /* const SizedBox(height: 20.0),
-            GestureDetector(
-              onTap: () async {
-                List<CameraDescription> cameras = await availableCameras();
-                final result = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            CameraApp(cameras: cameras, plant: widget.plant)));
-                if (result != null) {
-                  setState(() {
-                    _imagePath = result;
-                  });
-                }
-              },
-              child: _imagePath == null
-                  ? Container(
-                      height: 150,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Color(0XFF2A203D)),
-                      ),
-                      child: Icon(Icons.add_a_photo, color: Color(0XFF8E505F)),
-                    )
-                  : Image.file(File(_imagePath!)),
-            ),*/
             const SizedBox(height: 20.0),
             DropdownButtonFormField<String>(
               key: Key('categoryDropdown'),

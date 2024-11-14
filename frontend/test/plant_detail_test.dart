@@ -110,12 +110,8 @@ void main() {
       ),
     );
     expect(find.text('Tomato'), findsOneWidget);
-    await tester.tap(find.text('Update Plant'));
-    expect(find.text('Update Plant'), findsOneWidget);
+    await tester.tap(find.byKey(Key('updatePlantButton')));
+    expect(find.byIcon(Icons.edit), findsOneWidget);
 
-    expect(find.byType(ElevatedButton), findsNWidgets(6));
-    await tester.tap(find.text('Garden Detail'), warnIfMissed: false);
-
-//    expect(find.text('Test notes'), findsOneWidget);
   });
 }

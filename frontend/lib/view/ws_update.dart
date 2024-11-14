@@ -62,15 +62,6 @@ class _WsUpdateState extends State<WsUpdate> {
             fit: BoxFit.cover,
             opacity: 0.15,
           ),
-
-//          gradient: LinearGradient(
-//            begin: Alignment.topLeft,
-//            end: Alignment.bottomRight,
-//            colors: [
-//              Color(0xFF263B61),
-//              Color(0xFF4E7AC7),
-//            ],
-//          ),
         ),
         child: ListView(
           padding: const EdgeInsets.all(20),

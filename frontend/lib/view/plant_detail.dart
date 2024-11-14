@@ -139,7 +139,51 @@ class _PlantDetailState extends State<PlantDetail> {
                   } else if (snapshot.hasError) {
                     return Text("Error: ${snapshot.error}");
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Text("No journals found");
+                    return ElevatedButton(
+                      key: Key('submitJournalButton'),
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.all<double>(12.0),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.transparent),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  JournalCreate(plant: this.widget.plant)),
+                        );
+                      },
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color(0xFF8E505F),
+                              Color(0xFF2A203D),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        child: Container(
+                          constraints:
+                              BoxConstraints(minWidth: 108.0, minHeight: 45.0),
+                          alignment: Alignment.center,
+                          child: const Text('Add Journal',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0,
+                                  fontFamily: 'Taviraj')),
+                        ),
+                      ),
+                    );
                   } else {
                     PageController pageController =
                         PageController(viewportFraction: 0.85);
@@ -192,12 +236,15 @@ class _PlantDetailState extends State<PlantDetail> {
                                           color: Colors.white,
                                         ),
                                       ),
-                                      subtitle:
-                                          Text(snapshot.data![index].entry,
-                                              style: TextStyle(
-                                                fontFamily: 'Taviraj',
-                                                color: Colors.white,
-                                              )),
+                                      subtitle: Text(
+                                          snapshot.data![index].entry.length >
+                                                  230
+                                              ? '${snapshot.data![index].entry.substring(0, 230)}...'
+                                              : snapshot.data![index].entry,
+                                          style: TextStyle(
+                                            fontFamily: 'Taviraj',
+                                            color: Colors.white,
+                                          )),
                                     ),
                                   ),
                                 ),
@@ -269,20 +316,84 @@ class _PlantDetailState extends State<PlantDetail> {
                               leading: Icon(Icons.water_drop_rounded,
                                   color: Color(0XFF987D3F)),
                               title: Text(
-                                snapshot.data![index].notes,
+                                'Water Schedule Notes: ',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Taviraj',
                                   color: Colors.white,
                                 ),
                               ),
+                              subtitle: Text(
+                                  snapshot.data![index].notes.length > 230
+                                      ? '${snapshot.data![index].notes.substring(0, 230)}...'
+                                      : snapshot.data![index].notes,
+                                  style: TextStyle(
+                                    fontFamily: 'Taviraj',
+                                    color: Colors.white,
+                                  )),
                             ),
                           ),
                         );
                       },
                     );
                   } else {
-                    return Text("No Water Schedules found");
+                    return ElevatedButton(
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.all<double>(12.0),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.transparent),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                        ),
+                      ),
+                      onPressed: () async {
+                        List<WaterSchedule> schedules =
+                            await wsProvider.fetchWs(widget.plant.id);
+
+                        if (schedules.isNotEmpty) {
+                          WaterSchedule ws = schedules.first;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    WsUpdate(plant: this.widget.plant, ws: ws)),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    WsCreate(plant: this.widget.plant)),
+                          );
+                        }
+                      },
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color(0xFF4E7AC7),
+                              Color(0xFF263B61),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        child: Container(
+                          constraints:
+                              BoxConstraints(minWidth: 108.0, minHeight: 45.0),
+                          alignment: Alignment.center,
+                          child: const Text('Water Schedule',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0,
+                                  fontFamily: 'Taviraj')),
+                        ),
+                      ),
+                    );
                   }
                 },
               ),
@@ -358,110 +469,91 @@ class _PlantDetailState extends State<PlantDetail> {
                       },
                     );
                   } else {
-                    return Text("No Tags found");
+                    return ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  TagCreate(plant: this.widget.plant)),
+                        );
+                      },
+                      child: Text('Add Tag'),
+                    );
                   }
                 },
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Wrap(
+              spacing: 16.0,
+              runSpacing: 16.0,
+              children: [
+                FloatingActionButton(
+                  key: Key('addPJournalButton'),
+                  heroTag: 'add_journal',
                   onPressed: () {
-                    Navigator.push(
-                      context,
+                    Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) =>
-                              PlantUpdate(plant: widget.plant)),
+                              JournalCreate(plant: this.widget.plant)),
                     );
-                    // Navigator.of(context).pop();
                   },
-                  child: Text('Update Plant'),
+                  child: Icon(Icons.library_books_rounded,
+                      color: Color(0XFF987D3F)),
+                  backgroundColor: Color(0XFFFED16A),
+                  tooltip: 'Add Journal',
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    List<WaterSchedule> schedules =
-                        await wsProvider.fetchWs(widget.plant.id);
-
-                    if (schedules.isNotEmpty) {
-                      WaterSchedule ws = schedules.first;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                WsUpdate(plant: this.widget.plant, ws: ws)),
-                      );
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                WsCreate(plant: this.widget.plant)),
-                      );
-                    }
+                FloatingActionButton(
+                  key: Key('addPTagButton'),
+                  heroTag: 'add_tag',
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => TagCreate(plant: widget.plant)),
+                    );
                   },
-                  child: Text('Water Schedule'),
+                  child: Icon(Icons.label_rounded, color: Color(0XFFFED16A)),
+                  backgroundColor: Color(0XFF987D3F),
+                  tooltip: 'Add Tag',
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
+                FloatingActionButton(
+                  key: Key('updatePlantButton'),
+                  heroTag: 'update_plant',
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PlantUpdate(plant: widget.plant),
+                      ),
+                    );
+                  },
+                  child: Icon(Icons.edit, color: Color(0XFF987D3F)),
+                  backgroundColor: Color(0XFFFED16A),
+                  tooltip: 'Update Plant',
+                ),
+                FloatingActionButton(
+                  key: Key('deletePlantButton'),
+                  heroTag: 'delete_plant',
                   onPressed: () {
                     Provider.of<PlantProvider>(context, listen: false)
                         .deletePlant(widget.plant.id);
                     Navigator.of(context).pop();
                   },
-                  child: Text('Delete Plant'),
+                  child: Icon(Icons.delete, color: Color(0XFFFED16A)),
+                  backgroundColor: Color(0XFF987D3F),
+                  tooltip: 'Delete Plant',
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              JournalCreate(plant: this.widget.plant)),
-                    );
-                    // Navigator.of(context).pop();
-                  },
-                  child: Text('Add Journal'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              TagCreate(plant: this.widget.plant)),
-                    );
-                    // Navigator.of(context).pop();
-                  },
-                  child: Text('Add Tag'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    //Navigator.push(
-                    //context,
-                    // MaterialPageRoute(
-                    //builder: (context) => GardenDetail(gardenId: plant.garden_id)),
-                    //);
-                    // Navigator.of(context).pop();
-                  },
-                  child: Text('Garden Detail'),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

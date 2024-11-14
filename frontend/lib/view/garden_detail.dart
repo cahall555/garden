@@ -115,53 +115,63 @@ class GardenDetail extends StatelessWidget {
                   }
                 },
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
-                  key: Key('updateGardenButton'),
-                  onPressed: () {
-                    // Navigate to update garden page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => GardenUpdate(
-                              garden: this.garden,
-                              userAccounts: this.userAccounts)),
-                    );
-                  },
-                  child: Text('Update Garden'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
-                  key: Key('deleteGardenButton'),
-                  onPressed: () {
-                    Provider.of<GardenProvider>(context, listen: false)
-                        .deleteGarden(garden.id);
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Delete Garden'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton(
-                  key: Key('addPlantButton'),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              PlantCreate(garden: this.garden)),
-                    );
-                  },
-                  child: Text('Add Plant'),
-                ),
-              ),
             ],
           ),
         ),
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: FloatingActionButton(
+              key: Key('addPlantButton'),
+              heroTag: 'add_plant',
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => PlantCreate(garden: this.garden)),
+                );
+              },
+              child: Icon(Icons.add, color: Color(0XFFFED16A)),
+              backgroundColor: Color(0XFF987D3F),
+              tooltip: 'Add Plant',
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: FloatingActionButton(
+              key: Key('updateGardenButton'),
+              heroTag: 'update_garden',
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => GardenUpdate(
+                        garden: this.garden, userAccounts: this.userAccounts),
+                  ),
+                );
+              },
+              child: Icon(Icons.edit, color: Color(0XFF987D3F)),
+              backgroundColor: Color(0XFFFED16A),
+              tooltip: 'Update Garden',
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: FloatingActionButton(
+              key: Key('deleteGardenButton'),
+              heroTag: 'delete_garden',
+              onPressed: () {
+                Provider.of<GardenProvider>(context, listen: false)
+                    .deleteGarden(garden.id);
+                Navigator.of(context).pop();
+              },
+              child: Icon(Icons.delete, color: Color(0XFFFED16A)),
+              backgroundColor: Color(0XFF987D3F),
+              tooltip: 'Delete Garden',
+            ),
+          ),
+        ],
       ),
     );
   }

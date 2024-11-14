@@ -31,45 +31,69 @@ class _PlantCreateState extends State<PlantCreate> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF344E41),
-              Color(0xFF78B496),
-            ],
+          image: DecorationImage(
+            image: AssetImage("assets/plant.webp"),
+            fit: BoxFit.cover,
+            opacity: 0.15,
           ),
         ),
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: <Widget>[
             TextField(
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Color(0XFF987D3F),
+                  fontFamily: 'Taviraj',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 labelText: 'Name',
-                border: OutlineInputBorder(),
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle:
+                    TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF987D3F))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0XFF987D3F)),
+                ),
               ),
               controller: _nameController,
             ),
             const SizedBox(height: 20.0),
             TextField(
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Color(0XFF987D3F),
+                  fontFamily: 'Taviraj',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 labelText: 'Days to Harvest',
-                border: OutlineInputBorder(),
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle:
+                    TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF987D3F))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0XFF987D3F)),
+                ),
               ),
               controller: _days_to_harvestController,
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 20.0),
             TextField(
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Color(0XFF987D3F),
+                  fontFamily: 'Taviraj',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 labelText: 'Plant Count',
-                border: OutlineInputBorder(),
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle:
+                    TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF987D3F))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0XFF987D3F)),
+                ),
               ),
               controller: _plant_countController,
               keyboardType: TextInputType.number,
@@ -77,11 +101,20 @@ class _PlantCreateState extends State<PlantCreate> {
             const SizedBox(height: 20.0),
             TextField(
               readOnly: true,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Color(0XFF987D3F),
+                  fontFamily: 'Taviraj',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 labelText: 'Date Planted',
-                border: OutlineInputBorder(),
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle:
+                    TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF987D3F))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0XFF987D3F)),
+                ),
               ),
               controller: _date_plantedController,
               onTap: () async {
@@ -97,11 +130,20 @@ class _PlantCreateState extends State<PlantCreate> {
             const SizedBox(height: 20.0),
             TextField(
               readOnly: true,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                  color: Color(0XFF987D3F),
+                  fontFamily: 'Taviraj',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 labelText: 'Date Germinated',
-                border: OutlineInputBorder(),
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle:
+                    TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF987D3F))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0XFF987D3F)),
+                ),
               ),
               controller: _date_germinatedController,
               onTap: () async {
@@ -116,8 +158,15 @@ class _PlantCreateState extends State<PlantCreate> {
             ),
             const SizedBox(height: 20.0),
             ListTile(
-              leading: const Text('Germinated'),
+              leading: const Text('Germinated',
+                  style: TextStyle(
+                      color: Color(0XFF987D3F),
+                      fontFamily: 'Taviraj',
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold)),
               trailing: Switch(
+                activeColor: Color(0XFF987D3F),
+                activeTrackColor: Color(0XFFFED16A),
                 value: _germinatedController,
                 onChanged: (bool value) {
                   setState(() {
@@ -128,6 +177,16 @@ class _PlantCreateState extends State<PlantCreate> {
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
+              style: ButtonStyle(
+                elevation: MaterialStateProperty.all<double>(12.0),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.transparent),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                ),
+              ),
               onPressed: () {
                 if (_nameController.text.isNotEmpty &&
                     _days_to_harvestController.text.isNotEmpty) {
@@ -138,7 +197,28 @@ class _PlantCreateState extends State<PlantCreate> {
                   );
                 }
               },
-              child: const Text('submit'),
+              child: Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFFFED16A),
+                      Color(0xFF987D3F),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                child: Container(
+                  constraints: BoxConstraints(minWidth: 108.0, minHeight: 45.0),
+                  alignment: Alignment.center,
+                  child: const Text('Submit',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontFamily: 'Taviraj')),
+                ),
+              ),
             ),
           ],
         ),
@@ -180,7 +260,7 @@ class _PlantCreateState extends State<PlantCreate> {
         'date_planted': _date_plantedController.text.trim(),
         'date_germinated': _date_germinatedController.text.trim(),
         'garden_id': widget.garden.id,
-	'account_id': widget.garden.account_id,
+        'account_id': widget.garden.account_id,
       }, widget.garden.id);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Plant created successfully!')),
