@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 import '../model/plant.dart';
 import '../view/plant_detail.dart';
 
@@ -8,6 +9,17 @@ class PlantCard extends StatelessWidget {
   final int days_to_harvest;
   final Plant plant;
 //  final String imageUrl;
+
+  String formatDate(DateTime? date) {
+    if (date == null) {
+      return 'date not set';
+    }
+    if (intl.DateFormat('y').format(date.toLocal()) == '0') {
+      return 'date not set';
+    }
+    final formatter = intl.DateFormat('yMMMMd');
+    return formatter.format(date.toLocal());
+  }
 
   PlantCard({
     required this.title,
@@ -66,7 +78,7 @@ class PlantCard extends StatelessWidget {
                     '\n' +
                     (germinated
                         ? 'Plant has germinated'
-                        : 'Plant has not germinated') + '\n' + 'Plant Count: ' + plant.plant_count.toString() + '\n' + 'Date Planted: ' + plant.date_planted.toString(),
+                        : 'Plant has not germinated') + '\n' + 'Plant Count: ' + plant.plant_count.toString() + '\n' + 'Date Planted: ' + formatDate(plant.date_planted),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Taviraj',

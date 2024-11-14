@@ -66,7 +66,7 @@ void main() {
     
     expect(find.text('Description: A beautiful test garden'), findsOneWidget);
     
-    expect(find.text('Update Garden'), findsOneWidget);
+    expect(find.byIcon(Icons.edit), findsOneWidget);
     expect(find.byKey(Key('updateGardenButton')), findsOneWidget);
     await tester.tap(find.byKey(Key('updateGardenButton')));
     await tester.pumpAndSettle();

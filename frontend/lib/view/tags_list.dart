@@ -37,11 +37,20 @@ class _TagListState extends State<TagList> {
         builder: (context, tagProvider, child) {
           return Stack(
             children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/tag.webp"),
+                    fit: BoxFit.cover,
+                    opacity: 0.15,
+                  ),
+                ),
+              ),
               FutureBuilder<List<Tag>>(
                 future: futureTag,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Text("Error: ${snapshot.error}");
                   } else if (snapshot.hasData) {
@@ -62,10 +71,11 @@ class _TagListState extends State<TagList> {
                               );
                             },
                             leading:
-                                Icon(Icons.label, color: Colors.green[800]),
+                                Icon(Icons.label, color: Color(0xFF344E41)),
                             title: Text(
                               snapshot.data![index].name,
                               style: TextStyle(
+                                fontFamily: 'Taviraj',
                                 fontWeight: FontWeight.bold,
                                 color: Colors.green[800],
                               ),
@@ -75,27 +85,32 @@ class _TagListState extends State<TagList> {
                       },
                     );
                   } else {
-                    return Text("No tags found");
+                    return Center(child: Text("No tags found"));
                   }
                 },
-              ),
-              Positioned(
-                bottom: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => TagCreate()));
-                  },
-                  child: Text('Add Tag'),
-                  style: ElevatedButton.styleFrom(
-                    shape: StadiumBorder(),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  ),
-                ),
               ),
             ],
           );
         },
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => TagCreate(),
+                  ),
+                );
+              },
+              child: Icon(Icons.add, color: Color(0XFFFED16A)),
+              backgroundColor: Color(0XFF987D3F),
+            ),
+          ),
+        ],
       ),
     );
   }
