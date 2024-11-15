@@ -76,47 +76,39 @@ class _JournalDetailState extends State<JournalDetail> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  _buildButton(
+                    text: 'Update Journal',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => JournalUpdate(
+                              journal: widget.journal, plant: widget.plant),
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  _buildButton(
+                    text: 'Delete Journal',
+                    onPressed: () {
+                      try {
+                        Provider.of<JournalProvider>(context, listen: false)
+                            .deleteJournal(widget.journal.id);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Journal deleted successfully'),
+                        ));
+                        Navigator.of(context).pop();
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Failed to delete journal: $e'),
+                        ));
+                      }
+                    },
+                  ),
                 ],
               ),
-            ),
-          ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            right: 20,
-            child: Column(
-              children: [
-                _buildButton(
-                  text: 'Update Journal',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => JournalUpdate(
-                            journal: widget.journal, plant: widget.plant),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(height: 10),
-                _buildButton(
-                  text: 'Delete Journal',
-                  onPressed: () {
-                    try {
-                      Provider.of<JournalProvider>(context, listen: false)
-                          .deleteJournal(widget.journal.id);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text('Journal deleted successfully'),
-                      ));
-                      Navigator.of(context).pop();
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text('Failed to delete journal: $e'),
-                      ));
-                    }
-                  },
-                ),
-              ],
             ),
           ),
         ],

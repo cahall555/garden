@@ -93,25 +93,6 @@ class _TagListState extends State<TagList> {
           );
         },
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => TagCreate(),
-                  ),
-                );
-              },
-              child: Icon(Icons.add, color: Color(0XFFFED16A)),
-              backgroundColor: Color(0XFF987D3F),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
