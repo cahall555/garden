@@ -53,199 +53,202 @@ class _JournalUpdateState extends State<JournalUpdate> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Update Journal', style: TextStyle(fontFamily: 'Taviraj')),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/journal.webp"),
-            fit: BoxFit.cover,
-            opacity: 0.15,
-          ),
-
-//          gradient: LinearGradient(
-//            begin: Alignment.topLeft,
-//            end: Alignment.bottomRight,
-//            colors: [
-//              Color(0xFF344E41),
-//              Color(0xFF78B496),
-//            ],
-//          ),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        textSelectionTheme: TextSelectionThemeData(
+          selectionHandleColor: Color(0XFF8E505F),
         ),
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: <Widget>[
-            TextField(
-              style: TextStyle(
-                  color: Color(0XFF8E505F),
-                  fontFamily: 'Taviraj',
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
-                labelText: 'Title',
-                labelStyle:
-                    TextStyle(color: Color(0XFF2A203D), fontFamily: 'Taviraj'),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0XFF2A203D))),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0XFF2A203D)),
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          title:
+              Text('Update Journal', style: TextStyle(fontFamily: 'Taviraj')),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/journal.webp"),
+              fit: BoxFit.cover,
+              opacity: 0.15,
+            ),
+          ),
+          child: ListView(
+            padding: const EdgeInsets.all(20),
+            children: <Widget>[
+              TextField(
+                style: TextStyle(
+                    color: Color(0XFF8E505F),
+                    fontFamily: 'Taviraj',
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold),
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  labelStyle: TextStyle(
+                      color: Color(0XFF2A203D), fontFamily: 'Taviraj'),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0XFF2A203D))),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF2A203D)),
+                  ),
                 ),
+                controller: _titleController,
               ),
-              controller: _titleController,
-            ),
-            const SizedBox(height: 20.0),
-            TextField(
-              maxLines: 10,
-              style: TextStyle(
-                  color: Color(0XFF8E505F),
-                  fontFamily: 'Taviraj',
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
-                labelText: 'Entry',
-                labelStyle:
-                    TextStyle(color: Color(0XFF2A203D), fontFamily: 'Taviraj'),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0XFF2A203D))),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0XFF2A203D)),
+              const SizedBox(height: 20.0),
+              TextField(
+                maxLines: 10,
+                style: TextStyle(
+                    color: Color(0XFF8E505F),
+                    fontFamily: 'Taviraj',
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold),
+                decoration: InputDecoration(
+                  labelText: 'Entry',
+                  labelStyle: TextStyle(
+                      color: Color(0XFF2A203D), fontFamily: 'Taviraj'),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0XFF2A203D))),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0XFF2A203D)),
+                  ),
                 ),
+                controller: _entryController,
               ),
-              controller: _entryController,
-            ),
-            const SizedBox(height: 20.0),
-            Container(
-              height: 150,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                border: Border.all(color: Color(0xFF2A203D)),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: _imagePath == _imagePath 
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                          onTap: () => _pickImage(),
-                          child: Icon(Icons.camera_roll_rounded,
-                              color: Color(0xFF8E505F)),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            List<CameraDescription> cameras =
-                                await availableCameras();
-                            final result = await Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => CameraApp(
-                                        cameras: cameras,
-                                        plant: this.widget.plant!)));
-                            if (result != null) {
-                              setState(() {
-                                _imagePath = result;
-                              });
-                            }
-                          },
-                          child:
-                              Icon(Icons.add_a_photo, color: Color(0xFF8E505F)),
-                        ),
-                      ],
-                    )
-                  : Image.file(File(_imagePath!)),
-            ),
-            const SizedBox(height: 20.0),
-            DropdownButtonFormField<String>(
-              style: TextStyle(color: Color(0xFF8E505F), fontFamily: 'Taviraj'),
-              decoration: InputDecoration(
-                labelText: "Category",
-                labelStyle:
-                    TextStyle(color: Color(0xFF2A203D), fontFamily: 'Taviraj'),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF2A203D))),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF2A203D)),
+              const SizedBox(height: 20.0),
+              Container(
+                height: 150,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xFF2A203D)),
+                  borderRadius: BorderRadius.circular(8),
                 ),
+                child: _imagePath == _imagePath
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          GestureDetector(
+                            onTap: () => _pickImage(),
+                            child: Icon(Icons.camera_roll_rounded,
+                                color: Color(0xFF8E505F)),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              List<CameraDescription> cameras =
+                                  await availableCameras();
+                              final result = await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => CameraApp(
+                                          cameras: cameras,
+                                          plant: this.widget.plant!)));
+                              if (result != null) {
+                                setState(() {
+                                  _imagePath = result;
+                                });
+                              }
+                            },
+                            child: Icon(Icons.add_a_photo,
+                                color: Color(0xFF8E505F)),
+                          ),
+                        ],
+                      )
+                    : Image.file(File(_imagePath!)),
               ),
-              value: _currentSelectedValue,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _currentSelectedValue = newValue;
-                });
-              },
-              items:
-                  _dropdownValues.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value,
-                      style: TextStyle(
-                          color: _currentSelectedValue == value
-                              ? Color(0xFF8E505F)
-                              : Color(0xFF2A203D),
-                          fontFamily: 'Taviraj',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15.0)),
-                );
-              }).toList(),
-            ),
-            ListTile(
-              leading: const Text('Display in Garden',
-                  style: TextStyle(
-                      color: Color(0XFF2A203D),
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Taviraj')),
-              trailing: Switch(
-                activeColor: Color(0XFF2A203D),
-                activeTrackColor: Color(0XFF8E505F),
-                value: _display_on_gardenController,
-                onChanged: (bool value) {
+              const SizedBox(height: 20.0),
+              DropdownButtonFormField<String>(
+                style:
+                    TextStyle(color: Color(0xFF8E505F), fontFamily: 'Taviraj'),
+                decoration: InputDecoration(
+                  labelText: "Category",
+                  labelStyle: TextStyle(
+                      color: Color(0xFF2A203D), fontFamily: 'Taviraj'),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF2A203D))),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF2A203D)),
+                  ),
+                ),
+                value: _currentSelectedValue,
+                onChanged: (String? newValue) {
                   setState(() {
-                    _display_on_gardenController = value;
+                    _currentSelectedValue = newValue;
                   });
                 },
+                items: _dropdownValues
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value,
+                        style: TextStyle(
+                            color: _currentSelectedValue == value
+                                ? Color(0xFF8E505F)
+                                : Color(0xFF2A203D),
+                            fontFamily: 'Taviraj',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.0)),
+                  );
+                }).toList(),
               ),
-            ),
-            const SizedBox(height: 20.0),
-            ElevatedButton(
-              style: ButtonStyle(
-                elevation: MaterialStateProperty.all<double>(12.0),
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.transparent),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
+              ListTile(
+                leading: const Text('Display in Garden',
+                    style: TextStyle(
+                        color: Color(0XFF2A203D),
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Taviraj')),
+                trailing: Switch(
+                  activeColor: Color(0XFF2A203D),
+                  activeTrackColor: Color(0XFF8E505F),
+                  inactiveThumbColor: Color(0xFF2A203D),
+                  inactiveTrackColor: Colors.grey[400],
+                  value: _display_on_gardenController,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _display_on_gardenController = value;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              ElevatedButton(
+                style: ButtonStyle(
+                  elevation: MaterialStateProperty.all<double>(12.0),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.transparent),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  updateJournalInfo();
+                },
+                child: Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFF8E505F),
+                        Color(0xFF2A203D),
+                      ],
+                    ),
                     borderRadius: BorderRadius.circular(25.0),
                   ),
-                ),
-              ),
-              onPressed: () {
-                updateJournalInfo();
-              },
-              child: Ink(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF8E505F),
-                      Color(0xFF2A203D),
-                    ],
+                  child: Container(
+                    constraints:
+                        BoxConstraints(minWidth: 108.0, minHeight: 45.0),
+                    alignment: Alignment.center,
+                    child: const Text('Submit',
+                        key: Key('updateJournalButton'),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.0,
+                            fontFamily: 'Taviraj')),
                   ),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                child: Container(
-                  constraints: BoxConstraints(minWidth: 108.0, minHeight: 45.0),
-                  alignment: Alignment.center,
-                  child: const Text('Submit',
-                      key: Key('updateJournalButton'),
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15.0,
-                          fontFamily: 'Taviraj')),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

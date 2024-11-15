@@ -167,6 +167,8 @@ class _PlantCreateState extends State<PlantCreate> {
               trailing: Switch(
                 activeColor: Color(0XFF987D3F),
                 activeTrackColor: Color(0XFFFED16A),
+                inactiveThumbColor: Color(0xFF987D3F),
+                inactiveTrackColor: Colors.grey[400],
                 value: _germinatedController,
                 onChanged: (bool value) {
                   setState(() {

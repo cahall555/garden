@@ -20,6 +20,8 @@ class _UserCreateState extends State<UserCreate> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordConfirmController = TextEditingController();
+  bool obscureTextOne = true;
+  bool obscureTextTwo = true;
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +99,7 @@ class _UserCreateState extends State<UserCreate> {
             ),
             const SizedBox(height: 20.0),
             TextField(
+              obscureText: obscureTextOne,
               style: TextStyle(
                   color: Color(0XFF987D3F),
                   fontFamily: 'Taviraj',
@@ -104,6 +107,17 @@ class _UserCreateState extends State<UserCreate> {
                   fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 labelText: 'Password',
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    obscureTextOne ? Icons.visibility : Icons.visibility_off,
+                    color: Color(0XFF987D3F),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      obscureTextOne = !obscureTextOne;
+                    });
+                  },
+                ),
                 labelStyle:
                     TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
                 enabledBorder: OutlineInputBorder(
@@ -116,6 +130,7 @@ class _UserCreateState extends State<UserCreate> {
             ),
             const SizedBox(height: 20.0),
             TextField(
+              obscureText: obscureTextTwo,
               style: TextStyle(
                   color: Color(0XFF987D3F),
                   fontFamily: 'Taviraj',
@@ -123,6 +138,17 @@ class _UserCreateState extends State<UserCreate> {
                   fontWeight: FontWeight.bold),
               decoration: InputDecoration(
                 labelText: 'Confirm Password',
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    obscureTextTwo ? Icons.visibility : Icons.visibility_off,
+                    color: Color(0XFF987D3F),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      obscureTextTwo = !obscureTextTwo;
+                    });
+                  },
+                ),
                 labelStyle:
                     TextStyle(color: Color(0XFF987D3F), fontFamily: 'Taviraj'),
                 enabledBorder: OutlineInputBorder(
@@ -200,15 +226,15 @@ class _UserCreateState extends State<UserCreate> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('User successfully created!')),
       );
-      print('Successfully created user: ${newUser.email} new user id ${newUser.id}, moving to account creation.');
+      print(
+          'Successfully created user: ${newUser.email} new user id ${newUser.id}, moving to account creation.');
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) =>
-              AccountCreate(user: newUser),
+          builder: (context) => AccountCreate(user: newUser),
         ),
       );
     } catch (e) {
-	    print('Failed to create user: $e');
+      print('Failed to create user: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to create user: $e')),
       );

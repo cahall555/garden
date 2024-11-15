@@ -180,6 +180,8 @@ class _PlantUpdateState extends State<PlantUpdate> {
               trailing: Switch(
                 activeColor: Color(0xFF987D3F),
                 activeTrackColor: Color(0XFFFED16A),
+                inactiveThumbColor: Color(0xFF987D3F),
+                inactiveTrackColor: Colors.grey[400],
                 value: _germinatedController,
                 onChanged: (bool value) {
                   setState(() {

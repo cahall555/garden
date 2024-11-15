@@ -92,6 +92,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Garden Journal',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.blueGrey,
+          accentColor: Color(0XFFFED16A),
+        ),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: Color(0XFF987D3F),
+          selectionHandleColor: Color(0XFF987D3F),
+        ),
+      ),
       home: HomeScreen(),
       routes: {
         '/plantDetail': (context) {
