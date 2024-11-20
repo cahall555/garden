@@ -3,13 +3,16 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-//	"fmt"
+
+	//	"fmt"
 	"database/sql"
-	"github.com/pkg/errors"
+
 	"github.com/gofrs/uuid"
-//	"github.com/microcosm-cc/bluemonday"
-	"github.com/gobuffalo/pop/v6"
+	"github.com/pkg/errors"
+
+	//	"github.com/microcosm-cc/bluemonday"
 	"github.com/gobuffalo/buffalo"
+	"github.com/gobuffalo/pop/v6"
 )
 
 // WaterSchedulesShow default implementation.
@@ -21,12 +24,12 @@ func WaterSchedulesShow(c buffalo.Context) error {
 	err := tx.Eager().Find(&ws, wsID)
 	if err != nil {
 		c.Flash().Add("warning", "Water Schedule not found")
-	        return c.Render(http.StatusNotFound, r.JSON(map[string]string{"warning": "Water Schedule not found"}))
+		return c.Render(http.StatusNotFound, r.JSON(map[string]string{"warning": "Water Schedule not found"}))
 	}
 
 	c.Set("ws", ws)
 
-	return c.Render(http.StatusOK, r.JSON(ws))//r.HTML("water_schedules/show.html"))
+	return c.Render(http.StatusOK, r.JSON(ws)) //r.HTML("water_schedules/show.html"))
 }
 
 func WaterSchedulesIndex(c buffalo.Context) error {
@@ -37,11 +40,11 @@ func WaterSchedulesIndex(c buffalo.Context) error {
 	err := tx.Where("plant_id = ?", plantID).First(&ws)
 
 	if errors.Is(err, sql.ErrNoRows) {
-	        return c.Render(http.StatusNotFound, r.JSON(map[string]string{"warning": "Water Schedule not found for the provided plant ID"}))
-    	} else if err != nil {
-        	// For other types of errors, return a 500 Internal Server Error
-        	return errors.WithStack(err)
-    	}
+		return c.Render(http.StatusNotFound, r.JSON(map[string]string{"warning": "Water Schedule not found for the provided plant ID"}))
+	} else if err != nil {
+		// For other types of errors, return a 500 Internal Server Error
+		return errors.WithStack(err)
+	}
 
 	c.Set("ws", ws)
 	return c.Render(http.StatusOK, r.JSON(ws))
@@ -55,39 +58,39 @@ func WaterSchedulesCreate(c buffalo.Context) error {
 	plants := &models.Plants{}
 	err := tx.All(plants)
 	if err != nil {
-//		c.Logger().Error("Plants not found")
+		//		c.Logger().Error("Plants not found")
 		return c.Render(302, r.JSON(map[string]string{"error": "Plants not found"}))
 	}
-	
+
 	c.Set("plants", plants)
 
 	plantId := c.Param("plantId")
-    	c.Set("plantId", plantId)
+	c.Set("plantId", plantId)
 
 	return c.Render(http.StatusOK, r.JSON(ws)) //r.HTML("water_schedules/create.html"))
 }
 
 func WaterSchedulesNew(c buffalo.Context) error {
-	tx :=c.Value("tx").(*pop.Connection)
+	tx := c.Value("tx").(*pop.Connection)
 	ws := &models.WaterSchedule{}
 	err := c.Bind(ws)
 	if err != nil {
-	//	c.Flash().Add("warning", "Water Schedule form binding error")
+		//	c.Flash().Add("warning", "Water Schedule form binding error")
 		return c.Render(302, r.JSON(map[string]string{"error": "Water Schedule form binding error"}))
 	}
 
 	err = c.Request().ParseForm()
 	if err != nil {
-	//	c.Flash().Add("error", "Water Schedule form parsing error")
+		//	c.Flash().Add("error", "Water Schedule form parsing error")
 		return c.Render(302, r.JSON(map[string]string{"error": "Water Schedule form parsing error"}))
 	}
 
-	pws := c.Param("plantId")//c.Request().FormValue("Plant")
+	pws := c.Param("plantId") //c.Request().FormValue("Plant")
 	plant := &models.Plant{}
 	err = tx.Find(plant, pws)
 	if err != nil {
 		c.Logger().Error("Plant not found")
-	//	c.Flash().Add("warning", "Plant not found")
+		//	c.Flash().Add("warning", "Plant not found")
 		return c.Render(302, r.JSON(map[string]string{"error": "Plant not found"}))
 	}
 
@@ -95,9 +98,9 @@ func WaterSchedulesNew(c buffalo.Context) error {
 
 	plant.WaterSchedules = *ws
 
-//	rawNotes := c.Request().FormValue("Notes")
-//	cleanNotes := bluemonday.StrictPolicy().Sanitize(rawNotes)
-//	ws.Notes = cleanNotes
+	//	rawNotes := c.Request().FormValue("Notes")
+	//	cleanNotes := bluemonday.StrictPolicy().Sanitize(rawNotes)
+	//	ws.Notes = cleanNotes
 
 	verrs, err := tx.Eager().ValidateAndCreate(ws)
 	if err != nil {
@@ -105,14 +108,14 @@ func WaterSchedulesNew(c buffalo.Context) error {
 	}
 
 	if verrs.HasAny() {
-//		c.Flash().Add("warning", "Water Schedule validation error")
+		//		c.Flash().Add("warning", "Water Schedule validation error")
 		c.Set("ws", ws)
 		c.Set("errors", verrs)
-		return c.Render(422, r.JSON(verrs))//r.HTML("water_schedules/create.html"))
+		return c.Render(422, r.JSON(verrs)) //r.HTML("water_schedules/create.html"))
 	}
 
-//	c.Flash().Add("success", "Water Schedule created")
-	return c.Render(201, r.JSON(ws))//c.Redirect(301, fmt.Sprintf("/water_schedules/%s", ws.ID))
+	//	c.Flash().Add("success", "Water Schedule created")
+	return c.Render(201, r.JSON(ws)) //c.Redirect(301, fmt.Sprintf("/water_schedules/%s", ws.ID))
 }
 
 func WaterSchedulesUpdate(c buffalo.Context) error {
@@ -136,16 +139,16 @@ func WaterSchedulesUpdate(c buffalo.Context) error {
 		c.Logger().Error("Plants not found")
 		return c.Render(500, r.JSON(map[string]string{"error": "Plants not found"}))
 	}
-	
+
 	plantId := ws.PlantID
 	c.Set("plantId", plantId)
 	c.Set("plants", plants)
 
-	return c.Render(http.StatusOK, r.JSON(ws))//r.HTML("water_schedules/update.html"))
+	return c.Render(http.StatusOK, r.JSON(ws)) //r.HTML("water_schedules/update.html"))
 }
 
 func WaterSchedulesEdit(c buffalo.Context) error {
-	tx :=c.Value("tx").(*pop.Connection)
+	tx := c.Value("tx").(*pop.Connection)
 	ws := &models.WaterSchedule{}
 	if err := tx.Find(ws, c.Param("wsId")); err != nil {
 		return err
@@ -153,30 +156,30 @@ func WaterSchedulesEdit(c buffalo.Context) error {
 
 	err := c.Bind(ws)
 	if err != nil {
-	//	c.Flash().Add("warning", "Water Schedule form binding error")
+		//	c.Flash().Add("warning", "Water Schedule form binding error")
 		return c.Render(302, r.JSON(map[string]string{"error": "Water Schedule form binding error"}))
 	}
 
 	err = c.Request().ParseForm()
 	if err != nil {
-	//	c.Flash().Add("error", "Water Schedule form parsing error")
+		//	c.Flash().Add("error", "Water Schedule form parsing error")
 		return c.Render(302, r.JSON(map[string]string{"error": "Water Schedule form parsing error"}))
 	}
 
-	pws := c.Param("plantId")//c.Request().FormValue("Plant")
+	pws := c.Param("plantId") //c.Request().FormValue("Plant")
 	plant := &models.Plant{}
 	err = tx.Find(plant, pws)
 	if err != nil {
 		c.Logger().Error("Plant not found")
-	//	c.Flash().Add("warning", "Plant not found")
+		//	c.Flash().Add("warning", "Plant not found")
 		return c.Render(302, r.JSON(map[string]string{"error": "Plant not found"}))
 	}
 
 	plant.WaterSchedules = *ws
 
-//	rawNotes := c.Request().FormValue("Notes")
-//	cleanNotes := bluemonday.StrictPolicy().Sanitize(rawNotes)
-//	ws.Notes = cleanNotes
+	//	rawNotes := c.Request().FormValue("Notes")
+	//	cleanNotes := bluemonday.StrictPolicy().Sanitize(rawNotes)
+	//	ws.Notes = cleanNotes
 
 	verrs, err := tx.Eager().ValidateAndUpdate(ws)
 	if err != nil {
@@ -187,28 +190,27 @@ func WaterSchedulesEdit(c buffalo.Context) error {
 		c.Flash().Add("warning", "Water Schedule validation error")
 		c.Set("ws", ws)
 		c.Set("errors", verrs)
-		return c.Render(422, r.JSON(verrs))//r.HTML("water_schedules/update.html"))
+		return c.Render(422, r.JSON(verrs)) //r.HTML("water_schedules/update.html"))
 	}
 
-//	c.Flash().Add("success", "Water Schedule updated")
-	return c.Render(201, r.JSON(ws))//c.Redirect(301, fmt.Sprintf("/water_schedules/%s", ws.ID))
-}	
+	//	c.Flash().Add("success", "Water Schedule updated")
+	return c.Render(201, r.JSON(ws)) //c.Redirect(301, fmt.Sprintf("/water_schedules/%s", ws.ID))
+}
 
 func WaterSchedulesDelete(c buffalo.Context) error {
-	tx := c.Value("tx").(*pop.Connection) 
-	wsId := c.Param("id") 
+	tx := c.Value("tx").(*pop.Connection)
+	wsId := c.Param("id")
 
 	ws := models.WaterSchedule{}
 	if err := tx.Find(&ws, wsId); err != nil {
 		c.Logger().Errorf("Error finding Water Schedule with id %s, error: %v", wsId, err)
-//		c.Flash().Add("error", "Water Schedule not found")
+		//		c.Flash().Add("error", "Water Schedule not found")
 		return c.Render(http.StatusNotFound, r.JSON(map[string]string{"error": "Water Schedule not found"}))
 	}
-	
 
 	if err := tx.Destroy(&ws); err != nil {
 		c.Logger().Errorf("Error deleting Water Schedule with id %s, error: %v", wsId, err)
-//		c.Flash().Add("error", "Error deleting Water Schedule")
+		//		c.Flash().Add("error", "Error deleting Water Schedule")
 		return c.Render(500, r.JSON(map[string]string{"error": "Error deleting Water Schedule"}))
 	}
 
@@ -218,10 +220,10 @@ func WaterSchedulesDelete(c buffalo.Context) error {
 
 // Delete water schedule as part of parent delete
 func DeleteWSById(tx *pop.Connection, WSID uuid.UUID) error {
-    ws := &models.WaterSchedule{}
-    if err := tx.Find(ws, WSID); err != nil {
-        return err
-    }
+	ws := &models.WaterSchedule{}
+	if err := tx.Find(ws, WSID); err != nil {
+		return err
+	}
 
-    return tx.Destroy(ws)
+	return tx.Destroy(ws)
 }

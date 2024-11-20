@@ -3,7 +3,8 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-//	"fmt"
+
+	//	"fmt"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"
 )
@@ -16,7 +17,7 @@ func TagsShow(c buffalo.Context) error {
 
 	err := tx.Eager().Find(&tag, tagID)
 	if err != nil {
-//		c.Flash().Add("warning", "Tag not found")
+		//		c.Flash().Add("warning", "Tag not found")
 		c.Redirect(301, "/")
 	}
 
@@ -47,7 +48,7 @@ func TagsIndex(c buffalo.Context) error {
 	accountID := c.Param("account_id")
 	err := tx.Eager().Where("account_id = ?", accountID).All(&tag)
 	if err != nil {
-//		c.Flash().Add("warning", "Tags not found")
+		//		c.Flash().Add("warning", "Tags not found")
 		c.Redirect(301, "/")
 	}
 
@@ -58,11 +59,11 @@ func TagsIndex(c buffalo.Context) error {
 func TagsCreate(c buffalo.Context) error {
 	tag := models.Tag{}
 	c.Set("tag", tag)
-	return c.Render(http.StatusOK, r.JSON(tag))//r.HTML("tags/create.html"))
+	return c.Render(http.StatusOK, r.JSON(tag)) //r.HTML("tags/create.html"))
 }
 
 func TagsNew(c buffalo.Context) error {
-	tx :=c.Value("tx").(*pop.Connection)
+	tx := c.Value("tx").(*pop.Connection)
 	tag := &models.Tag{}
 	err := c.Bind(tag)
 	if err != nil {
@@ -96,8 +97,8 @@ func TagsUpdate(c buffalo.Context) error {
 
 	err := tx.Eager().Find(&tag, tagID)
 	if err != nil {
-	//	c.Flash().Add("warning", "Tag not found")
-	//	c.Redirect(301, "/")
+		//	c.Flash().Add("warning", "Tag not found")
+		//	c.Redirect(301, "/")
 		c.Logger().Error("Tag not found: ", err)
 	}
 	c.Set("tag", tag)
@@ -111,7 +112,7 @@ func TagsEdit(c buffalo.Context) error {
 	if err := tx.Find(tag, c.Param("tagId")); err != nil {
 		return err
 	}
-	
+
 	err := c.Bind(tag)
 	if err != nil {
 		//c.Flash().Add("warning", "Tag form binding error")
@@ -138,14 +139,14 @@ func TagsEdit(c buffalo.Context) error {
 	return c.Render(200, r.JSON(tag))
 }
 func TagsDelete(c buffalo.Context) error {
-	tx := c.Value("tx").(*pop.Connection) 
-	tagId := c.Param("id") 
+	tx := c.Value("tx").(*pop.Connection)
+	tagId := c.Param("id")
 
 	tag := models.Tag{}
 	if err := tx.Find(&tag, tagId); err != nil {
 		c.Logger().Errorf("Error finding Tag with id %s, error: %v", tagId, err)
-//		c.Flash().Add("error", "Water Schedule not found")
-//		return c.Redirect(http.StatusFound, "/tags/")
+		//		c.Flash().Add("error", "Water Schedule not found")
+		//		return c.Redirect(http.StatusFound, "/tags/")
 		return c.Render(http.StatusNotFound, r.JSON("Not Found"))
 	}
 
@@ -169,12 +170,12 @@ func TagsDelete(c buffalo.Context) error {
 
 	if err := tx.Destroy(&tag); err != nil {
 		c.Logger().Errorf("Error deleting Tag with id %s, error: %v", tagId, err)
-//		c.Flash().Add("error", "Error deleting Tag")
-//		return c.Redirect(http.StatusFound, "/")
+		//		c.Flash().Add("error", "Error deleting Tag")
+		//		return c.Redirect(http.StatusFound, "/")
 		return c.Render(http.StatusInternalServerError, r.JSON("Error deleting Tag"))
 	}
 
-//	c.Flash().Add("success", "Tag successfully deleted")
-//	return c.Redirect(http.StatusFound, "/")
+	//	c.Flash().Add("success", "Tag successfully deleted")
+	//	return c.Redirect(http.StatusFound, "/")
 	return c.Render(http.StatusOK, r.JSON("Tag successfully deleted"))
 }

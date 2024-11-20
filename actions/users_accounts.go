@@ -3,9 +3,10 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-	"github.com/pkg/errors"
+
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"
+	"github.com/pkg/errors"
 )
 
 func UserAccountsIndex(c buffalo.Context) error {
@@ -19,7 +20,7 @@ func UserAccountsIndex(c buffalo.Context) error {
 	}
 
 	c.Set("ua", ua)
-	return c.Render(http.StatusOK, r.JSON(ua))//r.HTML("accounts/index.html"))
+	return c.Render(http.StatusOK, r.JSON(ua)) //r.HTML("accounts/index.html"))
 }
 
 func UsersAccountShow(c buffalo.Context) error {

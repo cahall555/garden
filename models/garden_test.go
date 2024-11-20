@@ -2,7 +2,7 @@ package models
 
 func (ms *ModelSuite) Test_Garden() {
 	g := &Garden{
-		Name: "Salsa Garden",
+		Name:        "Salsa Garden",
 		Description: "This garden was planted in mid-May and is expected to produce a variety of salsa ingredients.",
 	}
 
@@ -20,7 +20,7 @@ func (ms *ModelSuite) Test_Garden() {
 
 func (ms *ModelSuite) Test_GardenPlant() {
 	g := &Garden{
-		Name: "Salsa Garden",
+		Name:        "Salsa Garden",
 		Description: "This garden was planted in mid-May and is expected to produce a variety of salsa ingredients.",
 		Plants: []Plant{
 			{

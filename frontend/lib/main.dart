@@ -35,6 +35,7 @@ import 'provider/account_provider.dart';
 import 'provider/users_account_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:camera/camera.dart';
 
 void main() async {
@@ -46,11 +47,12 @@ void main() async {
   }
 
   final client = http.Client();
+  final storage = const FlutterSecureStorage();
   final gardenApiService = GardenApiService(client);
   final accountApiService = AccountApiService(client);
   final userApiService = UserApiService(client);
   final usersAccountApiService = UsersAccountApiService(client);
-  final authApiService = AuthApiService(client);
+  final authApiService = AuthApiService(client, storage);
   final plantApiService = PlantApiService(client);
   final wsApiService = WsApiService(client);
   final journalApiService = JournalApiService(client);

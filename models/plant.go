@@ -12,22 +12,22 @@ import (
 
 // Plant is used by pop to map your plants database table to your go code.
 type Plant struct {
-	ID            uuid.UUID `json:"id" db:"id"`
-	Name          string    `json:"name" db:"name"`
-	Germinated    bool      `json:"germinated" db:"germinated"`
-	DaysToHarvest int       `json:"days_to_harvest" db:"days_to_harvest"`
-	PlantCount    int       `json:"plant_count" db:"plant_count"`
-	DatePlanted   time.Time `json:"date_planted" db:"date_planted"`
-	DateGerminated time.Time `json:"date_germinated" db:"date_germinated"`
-	GardenID      uuid.UUID `json:"garden_id" db:"garden_id"`
-	Garden        *Garden   `json:"Garden,omitempty" belongs_to:"garden"`
-	PlantTags     Tags      `json:"plant_tags,omitempty" many_to_many:"plants_tags"`
-	Journals      []Journal `json:"journals,omitempty" has_many:"journals"`
+	ID             uuid.UUID     `json:"id" db:"id"`
+	Name           string        `json:"name" db:"name"`
+	Germinated     bool          `json:"germinated" db:"germinated"`
+	DaysToHarvest  int           `json:"days_to_harvest" db:"days_to_harvest"`
+	PlantCount     int           `json:"plant_count" db:"plant_count"`
+	DatePlanted    time.Time     `json:"date_planted" db:"date_planted"`
+	DateGerminated time.Time     `json:"date_germinated" db:"date_germinated"`
+	GardenID       uuid.UUID     `json:"garden_id" db:"garden_id"`
+	Garden         *Garden       `json:"Garden,omitempty" belongs_to:"garden"`
+	PlantTags      Tags          `json:"plant_tags,omitempty" many_to_many:"plants_tags"`
+	Journals       []Journal     `json:"journals,omitempty" has_many:"journals"`
 	WaterSchedules WaterSchedule `has_one:"water_schedules"`
-	AccountID     uuid.UUID `json:"account_id" db:"account_id"`
-	Account       *Account  `json:"Account,omitempty" belongs_to:"accounts"`
-	CreatedAt     time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at" db:"updated_at"`
+	AccountID      uuid.UUID     `json:"account_id" db:"account_id"`
+	Account        *Account      `json:"Account,omitempty" belongs_to:"accounts"`
+	CreatedAt      time.Time     `json:"created_at" db:"created_at"`
+	UpdatedAt      time.Time     `json:"updated_at" db:"updated_at"`
 }
 
 func (p Plant) PlantName() string {
@@ -52,6 +52,7 @@ func (p Plant) SelectLabel() string {
 func (p Plant) SelectValue() interface{} {
 	return p.ID
 }
+
 // String is not required by pop and may be deleted
 func (p Plant) String() string {
 	jp, _ := json.Marshal(p)

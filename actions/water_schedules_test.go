@@ -18,6 +18,4 @@ func (as *ActionSuite) Test_WaterSchedules_Show() {
 	body := res.Body.String()
 	as.Contains(body, "Water every other day", "The word drip not found on page")
 
-
 }
-

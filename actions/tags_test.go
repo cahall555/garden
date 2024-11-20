@@ -24,17 +24,17 @@ func (as *ActionSuite) Test_Tags_Show() {
 
 func (as *ActionSuite) Test_Tags_Create() {
 	tag := &models.Tag{Name: "Spicy"}
-	
+
 	res := as.HTML("/tags").Post(tag)
-    	as.Equal(301, res.Code)
-    	err := as.DB.First(tag)
-    	as.NoError(err)
-    	as.NotZero(tag.ID)
+	as.Equal(301, res.Code)
+	err := as.DB.First(tag)
+	as.NoError(err)
+	as.NotZero(tag.ID)
 
 	as.Equal(fmt.Sprintf("/tags/%s", tag.ID), res.Location())
 
 	as.NotZero(tag.CreatedAt)
-    	as.Equal("Spicy", tag.Name)
+	as.Equal("Spicy", tag.Name)
 }
 
 func (as *ActionSuite) Test_Tags_Delete() {

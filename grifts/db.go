@@ -3,6 +3,7 @@ package grifts
 import (
 	"garden/models"
 	"time"
+
 	"github.com/gobuffalo/grift/grift"
 )
 
@@ -21,7 +22,7 @@ var _ = grift.Namespace("db", func() {
 		if err != nil {
 			panic(err)
 		}
-	
+
 		//Seed users
 		user1 := models.User{FirstName: "John", LastName: "Doe", Email: "john@garden.com", PasswordHash: "password"}
 		err = models.DB.Create(&user1)
@@ -30,6 +31,13 @@ var _ = grift.Namespace("db", func() {
 		}
 		user2 := models.User{FirstName: "Jane", LastName: "Doe", Email: "jane@garden.com", PasswordHash: "password"}
 		err = models.DB.Create(&user2)
+		if err != nil {
+			panic(err)
+		}
+
+		//Seed refresh_tokens
+		rt1 := models.RefreshToken{UserID: user1.ID, Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzE5NTQyODAsInVzZXJfaWQiOiIzZDJlOGQxNC0yNjE1LTRjODAtYmE5Yi1hYTZhOTgwNDJhMWMifQ.7", ExpiresAt: time.Now().Add(30 * 24 * time.Hour)}
+		err = models.DB.Create(&rt1)
 		if err != nil {
 			panic(err)
 		}
@@ -154,7 +162,7 @@ var _ = grift.Namespace("db", func() {
 		}
 
 		//Seed WaterSchedules
-		ws1 := models.WaterSchedule{Monday: true, Tuesday: false, Wednesday: true, Thursday: false, Friday: true, Saturday: false, Sunday: true, Method: "Drip", Notes:"Watering every other day", PlantID: basil.ID}
+		ws1 := models.WaterSchedule{Monday: true, Tuesday: false, Wednesday: true, Thursday: false, Friday: true, Saturday: false, Sunday: true, Method: "Drip", Notes: "Watering every other day", PlantID: basil.ID}
 		err = models.DB.Create(&ws1)
 		if err != nil {
 			panic(err)
