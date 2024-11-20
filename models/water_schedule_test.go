@@ -43,7 +43,6 @@ func (ms *ModelSuite) Test_WaterSchedule() {
 		PlantID:   p.ID,
 	}
 
-
 	verrs, err = db.ValidateAndCreate(ws)
 	if err != nil {
 		panic(err)

@@ -3,9 +3,10 @@ package actions
 import (
 	"garden/models"
 	"net/http"
-	"github.com/pkg/errors"
+
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"
+	"github.com/pkg/errors"
 )
 
 func AccountsShow(c buffalo.Context) error {
@@ -20,7 +21,7 @@ func AccountsShow(c buffalo.Context) error {
 	}
 
 	c.Set("account", account)
-	return c.Render(http.StatusOK, r.JSON(account))//r.HTML("accounts/show.html"))
+	return c.Render(http.StatusOK, r.JSON(account)) //r.HTML("accounts/show.html"))
 }
 
 func AccountsIndex(c buffalo.Context) error {
@@ -34,7 +35,7 @@ func AccountsIndex(c buffalo.Context) error {
 	}
 
 	c.Set("account", account)
-	return c.Render(http.StatusOK, r.JSON(account))//r.HTML("accounts/index.html"))
+	return c.Render(http.StatusOK, r.JSON(account)) //r.HTML("accounts/index.html"))
 }
 
 func AccountsNew(c buffalo.Context) error {
@@ -44,11 +45,11 @@ func AccountsNew(c buffalo.Context) error {
 }
 
 func AccountsCreate(c buffalo.Context) error {
-	tx :=c.Value("tx").(*pop.Connection)
+	tx := c.Value("tx").(*pop.Connection)
 	account := &models.Account{}
 	err := c.Bind(account)
 	if err != nil {
-		
+
 		return c.Render(301, r.JSON(account))
 	}
 
@@ -58,7 +59,7 @@ func AccountsCreate(c buffalo.Context) error {
 	}
 
 	if verrs.HasAny() {
-	
+
 		c.Set("account", account)
 		c.Set("errors", verrs)
 		return c.Render(422, r.JSON(verrs))
@@ -99,7 +100,7 @@ func AccountsEdit(c buffalo.Context) error {
 	if err := tx.Find(&account, c.Param("id")); err != nil {
 		return c.Render(500, r.JSON(account))
 	}
-	
+
 	err := c.Bind(account)
 	if err != nil {
 		return c.Render(500, r.JSON(account))

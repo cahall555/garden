@@ -2,8 +2,9 @@ package models
 
 import (
 	"encoding/json"
-	"time"
 	"strings"
+	"time"
+
 	"github.com/gobuffalo/pop/v6"
 	"github.com/gobuffalo/validate/v3"
 	"github.com/gobuffalo/validate/v3/validators"
@@ -14,15 +15,15 @@ import (
 
 // User is used by pop to map your users database table to your go code.
 type User struct {
-	ID            uuid.UUID `json:"id" db:"id"`
-	FirstName     string    `json:"first_name" db:"first_name"`
-	LastName      string    `json:"last_name" db:"last_name"`
-	Email         string    `json:"email" db:"email"`
-	PasswordHash  string    `json:"password_hash" db:"password_hash"`
-	Password      string    `json:"password" db:"-"`
-	PasswordConfirmation string `json:"password_confirmation" db:"-"`
-	CreatedAt     time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at" db:"updated_at"`
+	ID                   uuid.UUID `json:"id" db:"id"`
+	FirstName            string    `json:"first_name" db:"first_name"`
+	LastName             string    `json:"last_name" db:"last_name"`
+	Email                string    `json:"email" db:"email"`
+	PasswordHash         string    `json:"password_hash" db:"password_hash"`
+	Password             string    `json:"password" db:"-"`
+	PasswordConfirmation string    `json:"password_confirmation" db:"-"`
+	CreatedAt            time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt            time.Time `json:"updated_at" db:"updated_at"`
 }
 
 func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {

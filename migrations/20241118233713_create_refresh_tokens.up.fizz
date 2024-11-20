@@ -1,0 +1,8 @@
+create_table("refresh_tokens") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("user_id", "uuid", {})
+	t.ForeignKey("user_id", {"users": ["id"] })
+	t.Column("token", "string", {"null": false})
+	t.Column("expires_at", "time", {"null": false})
+	t.Timestamps()
+}

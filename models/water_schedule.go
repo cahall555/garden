@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 	"time"
+
 	"github.com/gobuffalo/pop/v6"
 	"github.com/gobuffalo/validate/v3"
 	"github.com/gobuffalo/validate/v3/validators"
@@ -12,10 +13,10 @@ import (
 type Method string
 
 const (
-	Drip   Method = "Drip"
-	Hand   Method = "Hand watering"
+	Drip      Method = "Drip"
+	Hand      Method = "Hand watering"
 	Sprinkler Method = "Sprinkler"
-	Soaker Method = "Soaker hose"
+	Soaker    Method = "Soaker hose"
 )
 
 // WaterSchedule is used by pop to map your water_schedules database table to your go code.
@@ -35,6 +36,7 @@ type WaterSchedule struct {
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 }
+
 // String is not required by pop and may be deleted
 func (w WaterSchedule) String() string {
 	jw, _ := json.Marshal(w)

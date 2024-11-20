@@ -2,16 +2,16 @@ package actions
 
 import (
 	"garden/models"
-	"net/http"
-	"os"
 	"io"
 	"log"
+	"net/http"
+	"os"
 	"path/filepath"
-	"github.com/gofrs/uuid"
+
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v6"
+	"github.com/gofrs/uuid"
 )
-
 
 // JournalsShow default implementation.
 func JournalsShow(c buffalo.Context) error {
@@ -58,9 +58,9 @@ func PlantJournals(c buffalo.Context) error {
 }
 
 func JournalsCreate(c buffalo.Context) error {
-	journal := models.Journal{}	
+	journal := models.Journal{}
 	c.Set("journal", journal)
-	
+
 	tx := c.Value("tx").(*pop.Connection)
 	plants := &models.Plants{}
 	err := tx.All(plants)
@@ -68,12 +68,12 @@ func JournalsCreate(c buffalo.Context) error {
 		c.Logger().Error("Plants not found")
 		return c.Render(500, r.JSON(map[string]string{"error": "Plants not found"}))
 	}
-	
+
 	c.Set("plants", plants)
 
 	plantId := c.Param("plantId")
-    	c.Set("plantId", plantId)
-	
+	c.Set("plantId", plantId)
+
 	c.Logger().Debug("Trying to understand the plants and plantId.")
 	c.Logger().Warn("Trying to understand the plants and plantId.")
 	c.Logger().Error("plantId: ", plantId)
@@ -85,7 +85,7 @@ func JournalsNew(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	journal := &models.Journal{}
 
-	if err := c.Request().ParseMultipartForm(10 << 20); err != nil { 
+	if err := c.Request().ParseMultipartForm(10 << 20); err != nil {
 		c.Logger().Error("Failed to parse multipart form: ", err)
 		return c.Render(400, r.JSON(map[string]string{"error": "Error parsing form"}))
 	}
@@ -157,7 +157,7 @@ func JournalsUpdate(c buffalo.Context) error {
 		c.Logger().Error("Plants not found")
 		return c.Render(500, r.JSON(map[string]string{"error": "Plants not found"}))
 	}
-	
+
 	plantId := journal.PlantID
 	c.Set("plantId", plantId)
 	c.Set("plants", plants)
@@ -190,7 +190,7 @@ func JournalsEdit(c buffalo.Context) error {
 	c.Logger().Info("File: ", file)
 	c.Logger().Info("Header: ", header)
 	c.Logger().Info("Error: ", err)
-	if err == http.ErrMissingFile{
+	if err == http.ErrMissingFile {
 		c.Logger().Info("No new file uploaded, preserving existing image if exists.")
 	} else if err != nil {
 		c.Logger().Error("Error getting uploaded file: ", err)
@@ -238,21 +238,21 @@ func JournalsEdit(c buffalo.Context) error {
 	return c.Render(200, r.JSON(journal))
 }
 
-func JournalsDelete (c buffalo.Context) error {
-	tx := c.Value("tx").(*pop.Connection) 
-	journalId := c.Param("id") 
+func JournalsDelete(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	journalId := c.Param("id")
 
 	journal := models.Journal{}
 	if err := tx.Find(&journal, journalId); err != nil {
 		c.Logger().Errorf("Error finding Journal with id %s, error: %v", journalId, err)
 		return c.Render(404, r.JSON(map[string]string{"error": "Journal not found"}))
 	}
-	
-    	imagePath := filepath.Join("frontend/assets", journal.Image)
 
-    	if err := os.Remove(imagePath); err != nil {
-        	c.Logger().Errorf("Error deleting image file %s, error: %v", imagePath, err)
-    	}
+	imagePath := filepath.Join("frontend/assets", journal.Image)
+
+	if err := os.Remove(imagePath); err != nil {
+		c.Logger().Errorf("Error deleting image file %s, error: %v", imagePath, err)
+	}
 
 	if err := tx.Destroy(&journal); err != nil {
 		c.Logger().Errorf("Error deleting Journal with id %s, error: %v", journalId, err)
@@ -266,17 +266,16 @@ func JournalsDelete (c buffalo.Context) error {
 
 // Delete journals as part of parent delete
 func DeleteJournalById(tx *pop.Connection, journalID uuid.UUID) error {
-    journal := &models.Journal{}
-    if err := tx.Find(journal, journalID); err != nil {
-        return err
-    }
+	journal := &models.Journal{}
+	if err := tx.Find(journal, journalID); err != nil {
+		return err
+	}
 
-    if journal.Image != "" {
-        imagePath := filepath.Join("frontend/assets", journal.Image)
-        if err := os.Remove(imagePath); err != nil {
-            log.Printf("Warning: Error deleting image file %s, error: %v", imagePath, err)
-        }
-	}    
-    return tx.Destroy(journal)
+	if journal.Image != "" {
+		imagePath := filepath.Join("frontend/assets", journal.Image)
+		if err := os.Remove(imagePath); err != nil {
+			log.Printf("Warning: Error deleting image file %s, error: %v", imagePath, err)
+		}
+	}
+	return tx.Destroy(journal)
 }
-

@@ -22,7 +22,6 @@ func (as *ActionSuite) Test_Plants_Show() {
 
 }
 
-
 func (as *ActionSuite) Test_Plants_Delete() {
 	as.LoadFixture("model test")
 

@@ -8,14 +8,17 @@ import (
 	"garden/models"
 	"garden/public"
 	"log"
+
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo-pop/v3/pop/popmw"
 	"github.com/gobuffalo/envy"
+
 	//"github.com/gobuffalo/middleware/csrf" TODO: Is there a way to leave csrf active and use when needed?
 	"github.com/gobuffalo/middleware/forcessl"
 	"github.com/gobuffalo/middleware/i18n"
 	"github.com/gobuffalo/middleware/paramlogger"
 	"github.com/unrolled/secure"
+	// "github.com/gorilla/sessions"
 )
 
 // ENV is used to help switch settings based on where the
@@ -48,11 +51,19 @@ func App() *buffalo.App {
 			SessionName: "_garden_session",
 		})
 
+		/*	store := sessions.NewCookieStore([]byte("your-secret-key")) // TODO: change this to a secret key
+			store.Options = &sessions.Options{
+			    Path:     "/",
+			    MaxAge:   86400 * 30,
+			    HttpOnly: true,
+			    Secure:   ENV == "production",
+			}*/
+
 		app.Use(func(next buffalo.Handler) buffalo.Handler {
-		    return func(c buffalo.Context) error {
-        		log.Println("Request received for:", c.Request().URL.Path)
-  		      return next(c)
-    			}
+			return func(c buffalo.Context) error {
+				log.Println("Request received for:", c.Request().URL.Path)
+				return next(c)
+			}
 		})
 
 		// Automatically redirect to SSL
@@ -63,7 +74,7 @@ func App() *buffalo.App {
 
 		// Protect against CSRF attacks. https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
 		// Remove to disable this.
-	//	app.Use(csrf.New) *** See todo on line 14
+		//	app.Use(csrf.New) *** See todo on line 14
 
 		// Wraps each request in a transaction.
 		//   c.Value("tx").(*pop.Connection)
@@ -71,17 +82,17 @@ func App() *buffalo.App {
 		app.Use(popmw.Transaction(models.DB))
 		// Setup and use translations:
 		app.Use(translations())
-	 
-//		app.GET("/csrf", func(c buffalo.Context) error {
-//        		csrfToken := csrf.Token(c)
-//        		return c.Render(200, r.JSON(map[string]string{"csrf_token": csrfToken}))
-//    		})
 
-	//	app.GET("/", GardensIndex) //replacing HomeHandler
+		//		app.GET("/csrf", func(c buffalo.Context) error {
+		//        		csrfToken := csrf.Token(c)
+		//        		return c.Render(200, r.JSON(map[string]string{"csrf_token": csrfToken}))
+		//    		})
+
+		//	app.GET("/", GardensIndex) //replacing HomeHandler
 
 		//AuthMiddleware
-	//	app.Use(SetCurrentUser)
-	//	app.Use(Authorize)
+		//	app.Use(SetCurrentUser)
+		//	app.Use(Authorize)
 		app.POST("/auth", AuthCreate)
 		app.DELETE("/auth/delete", AuthDelete)
 		app.GET("/users/new", UsersNew)

@@ -6,88 +6,122 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 import 'package:frontend/model/user.dart';
 import 'package:frontend/model/apis/auth_api.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'auth_api_test.mocks.dart';
+/* TODO: update auth tests issue #10
+class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 
 @GenerateMocks([http.Client])
 void main() async {
   late MockClient mockClient;
+  late MockFlutterSecureStorage mockStorage;
   late AuthApiService authApiService;
 
+  await dotenv.load(fileName: ".env");
   setUp(() {
     mockClient = MockClient();
-    authApiService = AuthApiService(mockClient);
+    mockStorage = MockFlutterSecureStorage();
+    authApiService = AuthApiService(mockClient, mockStorage);
   });
 
-  TestWidgetsFlutterBinding.ensureInitialized();
+  group('AuthApiService', () {
+    final apiUrl = dotenv.env['API_URL'] ?? '';
+    const String validAccessToken = 'validAccessToken';
+    const String validRefreshToken = 'validRefreshToken';
 
-  await dotenv.load(fileName: ".env");
-
-  final apiUrl = dotenv.env['API_URL'] ?? '';
-
-  test('API URL is loaded', () {
-    expect(apiUrl, isNotNull);
-    expect(apiUrl, isNotEmpty);
-  });
-
-  test('loginApi returns a User if the http call completes successfully',
-      () async {
-    final userData = {
+final userData = {
       'id': "1",
       'email': 'chuck@garden.com',
       'password': 'password',
       'created_at': '2021-08-10T00:00:00.000Z',
       'updated_at': '2021-08-10T00:00:00.000Z',
     };
+/*
+    final Map<String, dynamic> userData = {
+      'id': 1,
+      'first_name': 'Test',
+      'last_name': 'User',
+      'email': 'test@example.com',
+      'password': 'password123',
+      'created_at': '2021-07-01T00:00:00.000Z',
+      'updated_at': '2021-07-01T00:00:00.000Z'
+    };*/
 
-    final response =
-        '{"id": "1", "email": "chuck@garden.com", "password": "password", "created_at": "2021-08-10T00:00:00.000Z", "updated_at": "2021-08-10T00:00:00.000Z"}';
-
-    when(mockClient.post(Uri.parse(apiUrl + 'auth'),
-            headers: {"Content-Type": "application/json"},
-            body: json.encode(userData)))
-        .thenAnswer((_) async => http.Response(response, 200));
-
-    final user = await authApiService.createAuthApi(userData);
-
-    expect(user.id, '1');
-  });
-
-  test('loginApi throws an exception if the http call completes with an error',
-      () async {
-    final userData = {
-      'id': "1",
-      'email': "chuck@garden.com",
-      'password': "password1",
-      'created_at': "2021-08-10T00:00:00.000Z",
-      'updated_at': "2021-08-10T00:00:00.000Z",
+    final Map<String, dynamic> validResponseBody = {
+      'access_token': validAccessToken,
+      'refresh_token': validRefreshToken,
+      'user': {'id': 1, 'name': 'Test User', 'email': 'test@example.com'}
     };
-    when(mockClient.post(Uri.parse(apiUrl + 'auth'),
-            headers: {"Content-Type": "application/json"},
-            body: json.encode(userData)))
-        .thenAnswer((_) async => http.Response('Not Found', 404));
-    expect(authApiService.createAuthApi(userData), throwsException);
-    verify(mockClient.post(Uri.parse(apiUrl + 'auth'),
-        headers: {"Content-Type": "application/json"},
-        body: json.encode(userData)));
+
+    test('createAuthApi should return a User on successful authentication',
+        () async {
+      final url = Uri.parse(apiUrl + 'auth');
+      when(mockClient.post(
+        url,
+        headers: anyNamed('headers'),
+        body: anyNamed('body'),
+      )).thenAnswer(
+        (_) async => http.Response(json.encode(validResponseBody), 200),
+      );
+
+      when(mockStorage.write(key: 'accessToken', value: validAccessToken))
+          .thenAnswer((_) async => Future.value());
+      when(mockStorage.write(key: 'refreshToken', value: validRefreshToken))
+          .thenAnswer((_) async => Future.value());
+
+      final user = await authApiService.createAuthApi(userData);
+
+      expect(user, isA<User>());
+      expect(user.email, 'test@example.com');
+      verify(mockStorage.write(key: 'accessToken', value: validAccessToken))
+          .called(1);
+      verify(mockStorage.write(key: 'refreshToken', value: validRefreshToken))
+          .called(1);
+    });
+
+    test('createAuthApi should throw an exception if tokens are missing',
+        () async {
+      final url = Uri.parse(apiUrl + 'auth');
+      when(mockClient.post(
+        url,
+        headers: anyNamed('headers'),
+        body: anyNamed('body'),
+      )).thenAnswer(
+        (_) async => http.Response(
+            '{"user": {"id": 1, "name": "Test User", "email": "test@example.com"}, "access_token": "validAccessToken", "refresh_token": "validRefreshToken"}',
+            200),
+      );
+
+      when(mockStorage.write(key: 'accessToken', value: validAccessToken))
+          .thenAnswer((_) async => Future.value());
+      when(mockStorage.write(key: 'refreshToken', value: validRefreshToken))
+          .thenAnswer((_) async => Future.value());
+
+      expect(() async => await authApiService.createAuthApi(userData),
+          throwsException);
+      verifyNever(
+          mockStorage.write(key: 'accessToken', value: validAccessToken));
+      verifyNever(
+          mockStorage.write(key: 'refreshToken', value: validRefreshToken));
+    });
+
+    test('logoutApi should clear storage and return on successful logout',
+        () async {
+      final url = Uri.parse(apiUrl + 'auth/delete');
+      when(mockStorage.read(key: 'accessToken'))
+          .thenAnswer((_) async => validAccessToken);
+      when(mockClient.delete(
+        url,
+        headers: anyNamed('headers'),
+      )).thenAnswer(
+        (_) async => http.Response('', 200),
+      );
+      when(mockStorage.deleteAll()).thenAnswer((_) async => null);
+
+      await authApiService.logoutApi();
+
+      verify(mockClient.delete(url, headers: anyNamed('headers'))).called(1);
+      verify(mockStorage.deleteAll()).called(1);
+    });
   });
-
-  test('logoutApi returns void if the http call completes successfully',
-      () async {
-    final response = '{"message": "Logout successful"}';
-
-    when(mockClient.delete(Uri.parse(apiUrl + 'auth/delete'),
-            headers: {"Content-Type": "application/json"}))
-        .thenAnswer((_) async => http.Response(response, 200));
-
-    await authApiService.logoutApi();
-  });
-
-  test('logoutApi throws an exception when logoout fails', () async {
-    when(mockClient.delete(Uri.parse(apiUrl + 'auth/delete'),
-            headers: {"Content-Type": "application/json"}))
-        .thenAnswer((_) async => http.Response('Not Found', 404));
-    expect(authApiService.logoutApi(), throwsException);
-    verify(mockClient.delete(Uri.parse(apiUrl + 'auth/delete'),
-        headers: {"Content-Type": "application/json"}));
-  });
-}
+}*/

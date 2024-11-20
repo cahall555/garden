@@ -9,7 +9,7 @@ import 'package:frontend/view/user_create.dart';
 import 'package:frontend/view/auth_landing.dart';
 import 'package:frontend/provider/user_provider.dart';
 import 'package:frontend/provider/auth_provider.dart';
-
+// TODO: update auth tests issue #10
 void main() {
   testWidgets('LandingPage has Register and Login buttons', (WidgetTester tester) async {
 	  final client = http.Client(); 
@@ -45,4 +45,3 @@ void main() {
     expect(find.byType(AuthCreate), findsOneWidget);
   });
 }
-
