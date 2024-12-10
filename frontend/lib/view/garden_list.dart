@@ -55,22 +55,29 @@ class _GardenListState extends State<GardenList> {
                   } else if (snapshot.hasError) {
                     return Center(child: Text("Error: ${snapshot.error}"));
                   } else if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        Garden garden = snapshot.data![index];
-                        String plantCount =
-                            'Put Plant count here'; //snapshot.data![index].plants.length.toString() ?? '0';
-                        String gardenName = snapshot.data![index].name;
-                        String gardenDescription =
-                            snapshot.data![index].description;
-                        return GardenCard(
-                            title: gardenName,
-                            description: gardenDescription,
-                            //description: plantCount,
-                            garden: garden,
-                            userAccounts: widget.userAccounts);
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        futureGardens = gardenProvider
+                            .fetchGarden(widget.userAccounts.account_id);
+                        setState(() {});
                       },
+                      child: ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          Garden garden = snapshot.data![index];
+                          String plantCount =
+                              'Put Plant count here'; //snapshot.data![index].plants.length.toString() ?? '0';
+                          String gardenName = snapshot.data![index].name;
+                          String gardenDescription =
+                              snapshot.data![index].description;
+                          return GardenCard(
+                              title: gardenName,
+                              description: gardenDescription,
+                              //description: plantCount,
+                              garden: garden,
+                              userAccounts: widget.userAccounts);
+                        },
+                      ),
                     );
                   } else {
                     return Text("No gardens found");
@@ -85,8 +92,8 @@ class _GardenListState extends State<GardenList> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: FloatingActionButton(
-			key: Key('addGardenButton'),
-			heroTag: 'add_garden',
+                  key: Key('addGardenButton'),
+                  heroTag: 'add_garden',
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -102,8 +109,8 @@ class _GardenListState extends State<GardenList> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: FloatingActionButton(
-			key: Key('tagsButton'),
-			heroTag: 'list_tags',
+                  key: Key('tagsButton'),
+                  heroTag: 'list_tags',
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -120,8 +127,8 @@ class _GardenListState extends State<GardenList> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: FloatingActionButton(
-			key: Key('logoutButton'),
-			heroTag: 'logout',
+                  key: Key('logoutButton'),
+                  heroTag: 'logout',
                   onPressed: () {
                     Provider.of<AuthProvider>(context, listen: false).logout();
                     Navigator.of(context).push(

@@ -2,45 +2,69 @@ import 'plant.dart';
 import 'apis/plant_api.dart';
 
 class Garden {
-	final String id;
-	final String name;
-  	final String description;
-	final String account_id;
-	final DateTime createdAt;
-	final DateTime updatedAt;
-	final List<Plant>?plants;
+  final String id;
+  final String name;
+  final String description;
+  final String account_id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final List<Plant>? plants;
+  final int marked_for_deletion;
 
-  	Garden({required this.id, required this.name, required this.description, required this.account_id, required this.createdAt, required this.updatedAt, this.plants});
+  Garden(
+      {required this.id,
+      required this.name,
+      required this.description,
+      required this.account_id,
+      required this.createdAt,
+      required this.updatedAt,
+      this.plants,
+      this.marked_for_deletion = 0});
 
-  	factory Garden.fromJson(Map<String, dynamic> json) {
-    		return Garden(
-      			id: json['id'],
-      			name: json['name'],
-      			description: json['description'],
-			account_id: json['account_id'],
-			createdAt: DateTime.parse(json['created_at']),
-			updatedAt: DateTime.parse(json['updated_at']),
-			plants: json['plants'] !=null ? (json['plants'] as List).map((i) => Plant.fromJson(i)).toList() : null,
-    		);
-  	}
+  factory Garden.fromJson(Map<String, dynamic> json) {
+    String parseString(dynamic value) {
+      if (value == null || value == '') return '';
+      if (value is String) return value;
+      return value.toString();
+      throw ArgumentError('Invalid string value: $value');
+    }
 
-  	Map<String, dynamic> toJson() {
-    		return {
-      			'id': id,
-      			'name': name,
-      			'description': description,
-			'account_id': account_id,
-			'created_at': createdAt.toIso8601String(),
-			'updated_at': updatedAt.toIso8601String(),
-			'plants': plants?.map((plant) => plant.toJson()).toList(),
-    		};
-  	}
+    return Garden(
+      id: parseString(json['id']),
+      name: parseString(json['name']),
+      description: parseString(json['description']),
+      account_id: parseString(json['account_id']),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : DateTime.now(),
+      plants: json['plants'] != null
+          ? (json['plants'] as List).map((i) => Plant.fromJson(i)).toList()
+          : null,
+	marked_for_deletion: json['marked_for_deletion'] ?? 0,
+    );
+  }
 
-	set name(String newName) {
-		this.name = newName;
-	}
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'account_id': account_id,
+      'created_at': createdAt.toUtc().toIso8601String(),
+      'updated_at': updatedAt.toUtc().toIso8601String(),
+      'plants': plants?.map((plant) => plant.toJson()).toList(),
+      'marked_for_deletion': marked_for_deletion,
+    };
+  }
 
-	set description(String newDescription) {
-		this.description = newDescription;
-	}
+  set name(String newName) {
+    this.name = newName;
+  }
+
+  set description(String newDescription) {
+    this.description = newDescription;
+  }
 }

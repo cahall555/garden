@@ -24,6 +24,19 @@ func AccountsShow(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.JSON(account)) //r.HTML("accounts/show.html"))
 }
 
+func CurrentAccount(c buffalo.Context) error {
+	tx := c.Value("tx").(pop.Connection)
+	accountId := c.Session().Get("current_account_id").(string)
+	account := models.Account{}
+
+	err := tx.Find(&account, accountId)
+	if err != nil {
+		c.Flash().Add("warning", "Account not found")
+		c.Redirect(301, "/")
+	}
+	return c.Render(http.StatusOK, r.JSON(account))
+}
+
 func AccountsIndex(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	account := models.Accounts{}

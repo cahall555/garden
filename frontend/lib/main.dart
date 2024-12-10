@@ -2,6 +2,7 @@ import 'package:coverage/coverage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
 import 'view/garden_list.dart';
 import 'view/auth_landing.dart';
 import 'view/user_create.dart';
@@ -33,12 +34,29 @@ import 'provider/user_provider.dart';
 import 'provider/auth_provider.dart';
 import 'provider/account_provider.dart';
 import 'provider/users_account_provider.dart';
+import 'services/repositories/plant_repository.dart';
+import 'services/repositories/garden_repository.dart';
+import 'services/repositories/user_account_repository.dart';
+import 'services/repositories/ws_repository.dart';
+import 'services/repositories/journal_repository.dart';
+import 'services/repositories/tag_repository.dart';
+import 'services/repositories/sync_repository.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'services/connection_status.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:camera/camera.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  connectionStatus.initialize();
+
+  connectionStatus.connectionChange.listen((bool isConnected) {
+    print('Connection status changed: $isConnected');
+  });
+
+
   try {
     await dotenv.load(fileName: ".env");
     print('API_URL: ${dotenv.env['API_URL']}');
@@ -58,38 +76,83 @@ void main() async {
   final journalApiService = JournalApiService(client);
   final tagApiService = TagApiService(client);
   final plantsTagApiService = PlantsTagApiService(client);
+  final plantRepository = PlantRepository();
+  final gardenRepository = GardenRepository();
+  final userAccountRepository = UserAccountRepository();
+  final wsRepository = WaterScheduleRepository();
+  final journalRepository = JournalRepository();
+  final tagRepository = TagRepository();
+  final syncLogRepository = SyncLogRepository();
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (context) => GardenProvider(gardenApiService)),
+            create: (context) =>
+                GardenProvider(gardenApiService, gardenRepository, syncLogRepository)),
         ChangeNotifierProvider(
-            create: (context) => PlantProvider(plantApiService)),
-        ChangeNotifierProvider(create: (context) => WsProvider(wsApiService)),
+            create: (context) =>
+                PlantProvider(plantApiService, plantRepository)),
         ChangeNotifierProvider(
-            create: (context) => JournalProvider(journalApiService)),
-        ChangeNotifierProvider(create: (context) => TagProvider(tagApiService)),
+            create: (context) => WsProvider(wsApiService, wsRepository)),
+        ChangeNotifierProvider(
+            create: (context) =>
+                JournalProvider(journalApiService, journalRepository)),
+        ChangeNotifierProvider(
+            create: (context) => TagProvider(tagApiService, tagRepository)),
         ChangeNotifierProvider(
             create: (context) => PlantsTagProvider(plantsTagApiService)),
         ChangeNotifierProvider(
-            create: (context) => UserProvider(userApiService)),
+            create: (context) =>
+                UserProvider(userApiService, userAccountRepository)),
         ChangeNotifierProvider(
             create: (context) => AuthProvider(authApiService: authApiService)),
         ChangeNotifierProvider(
-            create: (context) => AccountProvider(accountApiService)),
+            create: (context) =>
+                AccountProvider(accountApiService, userAccountRepository)),
         ChangeNotifierProvider(
             create: (context) => UsersAccountsProvider(usersAccountApiService)),
       ],
-      child: MyApp(tagApiService: tagApiService),
+      child: MyApp(tagApiService: tagApiService, tagRepository: tagRepository),
     ),
   );
+     // connectionStatus.dispose();
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final TagApiService tagApiService;
+  final TagRepository tagRepository;
 
-  MyApp({required this.tagApiService});
+  const MyApp({
+    Key? key,
+    required this.tagApiService,
+    required this.tagRepository,
+  }) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Timer? _timer;
+
+  @override
+  initState() {
+    super.initState();
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      final accountProvider = context.read<AccountProvider>();
+      final accountId = accountProvider.newAccount!.id;
+      context.read<GardenProvider>().syncWithBackend(accountId);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+//  MyApp({required this.tagApiService, required this.tagRepository});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -113,7 +176,9 @@ class MyApp extends StatelessWidget {
           'plantDetailHero-${plant.id}';
           return MultiProvider(
             providers: [
-              ChangeNotifierProvider(create: (_) => TagProvider(tagApiService)),
+              ChangeNotifierProvider(
+                  create: (_) =>
+                      TagProvider(widget.tagApiService, widget.tagRepository)),
             ],
             child: PlantDetail(plant: plant),
           );

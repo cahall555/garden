@@ -7,8 +7,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 final String apiUrl = dotenv.env['API_URL']!;
 
 class GardenApiService {
-	final http.Client client;
-	GardenApiService(this.client);
+  final http.Client client;
+  GardenApiService(this.client);
 
   Future<List<Garden>> fetchGardenApi(var accountId) async {
     final response =
@@ -44,8 +44,8 @@ class GardenApiService {
     }; //, "X-CSRF-Token": csrfTokenProvider.csrfToken};
     //print('Using CSRF Token: ${csrfTokenProvider.csrfToken}');
     try {
-      final response =
-          await client.post(url, headers: headers, body: json.encode(gardenData));
+      final response = await client.post(url,
+          headers: headers, body: json.encode(gardenData));
 
       if (response.statusCode == 201) {
         print('Garden created successfully');
@@ -70,9 +70,17 @@ class GardenApiService {
 
     if (response.statusCode == 200) {
       try {
-       final List<dynamic> data = json.decode(response.body);
-
-        return data.map<Garden>((json) => Garden.fromJson(json)).toList();
+        final decodedBody = json.decode(response.body);
+        if (decodedBody is List) {
+          return decodedBody
+              .map<Garden>((json) => Garden.fromJson(json))
+              .toList();
+        } else if ((decodedBody is Map<String, dynamic>)) {
+          return [Garden.fromJson(decodedBody)];
+        } else {
+          throw Exception(
+              'Expected a list or a map but got ${decodedBody.runtimeType}');
+        }
       } on FormatException catch (e) {
         print('The response was not JSON. $e');
 

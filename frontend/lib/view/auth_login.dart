@@ -7,6 +7,7 @@ import '../model/apis/auth_api.dart';
 import '../model/apis/users_account_api.dart';
 import '../provider/users_account_provider.dart';
 import '../provider/auth_provider.dart';
+import '../provider/garden_provider.dart';
 import 'package:provider/provider.dart';
 
 class AuthCreate extends StatefulWidget {
@@ -162,6 +163,9 @@ class _AuthCreateState extends State<AuthCreate> {
           print('User ID: $userId');
           userAccounts = await usersAccountsProvider.fetchUserAccount(userId);
           print('User Accounts: $userAccounts');
+
+	  await context.read<GardenProvider>().fetchGarden(userAccounts!.account_id);
+	  await context.read<GardenProvider>().syncWithBackend(userAccounts!.account_id);
 
           if (userAccounts != null) {
             Navigator.of(context).push(

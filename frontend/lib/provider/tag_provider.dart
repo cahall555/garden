@@ -5,16 +5,25 @@ import 'package:provider/provider.dart';
 import '../model/plants_tag.dart';
 import '../model/apis/plants_tag_api.dart';
 import 'plants_tag_provider.dart';
+import 'package:frontend/services/repositories/tag_repository.dart';
+import 'package:frontend/services/connection_status.dart';
 
 class TagProvider with ChangeNotifier {
   List<Tag> tags = [];
   Tag? newTag;
   final tagApiService;
-  TagProvider(this.tagApiService);
+  final TagRepository tagRepository;
+  TagProvider(this.tagApiService, this.tagRepository);
 
   Future<List<Tag>> fetchTags(var accountId) async {
     try {
-      tags = await tagApiService.fetchTagsApi(accountId);
+      tags = await tagRepository.fetchAllTags(accountId);
+      if (tags.isEmpty) {
+        tags = await tagApiService.fetchTagsApi(accountId);
+        for (var tag in tags) {
+          tagRepository.insertTag(tag);
+        }
+      }
       notifyListeners();
       return tags;
     } catch (e) {
@@ -78,4 +87,27 @@ class TagProvider with ChangeNotifier {
       throw Exception('Failed to delete tag');
     }
   }
+Future<void> syncWithBackend(var accountId) async {
+    if (await isOnline()) {
+      try {
+        final tagsFromBackend =
+            await tagApiService.fetchtagsApi(accountId);
+        for (var tag in tagsFromBackend) {
+          await tagRepository.insertTag(tag);
+        }
+        tags = await tagRepository.fetchAllTags(accountId);
+        notifyListeners();
+      } catch (e) {
+        print('Error syncing with backend: $e');
+      }
+    } else {
+      print('Offline: Sync skipped');
+    }
+  }
+
+  Future<bool> isOnline() async {
+  //  return await ConnectionStatusSingleton.getInstance().checkConnection();
+    return true;
+  }
+
 }

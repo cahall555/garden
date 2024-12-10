@@ -12,55 +12,49 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode', '1').toInteger()
+def flutterVersionName = localProperties.getProperty('flutter.versionName', '1.0')
 
 android {
-    compileSdkVersion 33
-    defaultConfig {
-    	targetSdkVersion 33
-	}
     namespace "com.example.frontend"
-    compileSdk flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    testNamespace "com.example.frontendtest"
+    compileSdkVersion 34 
+
+    defaultConfig {
+        applicationId "com.example.frontend"
+        minSdkVersion 24 
+        targetSdkVersion 34
+        versionCode flutterVersionCode
+        versionName flutterVersionName
+
+        multiDexEnabled true
+    }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
+//  kotlinOptions {
+//       jvmTarget = '1.8'
+//    }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.frontend"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-	minSdkVersion 21
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
-    }
-
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+        debug {
             signingConfig signingConfigs.debug
+        }
+        release {
+            // TODO: Replace with release key for production builds
+            signingConfig signingConfigs.debug
+
+     
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -69,4 +63,13 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+  
+    implementation "androidx.camera:camera-core:1.4.0"
+    implementation "androidx.camera:camera-view:1.4.0"
+    implementation "androidx.camera:camera-lifecycle:1.4.0"
+    implementation "androidx.camera:camera-video:1.4.0"
+//    implementation "androidx.multidex:multidex:2.0.1"
+//    implementation "androidx.fragment:fragment:1.8.5"
+}
+

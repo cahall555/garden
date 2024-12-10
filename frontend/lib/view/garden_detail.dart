@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import '../model/garden.dart';
 import '../model/apis/garden_api.dart';
 import '../model/plant.dart';
@@ -12,12 +13,22 @@ import '../provider/garden_provider.dart';
 import '../provider/plant_provider.dart';
 import 'package:provider/provider.dart';
 
-class GardenDetail extends StatelessWidget {
+class GardenDetail extends StatefulWidget {
   final Garden garden;
   final UserAccounts userAccounts;
 
   GardenDetail({Key? key, required this.garden, required this.userAccounts})
       : super(key: key);
+
+  @override
+  _GardenDetailState createState() => _GardenDetailState();
+}
+
+class _GardenDetailState extends State<GardenDetail> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   final PlantCard plantCard = PlantCard(
     title: 'Tomato',
@@ -43,7 +54,8 @@ class GardenDetail extends StatelessWidget {
     return Scaffold(
       //  bottomNavigationBar: GardenDetailNavigation(garden: garden),
       appBar: AppBar(
-        title: Text(garden.name, style: TextStyle(fontFamily: 'Taviraj')),
+        title:
+            Text(widget.garden.name, style: TextStyle(fontFamily: 'Taviraj')),
       ),
       body: Container(
         width: screenSize.width,
@@ -55,67 +67,74 @@ class GardenDetail extends StatelessWidget {
             opacity: 0.15,
           ),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.0),
-                ),
-                margin: EdgeInsets.all(8),
-                child: Container(
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFFFED16A),
-                          Color(0xFF987D3F),
-                        ],
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await context
+                .read<PlantProvider>()
+                .syncWithBackend(widget.garden.id);
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  margin: EdgeInsets.all(8),
+                  child: Container(
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFFFED16A),
+                            Color(0xFF987D3F),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(25.0),
                       ),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    child: ListTile(
-                      title: Text('Description: ' + garden.description,
-                          style: TextStyle(
-                              fontFamily: 'Taviraj',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)),
+                      child: ListTile(
+                        title: Text('Description: ' + widget.garden.description,
+                            style: TextStyle(
+                                fontFamily: 'Taviraj',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              FutureBuilder<List<Plant>>(
-                future: Provider.of<PlantProvider>(context, listen: false)
-                    .fetchPlants(garden.id),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text("Error: ${snapshot.error}");
-                  } else if (snapshot.hasData) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return PlantCard(
-                          title: snapshot.data![index].name,
-                          germinated: snapshot.data![index].germinated,
-                          days_to_harvest:
-                              snapshot.data![index].days_to_harvest,
-                          plant: snapshot.data![index],
-                        );
-                      },
-                    );
-                  } else {
-                    return Text("No plants found");
-                  }
-                },
-              ),
-            ],
+                FutureBuilder<List<Plant>>(
+                  future: Provider.of<PlantProvider>(context, listen: false)
+                      .fetchPlants(widget.garden.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else if (snapshot.hasData) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return PlantCard(
+                            title: snapshot.data![index].name,
+                            germinated: snapshot.data![index].germinated,
+                            days_to_harvest:
+                                snapshot.data![index].days_to_harvest,
+                            plant: snapshot.data![index],
+                          );
+                        },
+                      );
+                    } else {
+                      return Text("No plants found");
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -130,7 +149,8 @@ class GardenDetail extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (context) => PlantCreate(garden: this.garden)),
+                      builder: (context) =>
+                          PlantCreate(garden: this.widget.garden)),
                 );
               },
               child: Icon(Icons.add, color: Color(0XFFFED16A)),
@@ -147,7 +167,8 @@ class GardenDetail extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => GardenUpdate(
-                        garden: this.garden, userAccounts: this.userAccounts),
+                        garden: this.widget.garden,
+                        userAccounts: this.widget.userAccounts),
                   ),
                 );
               },
@@ -163,7 +184,7 @@ class GardenDetail extends StatelessWidget {
               heroTag: 'delete_garden',
               onPressed: () {
                 Provider.of<GardenProvider>(context, listen: false)
-                    .deleteGarden(garden.id);
+                    .deleteGarden(widget.garden);
                 Navigator.of(context).pop();
               },
               child: Icon(Icons.delete, color: Color(0XFFFED16A)),

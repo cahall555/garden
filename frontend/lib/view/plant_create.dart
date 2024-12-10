@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:async';
 import '../model/plant.dart';
 import '../model/garden.dart';
@@ -17,6 +18,7 @@ class PlantCreate extends StatefulWidget {
 class _PlantCreateState extends State<PlantCreate> {
   final _nameController = TextEditingController();
   bool _germinatedController = false;
+  var uuid = Uuid();
   final _days_to_harvestController = TextEditingController();
   final _plant_countController = TextEditingController();
   final _date_plantedController = TextEditingController();
@@ -255,6 +257,7 @@ class _PlantCreateState extends State<PlantCreate> {
       }
       final plantProvider = Provider.of<PlantProvider>(context, listen: false);
       await plantProvider.createPlant({
+	'id': uuid.v1(),
         'name': _nameController.text.trim(),
         'days_to_harvest': daysToHarvest,
         'germinated': _germinatedController,

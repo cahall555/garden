@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:async';
 import '../model/garden.dart';
 import '../model/account.dart';
@@ -20,6 +21,7 @@ class GardenCreate extends StatefulWidget {
 class _GardenCreateState extends State<GardenCreate> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  var uuid = Uuid();
   //final GardenApi gardenApi = GardenApi(); *** Leaving in for potential csrf see line 14 in app.go.
 
   @override
@@ -135,6 +137,7 @@ class _GardenCreateState extends State<GardenCreate> {
           Provider.of<GardenProvider>(context, listen: false);
       await gardenProvider.createGarden({
         // await gardenApi.createGarden(gardenData); see comment in app.go line 14
+	'id': uuid.v1(),
         'name': _nameController.text.trim(),
         'description': _descriptionController.text.trim(),
         'account_id': widget.userAccounts!.account_id,

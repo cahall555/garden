@@ -101,6 +101,7 @@ func App() *buffalo.App {
 		app.POST("/accounts", AccountsCreate)
 		app.GET("/accounts/update/{id}", AccountsUpdate)
 		app.GET("/accounts/{id}", AccountsShow)
+		app.GET("/currentaccount", CurrentAccount)
 		app.GET("/accounts/new", AccountsNew)
 		app.PUT("/accounts/", AccountsEdit)
 		app.DELETE("/accounts/{id}", AccountsDelete)
