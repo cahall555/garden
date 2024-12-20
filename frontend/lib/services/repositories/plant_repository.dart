@@ -17,6 +17,12 @@ class PlantRepository {
     return List.generate(maps.length, (i) => Plant.fromJson(maps[i]));
   }
 
+  Future<List<Plant>> fetchCurrentPlants(var gardenId) async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('Plant', where: 'garden_id = ? AND marked_for_deletion = 0', whereArgs: [gardenId]);
+    return List.generate(maps.length, (i) => Plant.fromJson(maps[i]));
+  }
+
   Future<void> updatePlant(Plant plant) async {
     final db = await dbHelper.database;
     await db.update(
@@ -35,5 +41,15 @@ class PlantRepository {
       whereArgs: [id],
     );
   }
+  Future<void> markForDeletion(var id) async {
+    final db = await dbHelper.database;
+    await db.update(
+      'Plant',
+      {'marked_for_deletion': 1},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
 }
 

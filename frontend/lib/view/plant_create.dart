@@ -266,7 +266,7 @@ class _PlantCreateState extends State<PlantCreate> {
         'date_germinated': _date_germinatedController.text.trim(),
         'garden_id': widget.garden.id,
         'account_id': widget.garden.account_id,
-      }, widget.garden.id);
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Plant created successfully!')),
       );

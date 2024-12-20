@@ -543,7 +543,7 @@ class _PlantDetailState extends State<PlantDetail> {
                   heroTag: 'delete_plant',
                   onPressed: () {
                     Provider.of<PlantProvider>(context, listen: false)
-                        .deletePlant(widget.plant.id);
+                        .deletePlant(widget.plant);
                     Navigator.of(context).pop();
                   },
                   child: Icon(Icons.delete, color: Color(0XFFFED16A)),

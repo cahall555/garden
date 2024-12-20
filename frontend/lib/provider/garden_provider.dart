@@ -3,6 +3,7 @@ import '../model/garden.dart';
 import '../model/sync_log.dart';
 import '../model/apis/garden_api.dart';
 import 'package:frontend/services/repositories/garden_repository.dart';
+import 'package:frontend/services/repositories/plant_repository.dart';
 import 'package:frontend/services/repositories/sync_repository.dart';
 import 'package:frontend/services/connection_status.dart';
 
@@ -36,16 +37,9 @@ class GardenProvider with ChangeNotifier {
 
   Future<void> createGarden(Map<String, dynamic> garden) async {
     try {
-      // print('onlinestatus: ${await isOnline()}');
-      //if (await isOnline()) {
-      // await gardenApiService.createGardenApi(garden);
-      // final newGarden = Garden.fromJson(garden);
-      //await gardenRepository.insertGarden(newGarden);
-      //} else {
       final newGarden = Garden.fromJson(garden);
       await gardenRepository.insertGarden(newGarden);
       await syncWithBackend(newGarden.id);
-      //}
     } catch (e) {
       print('error creating garden: $e');
     } finally {
@@ -55,7 +49,6 @@ class GardenProvider with ChangeNotifier {
 
   Future<void> updateGarden(Map<String, dynamic> garden, var gardenId) async {
     try {
-//      await gardenApiService.updateGardenApi(garden, gardenId);
       final updateGarden = Garden.fromJson(garden);
       await gardenRepository.updateGarden(updateGarden, gardenId);
       await syncWithBackend(garden['account_id']);
@@ -75,11 +68,11 @@ class GardenProvider with ChangeNotifier {
 
   Future<void> deleteGarden(Garden garden) async {
     try {
-	    print("isOnline when delete is triggered: ${await isOnline()}");
+      print("isOnline when delete is triggered: ${await isOnline()}");
       if (await isOnline()) {
         await gardenApiService.deleteGardenApi(garden.id);
         print("Garden deleted from backend: ${garden.id}");
-	await gardenRepository.deleteGarden(garden.id);
+        await gardenRepository.deleteGarden(garden.id);
       } else {
         print("Offline: Marking garden for deletion locally");
         await gardenRepository.markForDeletion(garden.id);
@@ -107,16 +100,16 @@ class GardenProvider with ChangeNotifier {
         final gardensFromLocal =
             await gardenRepository.fetchAllGardens(accountId);
 
-	final backendGardenMap = {
+        final backendGardenMap = {
           for (var garden in gardensFromBackend) garden.id: garden
         };
         final localGardenMap = {
           for (var garden in gardensFromLocal) garden.id: garden
         };
 
-	for (var gardenId in localGardenMap.keys) {
+        for (var gardenId in localGardenMap.keys) {
           final localGarden = localGardenMap[gardenId];
-	print("Local garden marked for deletion: ${localGarden?.toJson()}");
+          print("Local garden marked for deletion: ${localGarden?.toJson()}");
           if (localGarden!.marked_for_deletion == 1) {
             try {
               await gardenApiService.deleteGardenApi(gardenId);

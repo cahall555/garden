@@ -25,8 +25,18 @@ func AccountsShow(c buffalo.Context) error {
 }
 
 func CurrentAccount(c buffalo.Context) error {
-	tx := c.Value("tx").(pop.Connection)
-	accountId := c.Session().Get("current_account_id").(string)
+	tx, ok := c.Value("tx").(pop.Connection)
+	if !ok {
+		return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{
+            "error": "Database connection not found",
+        }))
+    }
+	accountId, ok := c.Session().Get("current_account_id").(string)
+	if !ok || accountId == "" {
+        return c.Render(http.StatusUnauthorized, r.JSON(map[string]string{
+            "error": "No account ID in session",
+        }))
+    }
 	account := models.Account{}
 
 	err := tx.Find(&account, accountId)

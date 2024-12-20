@@ -55,6 +55,7 @@ class JournalApiService {
       String plantId, String? filePath) async {
     final url = Uri.parse(apiUrl + 'journals?plantId=$plantId');
     var request = http.MultipartRequest('POST', url);
+    request.fields['id'] = journalData['id'];
     request.fields['title'] = journalData['title'];
     request.fields['entry'] = journalData['entry'];
     request.fields['category'] = journalData['category'];

@@ -1,11 +1,13 @@
 import 'package:flutter/widgets.dart';
 import '../model/tag.dart';
+import '../model/sync_log.dart';
 import '../model/apis/tag_api.dart';
 import 'package:provider/provider.dart';
 import '../model/plants_tag.dart';
 import '../model/apis/plants_tag_api.dart';
 import 'plants_tag_provider.dart';
 import 'package:frontend/services/repositories/tag_repository.dart';
+import 'package:frontend/services/repositories/sync_repository.dart';
 import 'package:frontend/services/connection_status.dart';
 
 class TagProvider with ChangeNotifier {
@@ -13,10 +15,12 @@ class TagProvider with ChangeNotifier {
   Tag? newTag;
   final tagApiService;
   final TagRepository tagRepository;
-  TagProvider(this.tagApiService, this.tagRepository);
+  final SyncLogRepository syncLogRepository;
+  TagProvider(this.tagApiService, this.tagRepository, this.syncLogRepository);
 
   Future<List<Tag>> fetchTags(var accountId) async {
     try {
+	    await syncWithBackend(accountId);
       tags = await tagRepository.fetchAllTags(accountId);
       if (tags.isEmpty) {
         tags = await tagApiService.fetchTagsApi(accountId);

@@ -21,7 +21,7 @@ func WaterSchedulesShow(c buffalo.Context) error {
 	ws := models.WaterSchedule{}
 	wsID := c.Param("id")
 
-	err := tx.Eager().Find(&ws, wsID)
+	err := tx.Find(&ws, wsID)//tx.Eager().Find(&ws, wsID)
 	if err != nil {
 		c.Flash().Add("warning", "Water Schedule not found")
 		return c.Render(http.StatusNotFound, r.JSON(map[string]string{"warning": "Water Schedule not found"}))
@@ -148,14 +148,18 @@ func WaterSchedulesUpdate(c buffalo.Context) error {
 }
 
 func WaterSchedulesEdit(c buffalo.Context) error {
+	c.Logger().Info("***WaterSchedulesEdit***")
 	tx := c.Value("tx").(*pop.Connection)
 	ws := &models.WaterSchedule{}
 	if err := tx.Find(ws, c.Param("wsId")); err != nil {
+		c.Logger().Error("Error finding Water Schedule with id %s, error: %v", c.Param("wsId"), err)
 		return err
 	}
 
 	err := c.Bind(ws)
+	c.Logger().Info("***Water Schedule: ", ws)
 	if err != nil {
+		c.Logger().Error("Error binding Water Schedule with id %s, error: %v", c.Param("wsId"), err)
 		//	c.Flash().Add("warning", "Water Schedule form binding error")
 		return c.Render(302, r.JSON(map[string]string{"error": "Water Schedule form binding error"}))
 	}

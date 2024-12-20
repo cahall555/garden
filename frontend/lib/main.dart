@@ -92,14 +92,14 @@ void main() async {
                 GardenProvider(gardenApiService, gardenRepository, syncLogRepository)),
         ChangeNotifierProvider(
             create: (context) =>
-                PlantProvider(plantApiService, plantRepository)),
+                PlantProvider(plantApiService, plantRepository, syncLogRepository)),
         ChangeNotifierProvider(
-            create: (context) => WsProvider(wsApiService, wsRepository)),
+            create: (context) => WsProvider(wsApiService, wsRepository, syncLogRepository)),
         ChangeNotifierProvider(
             create: (context) =>
-                JournalProvider(journalApiService, journalRepository)),
+                JournalProvider(journalApiService, journalRepository, syncLogRepository)),
         ChangeNotifierProvider(
-            create: (context) => TagProvider(tagApiService, tagRepository)),
+            create: (context) => TagProvider(tagApiService, tagRepository, syncLogRepository)),
         ChangeNotifierProvider(
             create: (context) => PlantsTagProvider(plantsTagApiService)),
         ChangeNotifierProvider(
@@ -139,16 +139,23 @@ class _MyAppState extends State<MyApp> {
   @override
   initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    //TODO: is this timer idea a good idea, how should it be implemented? The current issue appears to be with the get current account api call.
+/*    _timer = Timer.periodic(Duration(seconds: 5), (timer) async {
       final accountProvider = context.read<AccountProvider>();
-      final accountId = accountProvider.newAccount!.id;
-      context.read<GardenProvider>().syncWithBackend(accountId);
-    });
+      final currentAccount = await accountProvider.currentAccountId();
+
+      if(currentAccount != null) {
+	      final accountId = currentAccount.id;
+	context.read<GardenProvider>().syncWithBackend(accountId);
+      } else {
+	print('No account found');
+      }
+    }); */ 
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+  //  _timer?.cancel();
     super.dispose();
   }
 
@@ -178,7 +185,7 @@ class _MyAppState extends State<MyApp> {
             providers: [
               ChangeNotifierProvider(
                   create: (_) =>
-                      TagProvider(widget.tagApiService, widget.tagRepository)),
+                      TagProvider(widget.tagApiService, widget.tagRepository, context.read<SyncLogRepository>())),
             ],
             child: PlantDetail(plant: plant),
           );

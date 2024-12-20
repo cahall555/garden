@@ -330,7 +330,7 @@ class _WsUpdateState extends State<WsUpdate> {
                   try {
                     final wsProvider =
                         Provider.of<WsProvider>(context, listen: false);
-                    await wsProvider.deleteWs(widget.ws.id);
+                    await wsProvider.deleteWs(widget.ws.id, widget.plant.id);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Schedule successfully deleted.')),
                     );
@@ -376,23 +376,26 @@ class _WsUpdateState extends State<WsUpdate> {
 
   void updateWaterSchedule() async {
     try {
+	Map<String, dynamic> wsData = {
+	'id': widget.ws.id,
+	'monday': _mondayController,
+	'tuesday': _tuesdayController,
+	'wednesday': _wednesdayController,
+	'thursday': _thursdayController,
+	'friday': _fridayController,
+	'saturday': _saturdayController,
+	'sunday': _sundayController,
+	'plant_id': widget.plant.id,
+	'method': _currentSelectedValue,
+	'notes': _notesController.text.trim(),
+      };	
+
       final wsProvider = Provider.of<WsProvider>(context, listen: false);
-      await wsProvider.updateWs({
-        'id': widget.ws.id,
-        'monday': _mondayController,
-        'tuesday': _tuesdayController,
-        'wednesday': _wednesdayController,
-        'thursday': _thursdayController,
-        'friday': _fridayController,
-        'saturday': _saturdayController,
-        'sunday': _sundayController,
-        'plant_id': widget.plant.id,
-        'method': _currentSelectedValue,
-        'notes': _notesController.text.trim(),
-      }, widget.plant.id, widget.ws.id);
+      await wsProvider.updateWs(wsData, widget.plant.id, widget.ws.id);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Water schedule updated successfully!')),
+	SnackBar(content: Text('Water schedule updated successfully!')),
       );
+
       Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

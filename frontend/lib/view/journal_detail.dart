@@ -62,9 +62,12 @@ class _JournalDetailState extends State<JournalDetail> {
                                     fontWeight: FontWeight.normal)),
                             subtitle: Text(widget.journal.entry),
                           ),
-                          if (widget.journal.image != "")
+                          if (widget.journal.image == null ||
+                              widget.journal.image!.isEmpty)
+                            const Text('Image not availabile')
+                          else
                             Image.asset(
-                              'assets/' + widget.journal.image!,
+                              '${widget.journal.image!}',
                               width: double.infinity,
                               fit: BoxFit.cover,
                               errorBuilder: (BuildContext context,
@@ -95,7 +98,7 @@ class _JournalDetailState extends State<JournalDetail> {
                     onPressed: () {
                       try {
                         Provider.of<JournalProvider>(context, listen: false)
-                            .deleteJournal(widget.journal.id);
+                            .deleteJournal(widget.journal);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('Journal deleted successfully'),
                         ));

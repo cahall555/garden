@@ -8,6 +8,7 @@ class Journal {
   final String plant_id;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final int marked_for_deletion;
 
   Journal(
       {required this.id,
@@ -18,7 +19,8 @@ class Journal {
       required this.category,
       required this.plant_id,
       required this.createdAt,
-      required this.updatedAt});
+      required this.updatedAt,
+      this.marked_for_deletion = 0});
 
   factory Journal.fromJson(Map<String, dynamic> json) {
     bool parseBool(dynamic value) {
@@ -35,8 +37,13 @@ class Journal {
       image: json['image'],
       category: json['category'],
       plant_id: json['plant_id'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      marked_for_deletion: json['marked_for_deletion'] ?? 0,
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : DateTime.now(),
     );
   }
 
@@ -53,8 +60,9 @@ class Journal {
       'image': image,
       'category': category,
       'plant_id': plant_id,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
+      'marked_for_deletion': marked_for_deletion,
+      'created_at': createdAt.toUtc().toIso8601String(),
+      'updated_at': updatedAt.toUtc().toIso8601String(),
     };
   }
 }

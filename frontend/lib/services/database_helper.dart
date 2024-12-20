@@ -78,16 +78,15 @@ class DatabaseHelper {
       date_planted TEXT,
       date_germinated TEXT,
       garden_id TEXT NOT NULL,
-      journal_id TEXT,
       plantTags TEXT,
       journals TEXT,
       waterSchedules TEXT,
       account_id TEXT NOT NULL,
+      marked_for_deletion INTEGER DEFAULT 0,
       "created_at" TEXT,
       "updated_at" TEXT,
       FOREIGN KEY (account_id) REFERENCES User_Accounts(id),
-      FOREIGN KEY (garden_id) REFERENCES Garden(id),
-      FOREIGN KEY (journal_id) REFERENCES Journal(id)
+      FOREIGN KEY (garden_id) REFERENCES Garden(id)
     )
     ''');
 
@@ -104,6 +103,7 @@ class DatabaseHelper {
       method TEXT,
       notes TEXT,
       plant_id TEXT,
+      marked_for_deletion INTEGER DEFAULT 0,
       "created_at" TEXT,
       "updated_at" TEXT,
       FOREIGN KEY (plant_id) REFERENCES Plant(id)
@@ -119,6 +119,7 @@ class DatabaseHelper {
       image TEXT,
       category TEXT NOT NULL,
       plant_id TEXT NOT NULL,
+      marked_for_deletion INTEGER DEFAULT 0,
       "created_at" TEXT,
       "updated_at" TEXT,
       FOREIGN KEY (plant_id) REFERENCES Plant(id)

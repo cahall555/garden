@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:async';
 import 'dart:io';
 import '../model/plant.dart';
@@ -7,6 +8,7 @@ import '../model/apis/journal_api.dart';
 import '../provider/journal_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/components/camera.dart';
@@ -38,6 +40,9 @@ class _JournalCreateState extends State<JournalCreate> {
     "Weather",
     "Germination"
   ];
+
+  var uuid = Uuid();
+
 
   @override
   Widget build(BuildContext context) {
@@ -130,9 +135,21 @@ class _JournalCreateState extends State<JournalCreate> {
                                           cameras: cameras,
                                           plant: widget.plant)));
                               if (result != null) {
+				      print('image path is $result');
+				      try {
+					      final directory = await getApplicationDocumentsDirectory();
+					      final newFilePath = '${directory.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+					      final File imageFile = File(result);
+					      final newImageFile = await imageFile.copy(newFilePath);
+
+					      print('Image saved to: ${newFilePath}');
                                 setState(() {
-                                  _imagePath = result;
+                                  _imagePath = newImageFile.path;
                                 });
+				      } catch (e) {
+					      print('Error saving image to application documents directory: $e');
+				      }
                               }
                             },
                             child: Icon(Icons.add_a_photo,
@@ -278,11 +295,12 @@ class _JournalCreateState extends State<JournalCreate> {
       final journalProvider =
           Provider.of<JournalProvider>(context, listen: false);
       await journalProvider.createJournal({
+	'id': uuid.v1(),      
         'title': _titleController.text.trim(),
         'entry': _entryController.text.trim(),
         'image': _imagePath,
         'category': _currentSelectedValue,
-        'display_in_garden': _display_on_gardenController,
+        'display_on_garden': _display_on_gardenController,
         'plant_id': widget.plant.id,
       }, widget.plant.id, _imagePath);
       ScaffoldMessenger.of(context).showSnackBar(

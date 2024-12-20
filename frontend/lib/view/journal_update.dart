@@ -7,6 +7,7 @@ import '../model/apis/journal_api.dart';
 import '../provider/journal_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/components/camera.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -43,7 +44,7 @@ class _JournalUpdateState extends State<JournalUpdate> {
     _titleController = TextEditingController(text: widget.journal.title);
     _entryController = TextEditingController(text: widget.journal.entry);
     if (widget.journal.image != null && widget.journal.image!.isNotEmpty) {
-      _imagePath = 'assets/' + widget.journal.image!;
+      _imagePath = widget.journal.image!;
     } else {
       _imagePath = "";
     }
@@ -140,9 +141,20 @@ class _JournalUpdateState extends State<JournalUpdate> {
                                           cameras: cameras,
                                           plant: this.widget.plant!)));
                               if (result != null) {
+				      try {
+					      final directory = await getApplicationDocumentsDirectory();
+					      final newFilePath = '${directory.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+					      final File imageFile = File(result);
+					      final newImageFile = await imageFile.copy(newFilePath);
+
+					      print('Image saved to: $newFilePath');
                                 setState(() {
-                                  _imagePath = result;
+                                  _imagePath = newImageFile.path;
                                 });
+				      } catch (e) {
+					      print('Error saving image to application document directory: $e');
+				      }
                               }
                             },
                             child: Icon(Icons.add_a_photo,

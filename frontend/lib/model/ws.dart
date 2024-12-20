@@ -12,6 +12,7 @@ class WaterSchedule {
   final String plant_id;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final int marked_for_deletion;
 
   WaterSchedule(
       {required this.id,
@@ -26,12 +27,17 @@ class WaterSchedule {
       required this.notes,
       required this.plant_id,
       required this.createdAt,
-      required this.updatedAt});
+      required this.updatedAt,
+      this.marked_for_deletion = 0});
 
   factory WaterSchedule.fromJson(Map<String, dynamic> json) {
     bool parseBool(dynamic value) {
       if (value is bool) return value;
       if (value is int) return value == 1;
+      if (value is String) {
+	if (value.toLowerCase() == 'true') return true;
+	if (value.toLowerCase() == 'false') return false;
+      }
       throw ArgumentError('Invalid boolean value: $value');
     }
 
@@ -47,15 +53,21 @@ class WaterSchedule {
       method: json['method'],
       notes: json['notes'],
       plant_id: json['plant_id'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : DateTime.now(),
+      marked_for_deletion: json['marked_for_deletion'] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson({bool forSqlLite = false}) {
-	  dynamic serializeBool(bool value) {
-      return forSqlLite ? (value ? 1 : 0) : (value ? 't' : 'f');
+    dynamic serializeBool(bool value) {
+      return forSqlLite ? (value ? 1 : 0) : (value ? true : false);
     }
+
     return {
       'id': id,
       'monday': serializeBool(monday),
@@ -68,8 +80,9 @@ class WaterSchedule {
       'method': method,
       'notes': notes,
       'plant_id': plant_id,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
+      'created_at': createdAt.toUtc().toIso8601String(),
+      'updated_at': updatedAt.toUtc().toIso8601String(),
+      'marked_for_deletion': marked_for_deletion,
     };
   }
 }

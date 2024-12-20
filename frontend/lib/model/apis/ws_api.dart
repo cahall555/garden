@@ -16,9 +16,7 @@ class WsApiService {
     final response = await client.get(uri).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 404) {
-     // return [];
-      // If plant id does not have a water schedule, 404 will be thrown
-	throw Exception('404 Not Found');
+      return [];
     } else if (response.statusCode != 200) {
 	throw Exception('Failed to load water schedule');
     }
@@ -83,10 +81,13 @@ class WsApiService {
   }
 
   Future<void> deleteWsApi(var wsId) async {
+	  print('Deleting water schedule with id: $wsId');
     final url = Uri.parse(apiUrl + 'water_schedules/$wsId');
     final headers = {"content-Type": "application/json"};
 
     final response =
         await client.delete(url, headers: headers); //, body: jsonEncode());
+
+    print('Response of deleting from backend: ${response}');
   }
 }

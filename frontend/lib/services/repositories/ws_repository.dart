@@ -18,6 +18,13 @@ class WaterScheduleRepository {
     return List.generate(maps.length, (i) => WaterSchedule.fromJson(maps[i]));
   }
 
+  Future<List<WaterSchedule>> fetchCurrentWaterSchedules(var plantId) async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('WaterSchedule',
+	where: 'plant_id = ? AND marked_for_deletion = 0', whereArgs: [plantId]);
+    return List.generate(maps.length, (i) => WaterSchedule.fromJson(maps[i]));
+  }
+
   Future<void> updateWaterSchedule(WaterSchedule waterSchedule) async {
     final db = await dbHelper.database;
     await db.update(
@@ -36,4 +43,14 @@ class WaterScheduleRepository {
       whereArgs: [id],
     );
   }
+  Future<void> markForDeletion(var id) async {
+    final db = await dbHelper.database;
+    await db.update(
+      'Garden',
+      {'marked_for_deletion': 1},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
 }

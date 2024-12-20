@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:async';
 import '../model/plant.dart';
 import '../model/ws.dart';
@@ -30,6 +31,7 @@ class _WsCreateState extends State<WsCreate> {
     "Sprinkler",
     "Soaker Hose"
   ];
+  var uuid = Uuid();
 
   @override
   Widget build(BuildContext context) {
@@ -309,6 +311,7 @@ class _WsCreateState extends State<WsCreate> {
     try {
       final wsProvider = Provider.of<WsProvider>(context, listen: false);
       await wsProvider.createWs({
+        'id': uuid.v1(),
         'monday': _mondayController,
         'tuesday': _tuesdayController,
         'wednesday': _wednesdayController,
