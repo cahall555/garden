@@ -58,8 +58,10 @@ class TagApiService {
       final data = jsonDecode(response.body);
 
       if (data is Map) {
+	      print('Tag data is a map');
         return [Tag.fromJson(Map<String, dynamic>.from(data))];
       } else if (data is List) {
+	      print('Tag data is a list');
         return data
             .map<Tag>((json) => Tag.fromJson(Map<String, dynamic>.from(json)))
             .toList();

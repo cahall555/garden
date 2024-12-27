@@ -87,7 +87,7 @@ class TagDetail extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: FloatingActionButton(
               onPressed: () {
-                Provider.of<TagProvider>(context, listen: false).deleteTag(tag.id);
+                Provider.of<TagProvider>(context, listen: false).deleteTag(tag.toJson());
                 Navigator.of(context).pop();
               },
               child: Icon(Icons.delete, color: Color(0XFF987D3F)),

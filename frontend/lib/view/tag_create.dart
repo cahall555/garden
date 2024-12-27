@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:async';
 import '../model/plant.dart';
 import '../model/tag.dart';
@@ -19,6 +20,7 @@ class TagCreate extends StatefulWidget {
 
 class _TagCreateState extends State<TagCreate> {
   final _nameController = TextEditingController();
+  var uuid = Uuid();
 
   @override
   Widget build(BuildContext context) {
@@ -108,28 +110,34 @@ class _TagCreateState extends State<TagCreate> {
 
   void submitTag() async {
     try {
-
       final tagProvider = Provider.of<TagProvider>(context, listen: false);
+      print('submitting tag: tagProvider: $tagProvider');
       if (widget.plant != null) {
-        Tag? existingTag =
-            await tagProvider.fetchTagByName(_nameController.text.trim(), widget.plant!.account_id);
+	      print('submitting tag: widget.plant: ${widget.plant}');
+        Tag? existingTag = await tagProvider.fetchTagByName(
+            _nameController.text.trim(), widget.plant!.account_id);
         if (existingTag != null) {
+		print('submitting tag: existingTag: $existingTag');
           PlantsTagProvider plantsTagProvider =
               Provider.of<PlantsTagProvider>(context, listen: false);
           await plantsTagProvider.createPlantsTag({
+            'id': uuid.v1(),
             'plant_id': widget.plant!.id,
             'tag_id': existingTag.id,
           });
         } else {
+		print('submitting tag: existingTag is null: $existingTag');
           Tag newTag = await tagProvider.createTag({
+            'id': uuid.v1(),
             'name': _nameController.text.trim(),
-	    'account_id': widget.plant!.account_id,
+            'account_id': widget.plant!.account_id,
           });
           var tagid = newTag.id;
           PlantsTagProvider plantsTagProvider =
               Provider.of<PlantsTagProvider>(context, listen: false);
 
           await plantsTagProvider.createPlantsTag({
+            'id': uuid.v1(),
             'plant_id': widget.plant!.id,
             'tag_id': tagid,
           });

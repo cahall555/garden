@@ -53,9 +53,9 @@ class _PlantDetailState extends State<PlantDetail> {
     final plantTags = await plantsTagProvider.fetchPlantsTag(plantId);
     List<Tag> tags = [];
     for (var pt in plantTags) {
-      print(pt.tag_id);
+      print('Tag id: ${pt.tag_id}');
       final tag = await tagProvider.fetchTag(pt.tag_id);
-
+	print('Tag: $tag');
       tags.addAll(tag);
     }
     return tags;

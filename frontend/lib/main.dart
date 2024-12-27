@@ -40,6 +40,7 @@ import 'services/repositories/user_account_repository.dart';
 import 'services/repositories/ws_repository.dart';
 import 'services/repositories/journal_repository.dart';
 import 'services/repositories/tag_repository.dart';
+import 'services/repositories/plants_tag_repository.dart';
 import 'services/repositories/sync_repository.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'services/connection_status.dart';
@@ -82,6 +83,7 @@ void main() async {
   final wsRepository = WaterScheduleRepository();
   final journalRepository = JournalRepository();
   final tagRepository = TagRepository();
+  final plantsTagRepository = PlantsTagRepository();
   final syncLogRepository = SyncLogRepository();
 
   runApp(
@@ -101,7 +103,7 @@ void main() async {
         ChangeNotifierProvider(
             create: (context) => TagProvider(tagApiService, tagRepository, syncLogRepository)),
         ChangeNotifierProvider(
-            create: (context) => PlantsTagProvider(plantsTagApiService)),
+            create: (context) => PlantsTagProvider(plantsTagApiService, plantsTagRepository, syncLogRepository)),
         ChangeNotifierProvider(
             create: (context) =>
                 UserProvider(userApiService, userAccountRepository)),
