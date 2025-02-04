@@ -13,6 +13,8 @@ import (
 // PlantsTag is used by pop to map your plants_tags database table to your go code.
 type PlantsTag struct {
 	ID        uuid.UUID `json:"id" db:"id"`
+	AccountID uuid.UUID `json:"account_id" db:"account_id"`
+	Account   *Account  `json:"Account,omitempty" belongs_to:"accounts"`
 	PlantID   uuid.UUID `json:"plant_id" db:"plant_id"`
 	Plant     *Plant    `json:"Plant,omitempty" belongs_to:"plants"`
 	TagID     uuid.UUID `json:"tag_id" db:"tag_id"`

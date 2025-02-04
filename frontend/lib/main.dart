@@ -101,7 +101,7 @@ void main() async {
             create: (context) =>
                 JournalProvider(journalApiService, journalRepository, syncLogRepository)),
         ChangeNotifierProvider(
-            create: (context) => TagProvider(tagApiService, tagRepository, syncLogRepository)),
+            create: (context) => TagProvider(tagApiService, plantsTagApiService, tagRepository, plantsTagRepository, syncLogRepository)),
         ChangeNotifierProvider(
             create: (context) => PlantsTagProvider(plantsTagApiService, plantsTagRepository, syncLogRepository)),
         ChangeNotifierProvider(
@@ -115,7 +115,7 @@ void main() async {
         ChangeNotifierProvider(
             create: (context) => UsersAccountsProvider(usersAccountApiService)),
       ],
-      child: MyApp(tagApiService: tagApiService, tagRepository: tagRepository),
+      child: MyApp(tagApiService: tagApiService, plantsTagApiService: plantsTagApiService, tagRepository: tagRepository, plantsTagRepository: plantsTagRepository),
     ),
   );
      // connectionStatus.dispose();
@@ -124,11 +124,15 @@ void main() async {
 class MyApp extends StatefulWidget {
   final TagApiService tagApiService;
   final TagRepository tagRepository;
+  final PlantsTagApiService plantsTagApiService;
+  final PlantsTagRepository plantsTagRepository;
 
   const MyApp({
     Key? key,
     required this.tagApiService,
     required this.tagRepository,
+    required this.plantsTagApiService,
+    required this.plantsTagRepository,
   }) : super(key: key);
 
   @override
@@ -187,7 +191,7 @@ class _MyAppState extends State<MyApp> {
             providers: [
               ChangeNotifierProvider(
                   create: (_) =>
-                      TagProvider(widget.tagApiService, widget.tagRepository, context.read<SyncLogRepository>())),
+                      TagProvider(widget.tagApiService, widget.plantsTagApiService, widget.tagRepository, widget.plantsTagRepository, context.read<SyncLogRepository>())),
             ],
             child: PlantDetail(plant: plant),
           );

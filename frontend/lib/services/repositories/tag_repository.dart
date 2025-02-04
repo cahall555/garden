@@ -13,7 +13,9 @@ class TagRepository {
 
   Future<List<Tag>> fetchAllTags(var accountId) async {
     final db = await dbHelper.database;
+    print('query local database for tags');
     final List<Map<String, dynamic>> maps = await db.query('Tag' , where: 'account_id = ?', whereArgs: [accountId]);
+    print('tags fetched from local: $maps');
     return List.generate(maps.length, (i) => Tag.fromJson(maps[i]));
   }
 

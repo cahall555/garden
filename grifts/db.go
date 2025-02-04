@@ -131,12 +131,12 @@ var _ = grift.Namespace("db", func() {
 		}
 
 		//Seed plant_tags
-		pt1 := models.PlantsTag{PlantID: basil.ID, TagID: herbTag.ID}
+		pt1 := models.PlantsTag{AccountID: free.ID, PlantID: basil.ID, TagID: herbTag.ID}
 		err = models.DB.Create(&pt1)
 		if err != nil {
 			panic(err)
 		}
-		pt2 := models.PlantsTag{PlantID: basil.ID, TagID: perinnialTag.ID}
+		pt2 := models.PlantsTag{AccountID: free.ID, PlantID: basil.ID, TagID: perinnialTag.ID}
 		err = models.DB.Create(&pt2)
 		if err != nil {
 			panic(err)

@@ -58,10 +58,10 @@ class TagApiService {
       final data = jsonDecode(response.body);
 
       if (data is Map) {
-	      print('Tag data is a map');
+        print('Tag data is a map');
         return [Tag.fromJson(Map<String, dynamic>.from(data))];
       } else if (data is List) {
-	      print('Tag data is a list');
+        print('Tag data is a list');
         return data
             .map<Tag>((json) => Tag.fromJson(Map<String, dynamic>.from(json)))
             .toList();
@@ -77,9 +77,14 @@ class TagApiService {
     final url = Uri.parse(apiUrl + 'tags');
     final headers = {"Content-Type": "application/json"};
     try {
+      print('json encode tagData: ${json.encode(tagData)}');
+      if (tagData.containsKey('related_plants')) {
+        tagData.remove('related_plants');
+        print('Removed related_plants from tagData');
+      }
       final response =
           await client.post(url, headers: headers, body: json.encode(tagData));
-
+      print('response for create tag api: ${response}');
       if (response.statusCode == 200) {
         return Tag.fromJson(jsonDecode(response.body));
         print('Tag created successfully');
@@ -97,6 +102,10 @@ class TagApiService {
     final url = Uri.parse(apiUrl + 'tags?tagId=$tagId');
     final headers = {"Content-Type": "application/json"};
     try {
+      if (tagData.containsKey('related_plants')) {
+        tagData.remove('related_plants');
+        print('Removed related_plants from tagData');
+      }
       final response =
           await client.put(url, headers: headers, body: json.encode(tagData));
 

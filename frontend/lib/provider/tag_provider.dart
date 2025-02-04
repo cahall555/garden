@@ -46,8 +46,6 @@ class TagProvider with ChangeNotifier {
       print('Tag fetched from local: $tags');
       if (tags.isNotEmpty) {
 	      print('Tags is not empty');
-        var accountId = tags[0].account_id;
-        await syncWithBackend(accountId);
       } else if (tags.isEmpty) {
 	      print('Tags is empty');
         tags = await tagApiService.fetchTagApi(tagId);
@@ -82,7 +80,9 @@ class TagProvider with ChangeNotifier {
   Future<Tag> createTag(Map<String, dynamic> tag) async {
     try {
       if (tag.isNotEmpty) {
+	      print('creating tag: $tag');
         final newTag = Tag.fromJson(tag);
+	print('new tag from json: $newTag');
         await tagRepository.insertTag(newTag);
         await syncWithBackend(tag['account_id']);
         return newTag;
@@ -141,7 +141,9 @@ class TagProvider with ChangeNotifier {
         final tagsFromBackend = await tagApiService.fetchTagsApi(accountId);
 	print("tags from backend: $tagsFromBackend");
 
+	print("fetching local tags for accountId: $accountId");
         final tagsFromLocal = await tagRepository.fetchAllTags(accountId);
+	print("tags from local: $tagsFromLocal");
 
         final backendTagMap = {for (var tag in tagsFromBackend) tag.id: tag};
         final localTagMap = {for (var tag in tagsFromLocal) tag.id: tag};
@@ -158,6 +160,7 @@ class TagProvider with ChangeNotifier {
               print("Error deleting tag: $e");
             }
           } else if (!backendTagMap.containsKey(tagId)) {
+		  print("creating tag in backend: ${localTag!.toJson()}");
             await tagApiService.createTagApi(localTag!.toJson());
           } else if (localTag.updatedAt
               .isAfter(backendTagMap[tagId]!.updatedAt)) {

@@ -1,7 +1,9 @@
 create_table("plants_tags") {
 	t.Column("id", "uuid", {primary: true})
+	t.Column("account_id", "uuid", {})
 	t.Column("plant_id", "uuid", {})
 	t.Column("tag_id", "uuid", {})
+	t.ForeignKey("account_id", {"accounts": ["id"] })
 	t.ForeignKey("plant_id", {"plants": ["id"] })
 	t.ForeignKey("tag_id", {"tags": ["id"] })
 	t.Timestamps()

@@ -33,6 +33,23 @@ class PlantsTagProvider with ChangeNotifier {
     }
   }
 
+  Future<List<PlantTags>> fetchPlantsTagAccount(var accountId) async {
+    try {
+      pt = await plantsTagRepository.fetchCurrentPlantTagsAccount(accountId);
+      if (pt.isEmpty) {
+	pt = await plantsTagApiService.fetchPlantsTagAccountApi(accountId);
+	for (var plantTag in pt) {
+	  plantsTagRepository.insertPlantsTag(plantTag);
+	}
+      }
+      notifyListeners();
+      return pt;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   Future<void> createPlantsTag(Map<String, dynamic> plantTag) async {
     try {
       if (plantTag.isNotEmpty) {
@@ -54,10 +71,12 @@ class PlantsTagProvider with ChangeNotifier {
 
         final syncLog = await syncLogRepository.getSyncLog('plant_tags');
         final lastSyncTime = syncLog?.lastSyncTime;
-
+	
+	print("starting backend sync for plants tag with plantId: $plantId");
         final plantTagsFromBackend =
             await plantsTagApiService.fetchPlantsTagApi(plantId);
 
+	print("starting local sync for plants tag with plantId: $plantId");
         final plantTagsFromLocal =
             await plantsTagRepository.fetchAllPlantTags(plantId);
 
@@ -68,6 +87,7 @@ class PlantsTagProvider with ChangeNotifier {
           for (var plantsTag in plantTagsFromLocal) plantsTag.id: plantsTag
         };
 
+	print("backendPlantsTagMap: $backendPlantsTagMap");
         for (var plantsTagId in localPlantsTagMap.keys) {
           final localPlantsTag = localPlantsTagMap[plantsTagId];
           print(

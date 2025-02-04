@@ -111,9 +111,12 @@ class _TagCreateState extends State<TagCreate> {
   void submitTag() async {
     try {
       final tagProvider = Provider.of<TagProvider>(context, listen: false);
-      print('submitting tag: tagProvider: $tagProvider');
-      if (widget.plant != null) {
-	      print('submitting tag: widget.plant: ${widget.plant}');
+      print('submitting tag: tagProvider: ${tagProvider}');
+      if (widget.plant?.id == null || widget.plant?.account_id == null) {
+	      throw Exception('Plant id or account id is null');
+      }
+      if (widget.plant?.id != null) {
+	      print('submitting tag: widget.plant: ${widget.plant?.id}');
         Tag? existingTag = await tagProvider.fetchTagByName(
             _nameController.text.trim(), widget.plant!.account_id);
         if (existingTag != null) {
@@ -122,25 +125,35 @@ class _TagCreateState extends State<TagCreate> {
               Provider.of<PlantsTagProvider>(context, listen: false);
           await plantsTagProvider.createPlantsTag({
             'id': uuid.v1(),
+	    'account_id': widget.plant!.account_id,
             'plant_id': widget.plant!.id,
             'tag_id': existingTag.id,
           });
         } else {
 		print('submitting tag: existingTag is null: $existingTag');
-          Tag newTag = await tagProvider.createTag({
-            'id': uuid.v1(),
-            'name': _nameController.text.trim(),
-            'account_id': widget.plant!.account_id,
-          });
+		Map<String, dynamic> newTagData = {
+	    'id': uuid.v1(),
+	    'name': _nameController.text.trim(),
+	    'related_plants': [widget.plant?.toJson()],
+	    'account_id': widget.plant?.account_id,
+	  };
+		print('submitting tag: newTagData: $newTagData');
+
+          Tag newTag = await tagProvider.createTag(newTagData);
+	  print('submitting tag: newTag: $newTag');
           var tagid = newTag.id;
+	  print('new tag id: $tagid');
           PlantsTagProvider plantsTagProvider =
               Provider.of<PlantsTagProvider>(context, listen: false);
 
+	  print('submitting tag: plantsTagProvider: $plantsTagProvider');
           await plantsTagProvider.createPlantsTag({
             'id': uuid.v1(),
+	    'account_id': widget.plant!.account_id,
             'plant_id': widget.plant!.id,
             'tag_id': tagid,
           });
+	  print('submitting tag: plantsTagProvider.createPlantsTag: $plantsTagProvider');
         }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Tag updated successfully!')),

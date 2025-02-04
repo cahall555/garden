@@ -23,6 +23,19 @@ class PlantsTagRepository {
     return List.generate(maps.length, (i) => PlantTags.fromJson(maps[i]));
   }
 
+
+ Future<List<PlantTags>> fetchAllPlantTagsAccount(var accountId) async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('PlantTags' , where: 'account_id = ?', whereArgs: [accountId]);
+    return List.generate(maps.length, (i) => PlantTags.fromJson(maps[i]));
+  }
+
+ Future<List<PlantTags>> fetchCurrentPlantTagsAccount(var accountId) async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('PlantTags' , where: 'account_id = ? AND marked_for_deletion = 0', whereArgs: [accountId]);
+    return List.generate(maps.length, (i) => PlantTags.fromJson(maps[i]));
+  }
+
  Future<PlantTags> fetchPlantTag(var plantId, var tagId) async {
     final db = await dbHelper.database;
     final List<Map<String, dynamic>> maps = await db.query('PlantTags' , where: 'plant_id = ? AND tag_id = ?', whereArgs: [plantId, tagId]);

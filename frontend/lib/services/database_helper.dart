@@ -144,9 +144,11 @@ class DatabaseHelper {
       id TEXT PRIMARY KEY,
       plant_id TEXT NOT NULL,
       tag_id TEXT NOT NULL,
+      account_id TEXT NOT NULL,
       marked_for_deletion INTEGER DEFAULT 0,
       "created_at" TEXT,
       "updated_at" TEXT,
+      FOREIGN KEY (account_id) REFERENCES User_Accounts(id),
       FOREIGN KEY (plant_id) REFERENCES Plant(id),
       FOREIGN KEY (tag_id) REFERENCES Tag(id)
     )
