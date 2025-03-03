@@ -1,0 +1,2 @@
+/home/courtneyelsner/Documents/garden/frontend/android/app/.cxx/Debug/211x1l5j/x86_64/CMakeFiles/edit_cache.dir
+/home/courtneyelsner/Documents/garden/frontend/android/app/.cxx/Debug/211x1l5j/x86_64/CMakeFiles/rebuild_cache.dir

@@ -42,6 +42,21 @@ func PlantTagAccountIndex(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.JSON(pt))
 }
 
+func PlantTagRelatedIndex(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	pt := models.PlantsTags{}
+	tagID := c.Param("tag_id")
+
+	err := tx.Where("tag_id = ?", tagID).All(&pt)
+	if err != nil {
+		c.Flash().Add("warning", "Plant Tags not found")
+		c.Redirect(301, "/")
+	}
+
+	c.Set("pt", pt)
+	return c.Render(http.StatusOK, r.JSON(pt))
+}
+
 func PlantTagCreate(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 	pt := &models.PlantsTag{}

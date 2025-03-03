@@ -48,6 +48,21 @@ func PlantsIndex(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.JSON(plant))
 }
 
+func PlantsAccountIndex(c buffalo.Context) error {
+	tx := c.Value("tx").(*pop.Connection)
+	plant := models.Plants{}
+	accountID := c.Param("account_id")
+
+	err := tx.Where("account_id = ?", accountID).All(&plant)
+	if err != nil {
+		c.Flash().Add("warning", "Plants not found")
+		c.Redirect(301, "/")
+	}
+
+	c.Set("plant", plant)
+	return c.Render(http.StatusOK, r.JSON(plant))
+}
+
 // PlantsCreate default implementation.
 func PlantsCreate(c buffalo.Context) error {
 	plant := models.Plant{}

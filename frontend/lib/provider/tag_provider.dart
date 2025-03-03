@@ -66,8 +66,8 @@ class TagProvider with ChangeNotifier {
       tag = await tagRepository.fetchTagName(name, accountId);
       print('Tag name fetched from local: $tag');
       // List<Tag> tags = await tagApiService.fetchTagByNameApi(name, accountId);
-      if (tags.isNotEmpty) {
-        return tags[0];
+      if (tag != null) {
+        return tag;
       } else {
         return null;
       }

@@ -54,6 +54,24 @@ class PlantApiService {
     }
   }
 
+  Future<List<Plant>> fetchAccountPlantsApi(var accountId) async {
+    final response =
+	await client.get(Uri.parse(apiUrl + 'plantsacct?account_id=$accountId'));
+
+    if (response.statusCode == 200) {
+      try {
+	final List<dynamic> data = json.decode(response.body);
+	return data.map<Plant>((json) => Plant.fromJson(json)).toList();
+      } on FormatException catch (e) {
+	print('The response was not JSON. $e');
+	throw Exception('Failed to decode JSON data: $e');
+      }
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+      throw Exception('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
   Future<void> createPlantApi(
       Map<String, dynamic> plantData, var gardenId) async {
     final url = Uri.parse(apiUrl + 'plants?gardenId=$gardenId');

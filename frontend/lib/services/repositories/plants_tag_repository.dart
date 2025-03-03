@@ -30,6 +30,12 @@ class PlantsTagRepository {
     return List.generate(maps.length, (i) => PlantTags.fromJson(maps[i]));
   }
 
+ Future<List<PlantTags>> fetchRelatedPlants(var tagId) async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('PlantTags' , where: 'tag_id = ?', whereArgs: [tagId]);
+    return List.generate(maps.length, (i) => PlantTags.fromJson(maps[i]));
+  }
+
  Future<List<PlantTags>> fetchCurrentPlantTagsAccount(var accountId) async {
     final db = await dbHelper.database;
     final List<Map<String, dynamic>> maps = await db.query('PlantTags' , where: 'account_id = ? AND marked_for_deletion = 0', whereArgs: [accountId]);
@@ -48,6 +54,15 @@ class PlantsTagRepository {
       'PlantTags',
       where: 'id = ?',
       whereArgs: [id],
+    );
+  }
+
+  Future<void> deletePlantTagTagId(var tagId) async {
+    final db = await dbHelper.database;
+    await db.delete(
+      'PlantTags',
+      where: 'tag_id = ?',
+      whereArgs: [tagId],
     );
   }
 

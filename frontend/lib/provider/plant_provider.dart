@@ -8,7 +8,7 @@ import 'package:frontend/services/connection_status.dart';
 
 class PlantProvider with ChangeNotifier {
   List<Plant> plants = [];
-  Plant? prevPlant;
+  Plant? plant;
   final plantApiService;
   final SyncLogRepository syncLogRepository;
   final PlantRepository plantRepository;
@@ -31,6 +31,45 @@ class PlantProvider with ChangeNotifier {
     } catch (e) {
       print(e);
       return [];
+    }
+  }
+
+  Future<List<Plant>> fetchAccountPlants(var accountId) async {
+    try {
+      plants = await plantRepository.fetchCurrentAccountPlants(accountId);
+      if (plants.isEmpty) {
+	plants = await plantApiService.fetchAccountPlantsApi(accountId);
+	for (var plant in plants) {
+	  plantRepository.insertPlant(plant);
+	}
+      }
+      notifyListeners();
+      return plants;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<Plant?> fetchPlant(var plantId) async {
+    try {
+      print("fetching local plant with id: $plantId");
+      plant = await plantRepository.fetchPlantId(plantId);
+      print('Plant fetched from local: $plant');
+      if (plant != null) {
+	print('Plant is not empty');
+      } else if (plant == null) {
+	print('Plant is empty');
+	plants = await plantApiService.fetchPlantApi(plantId);
+	for (var plant in plants) {
+	  plantRepository.insertPlant(plant);
+	}
+      }
+      notifyListeners();
+      return plant;
+    } catch (e) {
+      print(e);
+      
     }
   }
 

@@ -23,6 +23,28 @@ class PlantRepository {
     return List.generate(maps.length, (i) => Plant.fromJson(maps[i]));
   }
 
+  Future<List<Plant>> fetchCurrentAccountPlants(var accountId) async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('Plant', where: 'account_id = ? AND marked_for_deletion = 0', whereArgs: [accountId]);
+    return List.generate(maps.length, (i) => Plant.fromJson(maps[i]));
+  }
+
+  Future<List<Plant>> fetchAllAccountPlants(var accountId) async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('Plant', where: 'account_id = ?', whereArgs: [accountId]);
+    return List.generate(maps.length, (i) => Plant.fromJson(maps[i]));
+  }
+
+  Future<Plant?> fetchPlantId(var plantId) async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('Plant', where: 'id = ?', whereArgs: [plantId]);
+    if (maps.length > 0) {
+      return Plant.fromJson(maps.first);
+    } else {
+      // return null;
+    }
+  }
+
   Future<void> updatePlant(Plant plant) async {
     final db = await dbHelper.database;
     await db.update(

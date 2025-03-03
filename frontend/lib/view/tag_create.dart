@@ -141,7 +141,7 @@ class _TagCreateState extends State<TagCreate> {
 
           Tag newTag = await tagProvider.createTag(newTagData);
 	  print('submitting tag: newTag: $newTag');
-          var tagid = newTag.id;
+          var tagid = newTagData['id'];
 	  print('new tag id: $tagid');
           PlantsTagProvider plantsTagProvider =
               Provider.of<PlantsTagProvider>(context, listen: false);

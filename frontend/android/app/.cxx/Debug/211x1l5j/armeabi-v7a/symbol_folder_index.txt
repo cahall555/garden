@@ -1,0 +1,1 @@
+/home/courtneyelsner/Documents/garden/frontend/build/app/intermediates/cxx/Debug/211x1l5j/obj/armeabi-v7a

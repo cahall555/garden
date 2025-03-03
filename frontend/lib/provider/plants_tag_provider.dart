@@ -49,7 +49,22 @@ class PlantsTagProvider with ChangeNotifier {
       return [];
     }
   }
-
+  Future<List<PlantTags>> fetchRelatedPlants(var tagId) async {
+    try {
+      pt = await plantsTagRepository.fetchRelatedPlants(tagId);
+      if (pt.isEmpty) {
+	pt = await plantsTagApiService.fetchRelatedPlantsApi(tagId);
+	for (var plantTag in pt) {
+	  plantsTagRepository.insertPlantsTag(plantTag);
+	}
+      }
+      notifyListeners();
+      return pt;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
   Future<void> createPlantsTag(Map<String, dynamic> plantTag) async {
     try {
       if (plantTag.isNotEmpty) {
@@ -61,6 +76,24 @@ class PlantsTagProvider with ChangeNotifier {
       throw Exception('Failed to create plant tag: $e');
     } finally {
       notifyListeners();
+    }
+  }
+
+  Future<void> deletePlantTag(var id) async {
+    try {
+      await plantsTagRepository.deletePlantTag(id);
+      notifyListeners();
+    } catch (e) {
+      print('Error deleting plant tag: $e');
+    }
+  }
+
+  Future<void> deletePlantTagTagId(var tagId) async {
+    try {
+      await plantsTagRepository.deletePlantTagTagId(tagId);
+      notifyListeners();
+    } catch (e) {
+      print('Error deleting plant tag: $e');
     }
   }
 
